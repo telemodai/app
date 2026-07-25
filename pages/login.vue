@@ -32,6 +32,8 @@
 </template>
 
 <script setup lang="ts">
+import { buildTelegramAuthHref } from "~/lib/auth-return-to";
+
 definePageMeta({
   layout: false,
 });
@@ -54,9 +56,8 @@ const botLoginDeepLink = computed(() => {
 
 const telegramAuthHref = computed(() => {
   const returnTo = route.query.returnTo;
-  if (typeof returnTo === "string" && returnTo.trim()) {
-    return `/api/auth/telegram?returnTo=${encodeURIComponent(returnTo)}`;
-  }
-  return "/api/auth/telegram";
+  return buildTelegramAuthHref(
+    typeof returnTo === "string" ? returnTo : null
+  );
 });
 </script>
