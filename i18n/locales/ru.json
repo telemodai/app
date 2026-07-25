@@ -299,6 +299,12 @@
         "silentModeHelpTitle": "Тихий режим:",
         "silentModeEnabled": "Включён: нарушения только в БД — без удаления, бана и предупреждений в Telegram",
         "silentModeDisabled": "Выключен: действия по каждому правилу (удаление, предупреждение, бан — как настроено в правиле)",
+        "serviceMessagesTitle": "Системные сообщения",
+        "enableServiceMessageCleanup": "Удалять системные сообщения",
+        "serviceMessageMemberJoined": "Вход в группу",
+        "serviceMessageMemberLeft": "Выход из группы",
+        "serviceMessagesHelpTitle": "Системные сообщения:",
+        "serviceMessagesHelp": "Убирает серые уведомления Telegram о входе и выходе. Нужны права администратора на удаление сообщений.",
         "updateButton": "Обновить чат"
       }
     },

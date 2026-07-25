@@ -5,6 +5,7 @@ export interface Chat {
   chat_id: number;
   name: string;
   silent_mode: boolean;
+  service_message_cleanup?: import("../../lib/service-message-cleanup").ServiceMessageCleanupSettings;
   rules_count: number;
   photo_file_id?: string | null;
   telegram_username?: string | null;
@@ -44,6 +45,7 @@ export interface CreateBotInput {
     chat_id: number;
     name: string;
     silent_mode?: boolean;
+    service_message_cleanup?: import("../../lib/service-message-cleanup").ServiceMessageCleanupSettings;
   }>;
 }
 
@@ -53,6 +55,7 @@ export interface UpdateBotRequest {
     chat_id: number;
     name: string;
     silent_mode?: boolean;
+    service_message_cleanup?: import("../../lib/service-message-cleanup").ServiceMessageCleanupSettings;
   }>;
   token?: string;
   is_active?: boolean;

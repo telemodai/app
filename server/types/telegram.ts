@@ -1,10 +1,12 @@
 // Типы для Telegram API
 export interface TelegramMessage {
   message_id: number;
-  from: TelegramUser;
+  from?: TelegramUser;
   chat: TelegramChat;
   text?: string;
   date: number;
+  new_chat_members?: TelegramUser[];
+  left_chat_member?: TelegramUser;
 }
 
 export interface TelegramUser {

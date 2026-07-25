@@ -17,6 +17,7 @@ import {
   primaryKey,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import type { ServiceMessageCleanupSettings } from "../../lib/service-message-cleanup";
 import { users } from "./auth-schema";
 
 export const actionTypeEnum = pgEnum("action_type", [
@@ -100,6 +101,10 @@ export const chats = pgTable(
     chatId: bigint("chat_id", { mode: "number" }).notNull(),
     name: text("name").notNull(),
     silentMode: boolean("silent_mode").notNull().default(false),
+    serviceMessageCleanup: jsonb("service_message_cleanup")
+      .$type<ServiceMessageCleanupSettings>()
+      .notNull()
+      .default({ enabled: false, types: [] }),
     photoFileId: text("photo_file_id"),
     telegramUsername: text("telegram_username"),
     healthStatus: chatHealthStatusEnum("health_status"),

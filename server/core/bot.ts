@@ -40,6 +40,9 @@ import {
   telegramGetMe,
   telegramSendMessage,
 } from "../utils/telegram-bot-api";
+import { classifyServiceMessage } from "./service-message-kinds";
+import { shouldDeleteServiceMessage } from "./service-message-cleanup";
+import { DEFAULT_SERVICE_MESSAGE_CLEANUP } from "../../lib/service-message-cleanup";
 
 export class TelegramBot {
   private token: string;
@@ -96,7 +99,7 @@ export class TelegramBot {
       }
 
       logger.debug(
-        `Обрабатываем сообщение от пользователя ${message.from.id} в чате ${message.chat.id}`
+        `Обрабатываем сообщение от пользователя ${message.from?.id ?? "unknown"} в чате ${message.chat.id}`
       );
 
       const chatConfig = await this.getChatConfig(message.chat.id);
@@ -109,6 +112,10 @@ export class TelegramBot {
       }
 
       logger.debug(`Чат найден в конфигурации: ${chatConfig.name}`);
+
+      if (await this.tryCleanupServiceMessage(message, chatConfig)) {
+        return;
+      }
 
       if (!message.text) {
         logger.debug(
@@ -669,6 +676,43 @@ export class TelegramBot {
 
   private async sendInfoMessage(chatId: number, text: string): Promise<void> {
     await this.sendMessage(chatId, text);
+  }
+
+  private async tryCleanupServiceMessage(
+    message: TelegramMessage,
+    chatConfig: ConfigChat
+  ): Promise<boolean> {
+    const kind = classifyServiceMessage(message);
+    if (!kind) {
+      return false;
+    }
+
+    const settings =
+      chatConfig.service_message_cleanup ?? DEFAULT_SERVICE_MESSAGE_CLEANUP;
+    const botTelegramUserId = await this.resolveBotTelegramUserId();
+
+    if (
+      !shouldDeleteServiceMessage({
+        settings,
+        kind,
+        message,
+        botTelegramUserId,
+      })
+    ) {
+      return false;
+    }
+
+    await this.deleteMessage(message.chat.id, message.message_id);
+    logger.info(
+      {
+        botId: this.botId,
+        chatId: message.chat.id,
+        messageId: message.message_id,
+        kind,
+      },
+      "Deleted Telegram service message"
+    );
+    return true;
   }
 
   private async getChatConfig(chatId: number): Promise<ConfigChat | null> {

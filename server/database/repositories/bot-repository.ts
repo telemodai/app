@@ -10,11 +10,13 @@ import {
 import { bots, chats, rules } from "../schema";
 import { toBot, toBotResponse, toChat } from "../mappers";
 import { BotMemberRepository } from "./bot-member-repository";
+import { normalizeServiceMessageCleanup } from "../../../lib/service-message-cleanup";
 
 type IncomingChat = {
   chat_id: number;
   name: string;
   silent_mode?: boolean;
+  service_message_cleanup?: unknown;
 };
 
 export class BotRepository {
@@ -94,6 +96,9 @@ export class BotRepository {
           .set({
             name: chat.name,
             silentMode: chat.silent_mode ?? false,
+            serviceMessageCleanup: normalizeServiceMessageCleanup(
+              chat.service_message_cleanup
+            ),
           })
           .where(eq(chats.id, found.id));
       } else {
@@ -102,6 +107,9 @@ export class BotRepository {
           chatId: chat.chat_id,
           name: chat.name,
           silentMode: chat.silent_mode ?? false,
+          serviceMessageCleanup: normalizeServiceMessageCleanup(
+            chat.service_message_cleanup
+          ),
         });
       }
     }
