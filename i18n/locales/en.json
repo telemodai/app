@@ -299,6 +299,12 @@
         "silentModeHelpTitle": "Silent Mode:",
         "silentModeEnabled": "Enabled: violations logged to DB only — no Telegram delete, ban, or warning messages",
         "silentModeDisabled": "Disabled: per-rule actions apply (delete, warn, ban as configured on each rule)",
+        "serviceMessagesTitle": "Service messages",
+        "enableServiceMessageCleanup": "Delete service messages",
+        "serviceMessageMemberJoined": "Member joined",
+        "serviceMessageMemberLeft": "Member left",
+        "serviceMessagesHelpTitle": "Service messages:",
+        "serviceMessagesHelp": "Removes grey Telegram join/leave notifications. Requires the bot to be an admin with permission to delete messages.",
         "updateButton": "Update Chat"
       }
     },

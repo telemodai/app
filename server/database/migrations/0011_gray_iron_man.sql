@@ -1,0 +1,1 @@
+ALTER TABLE "chats" ADD COLUMN "service_message_cleanup" jsonb DEFAULT '{"enabled":false,"types":[]}'::jsonb NOT NULL;

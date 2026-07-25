@@ -42,6 +42,7 @@ describe("database mappers", () => {
         chatId: -100123,
         name: "Main",
         silentMode: false,
+        serviceMessageCleanup: { enabled: true, types: ["member_joined"] },
         photoFileId: "photo-big",
         telegramUsername: "mainchat",
         healthStatus: "ok",
@@ -55,6 +56,10 @@ describe("database mappers", () => {
     expect(chat.rules_count).toBe(3);
     expect(chat.chat_id).toBe(-100123);
     expect(chat.silent_mode).toBe(false);
+    expect(chat.service_message_cleanup).toEqual({
+      enabled: true,
+      types: ["member_joined"],
+    });
     expect(chat.photo_file_id).toBe("photo-big");
     expect(chat.health_status).toBe("ok");
   });

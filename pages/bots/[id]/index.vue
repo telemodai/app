@@ -631,6 +631,57 @@
             </div>
           </div>
 
+          <div class="border-t pt-4">
+            <h4 class="font-medium text-gray-700 mb-3">{{ t("bot.chats.editModal.serviceMessagesTitle") }}</h4>
+
+            <div class="space-y-3">
+              <label class="flex items-center">
+                <input
+                  v-model="newChat.service_message_cleanup.enabled"
+                  type="checkbox"
+                  class="mr-2"
+                  @change="onServiceCleanupEnabledChange"
+                />
+                <span class="text-sm font-medium text-gray-700">{{
+                  t("bot.chats.editModal.enableServiceMessageCleanup")
+                }}</span>
+              </label>
+
+              <div
+                v-if="newChat.service_message_cleanup.enabled"
+                class="ml-6 space-y-2"
+              >
+                <label class="flex items-center">
+                  <input
+                    type="checkbox"
+                    class="mr-2"
+                    :checked="newChat.service_message_cleanup.types.includes('member_joined')"
+                    @change="setServiceMessageType('member_joined', ($event.target as HTMLInputElement).checked)"
+                  />
+                  <span class="text-sm text-gray-700">{{
+                    t("bot.chats.editModal.serviceMessageMemberJoined")
+                  }}</span>
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="checkbox"
+                    class="mr-2"
+                    :checked="newChat.service_message_cleanup.types.includes('member_left')"
+                    @change="setServiceMessageType('member_left', ($event.target as HTMLInputElement).checked)"
+                  />
+                  <span class="text-sm text-gray-700">{{
+                    t("bot.chats.editModal.serviceMessageMemberLeft")
+                  }}</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="mt-3 text-xs text-gray-500 bg-gray-50 p-2 rounded">
+              <p class="font-medium mb-1">{{ t("bot.chats.editModal.serviceMessagesHelpTitle") }}</p>
+              <p>{{ t("bot.chats.editModal.serviceMessagesHelp") }}</p>
+            </div>
+          </div>
+
           <div class="flex gap-2 pt-4">
             <button
               type="submit"
@@ -668,6 +719,10 @@ import {
 } from "~/lib/bot-message-template-ui";
 import type { ChatActivationStartMode } from "~/composables/useChatActivationWait";
 import type { BotMemberRole } from "~/types/bot";
+import {
+  DEFAULT_SERVICE_MESSAGE_CLEANUP,
+  type ServiceMessageKindId,
+} from "~/lib/service-message-cleanup";
 
 const { t, tm, locale } = useI18n();
 const { actionLabel: logActionLabel } = useModerationActionDisplay();
@@ -757,6 +812,7 @@ const newChat = ref({
   chat_id: "",
   name: "",
   silent_mode: false,
+  service_message_cleanup: { ...DEFAULT_SERVICE_MESSAGE_CLEANUP },
 });
 
 const aggregatedStatusText = computed(() => {
@@ -1025,12 +1081,32 @@ async function loadStatistics() {
   }
 }
 
+function setServiceMessageType(kind: ServiceMessageKindId, enabled: boolean) {
+  const types = new Set(newChat.value.service_message_cleanup.types);
+  if (enabled) {
+    types.add(kind);
+  } else {
+    types.delete(kind);
+  }
+  newChat.value.service_message_cleanup.types = [...types];
+}
+
+function onServiceCleanupEnabledChange() {
+  if (!newChat.value.service_message_cleanup.enabled) {
+    newChat.value.service_message_cleanup.types = [];
+  }
+}
+
 function editChat(chat: any) {
   editingChat.value = chat;
   newChat.value = {
     chat_id: chat.chat_id,
     name: chat.name,
     silent_mode: chat.silent_mode,
+    service_message_cleanup: {
+      enabled: chat.service_message_cleanup?.enabled ?? false,
+      types: [...(chat.service_message_cleanup?.types ?? [])],
+    },
   };
   showAddChatModal.value = true;
 }
@@ -1042,6 +1118,7 @@ function closeChatModal() {
     chat_id: "",
     name: "",
     silent_mode: false,
+    service_message_cleanup: { ...DEFAULT_SERVICE_MESSAGE_CLEANUP },
   };
 }
 
@@ -1058,6 +1135,7 @@ async function saveChat() {
       updatedChats[index] = {
         ...updatedChats[index],
         silent_mode: newChat.value.silent_mode,
+        service_message_cleanup: newChat.value.service_message_cleanup,
       };
     }
 
