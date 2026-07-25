@@ -1,9 +1,20 @@
 /** Default landing after Telegram OIDC when no return path is stored. */
 export const DEFAULT_POST_LOGIN_PATH = "/bots";
 
+/** Paths that must never be used as post-login redirects (auth loop / plumbing). */
+function isAuthPlumbingPath(pathname: string): boolean {
+  if (pathname === "/login" || pathname.startsWith("/login/")) {
+    return true;
+  }
+  if (pathname.startsWith("/api/auth")) {
+    return true;
+  }
+  return false;
+}
+
 /**
  * Validates a post-login redirect path (same-origin relative only).
- * Rejects protocol-relative URLs, backslashes, and embedded schemes.
+ * Rejects protocol-relative URLs, backslashes, embedded schemes, and auth plumbing.
  */
 export function sanitizeReturnToPath(
   input: string | null | undefined
@@ -23,6 +34,15 @@ export function sanitizeReturnToPath(
 
   // Reject paths that look like "/http:" or "/javascript:".
   if (/^\/[^/?#]*:/i.test(trimmed)) {
+    return null;
+  }
+
+  try {
+    const url = new URL(trimmed, "http://local");
+    if (isAuthPlumbingPath(url.pathname)) {
+      return null;
+    }
+  } catch {
     return null;
   }
 
@@ -54,4 +74,22 @@ export function resolveReturnToPath(
   const normalized =
     typeof input === "string" ? normalizeAuthReturnTo(input) : null;
   return sanitizeReturnToPath(normalized) ?? DEFAULT_POST_LOGIN_PATH;
+}
+
+/** Build href for the Telegram OIDC start link from an optional /login?returnTo value. */
+export function buildTelegramAuthHref(
+  returnToQuery: string | null | undefined
+): string {
+  if (!returnToQuery?.trim()) {
+    return "/api/auth/telegram";
+  }
+
+  const sanitized = sanitizeReturnToPath(
+    normalizeAuthReturnTo(returnToQuery)
+  );
+  if (!sanitized) {
+    return "/api/auth/telegram";
+  }
+
+  return `/api/auth/telegram?returnTo=${encodeURIComponent(sanitized)}`;
 }
