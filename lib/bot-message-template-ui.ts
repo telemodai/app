@@ -15,6 +15,11 @@ export const WARNING_TEMPLATE_PLACEHOLDERS = [
     hintKey: "botTemplate.placeholders.warning.ruleName.hint",
   },
   {
+    key: "{rule_comment}",
+    labelKey: "botTemplate.placeholders.warning.ruleComment.label",
+    hintKey: "botTemplate.placeholders.warning.ruleComment.hint",
+  },
+  {
     key: "{warnings_current}",
     labelKey: "botTemplate.placeholders.warning.warningsCurrent.label",
     hintKey: "botTemplate.placeholders.warning.warningsCurrent.hint",
@@ -47,12 +52,18 @@ export const BAN_TEMPLATE_PLACEHOLDERS = [
     labelKey: "botTemplate.placeholders.ban.ruleName.label",
     hintKey: "botTemplate.placeholders.ban.ruleName.hint",
   },
+  {
+    key: "{rule_comment}",
+    labelKey: "botTemplate.placeholders.ban.ruleComment.label",
+    hintKey: "botTemplate.placeholders.ban.ruleComment.hint",
+  },
 ] as const;
 
 export const DEFAULT_WARNING_TEMPLATE_PREVIEW = `⚠️ <b>Предупреждение!</b>
 
 Сообщение нарушает правила чата.
 Нарушение: <b>{rule_name}</b>
+{rule_comment}
 
 Предупреждений: <b>{warnings_current}/{warnings_max}</b>
 До блокировки: <b>{warnings_left}</b>
@@ -62,7 +73,8 @@ export const DEFAULT_WARNING_TEMPLATE_PREVIEW = `⚠️ <b>Предупрежд�
 export const DEFAULT_BAN_TEMPLATE_PREVIEW = `🚫 <b>Пользователь заблокирован!</b>
 
 Нарушение правил чата.
-Правило: <b>{rule_name}</b>`;
+Правило: <b>{rule_name}</b>
+{rule_comment}`;
 
 export const TELEGRAM_HTML_DOCS_URL =
   "https://core.telegram.org/bots/api#html-style";

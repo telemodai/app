@@ -4,6 +4,7 @@ export const DEFAULT_WARNING_TEMPLATE = `⚠️ <b>Предупреждение!
 
 Сообщение нарушает правила чата.
 Нарушение: <b>{rule_name}</b>
+{rule_comment}
 
 Предупреждений: <b>{warnings_current}/{warnings_max}</b>
 До блокировки: <b>{warnings_left}</b>
@@ -13,12 +14,14 @@ export const DEFAULT_WARNING_TEMPLATE = `⚠️ <b>Предупреждение!
 export const DEFAULT_BAN_TEMPLATE = `🚫 <b>Пользователь заблокирован!</b>
 
 Нарушение правил чата.
-Правило: <b>{rule_name}</b>`;
+Правило: <b>{rule_name}</b>
+{rule_comment}`;
 
 export type WarningTemplateContext = {
   user_mention: string;
   user_name: string;
   rule_name: string;
+  rule_comment: string;
   warnings_current: string;
   warnings_max: string;
   warnings_left: string;
@@ -28,6 +31,7 @@ export type BanTemplateContext = {
   user_mention: string;
   user_name: string;
   rule_name: string;
+  rule_comment: string;
 };
 
 type TemplateContext = WarningTemplateContext | BanTemplateContext;

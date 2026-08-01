@@ -157,7 +157,7 @@ export const rules = pgTable(
       .notNull()
       .references(() => chats.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
-    description: text("description").notNull(),
+    comment: text("comment"),
     aiPrompt: text("ai_prompt").notNull(),
     isActive: boolean("is_active").notNull().default(true),
     deleteOnViolation: boolean("delete_on_violation").notNull().default(false),

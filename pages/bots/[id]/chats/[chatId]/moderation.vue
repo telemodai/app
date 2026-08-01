@@ -75,7 +75,7 @@
           </div>
         </div>
 
-        <p class="text-sm text-gray-600 mb-2">{{ rule.description }}</p>
+        <p v-if="rule.comment" class="text-sm text-gray-600 mb-2">{{ rule.comment }}</p>
 
         <div class="text-xs text-gray-500 space-y-1">
           <div>
@@ -267,7 +267,7 @@
               <div class="min-w-0">
                 <h4 class="font-medium">{{ template.name }}</h4>
                 <p class="text-sm text-gray-600 mt-1">
-                  {{ template.description }}
+                  {{ template.comment }}
                 </p>
               </div>
               <button
@@ -328,13 +328,15 @@
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">{{
-              t("moderation.ruleModal.descriptionLabel")
+              t("moderation.ruleModal.commentLabel")
             }}</label>
+            <p class="text-xs text-gray-500 mb-1">
+              {{ t("moderation.ruleModal.commentHint") }}
+            </p>
             <input
-              v-model="form.description"
+              v-model="form.comment"
               type="text"
               class="w-full border rounded px-3 py-2"
-              required
             />
           </div>
 
@@ -533,7 +535,7 @@ const telegramChatId = route.params.chatId as string;
 
 interface RuleForm {
   name: string;
-  description: string;
+  comment: string;
   ai_prompt: string;
   delete_on_violation: boolean;
   ban_on_violation: boolean;
@@ -543,7 +545,7 @@ interface RuleForm {
 interface TemplateCatalogItem {
   id: string;
   name: string;
-  description: string;
+  comment: string;
   delete_on_violation: boolean;
   ban_on_violation: boolean;
   warnings_before_ban: number | null;
@@ -552,12 +554,12 @@ interface TemplateCatalogItem {
 
 interface RuleAssistResponse {
   name: string;
-  description: string;
+  comment: string;
   ai_prompt: string;
 }
 
 interface RuleTextVersion {
-  description: string;
+  comment: string;
   ai_prompt: string;
 }
 
@@ -625,7 +627,7 @@ const aiAssistIsDraftMode = computed(() => ruleVersions.value.length === 0);
 
 const emptyForm = (): RuleForm => ({
   name: "",
-  description: "",
+  comment: "",
   ai_prompt: "",
   delete_on_violation: false,
   ban_on_violation: false,
@@ -647,12 +649,12 @@ function initRuleVersionsFromForm() {
   ruleVersions.value = [];
   ruleVersionIndex.value = -1;
   const hasText =
-    form.value.description.trim().length > 0 ||
+    form.value.comment.trim().length > 0 ||
     form.value.ai_prompt.trim().length > 0;
   if (hasText) {
     ruleVersions.value = [
       {
-        description: form.value.description,
+        comment: form.value.comment,
         ai_prompt: form.value.ai_prompt,
       },
     ];
@@ -665,7 +667,7 @@ function applyRuleVersion(index: number) {
   if (!version) {
     return;
   }
-  form.value.description = version.description;
+  form.value.comment = version.comment;
   form.value.ai_prompt = version.ai_prompt;
   ruleVersionIndex.value = index;
 }
@@ -692,7 +694,7 @@ async function submitRuleAssist() {
       method: "POST",
       body: {
         name: form.value.name,
-        description: form.value.description,
+        comment: form.value.comment,
         ai_prompt: form.value.ai_prompt,
         instruction,
       },
@@ -700,14 +702,14 @@ async function submitRuleAssist() {
 
     const next = response.data;
     ruleVersions.value.push({
-      description: next.description,
+      comment: next.comment,
       ai_prompt: next.ai_prompt,
     });
     ruleVersionIndex.value = ruleVersions.value.length - 1;
     if (!form.value.name.trim()) {
       form.value.name = next.name;
     }
-    form.value.description = next.description;
+    form.value.comment = next.comment;
     form.value.ai_prompt = next.ai_prompt;
     aiInstruction.value = "";
   } catch (error) {
@@ -848,7 +850,7 @@ function openEditModal(rule: any) {
   editingRule.value = rule;
   form.value = {
     name: rule.name,
-    description: rule.description,
+    comment: rule.comment ?? "",
     ai_prompt: rule.ai_prompt,
     delete_on_violation: Boolean(rule.delete_on_violation),
     ban_on_violation: Boolean(rule.ban_on_violation),
@@ -874,7 +876,7 @@ async function saveRule() {
   try {
     const payload = {
       name: form.value.name,
-      description: form.value.description,
+      comment: form.value.comment,
       ai_prompt: form.value.ai_prompt,
       delete_on_violation: form.value.delete_on_violation,
       ban_on_violation: form.value.ban_on_violation,

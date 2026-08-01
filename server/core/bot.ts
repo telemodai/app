@@ -444,7 +444,7 @@ export class TelegramBot {
           applicableRules.map((rule) => ({
             id: rule.id,
             name: rule.name,
-            description: rule.description,
+            comment: rule.comment,
             ai_prompt: rule.ai_prompt,
           }))
         );
@@ -564,6 +564,7 @@ export class TelegramBot {
       const ruleId = aiResponse.rule_violated ?? violatedRule?.id;
       const ruleDisplayName =
         violatedRule?.name ?? aiResponse.rule_violated ?? "unknown";
+      const ruleDisplayComment = violatedRule?.comment?.trim() ?? "";
 
       if (plan.logBan) {
         await this.contextService.handleUserBan(
@@ -582,6 +583,7 @@ export class TelegramBot {
             user_mention: buildUserMention(message.from),
             user_name: buildUserName(message.from),
             rule_name: escapeTelegramHtml(ruleDisplayName),
+            rule_comment: escapeTelegramHtml(ruleDisplayComment),
           });
 
           await this.sendInfoMessage(message.chat.id, banText);
@@ -608,6 +610,7 @@ export class TelegramBot {
             user_mention: buildUserMention(message.from),
             user_name: buildUserName(message.from),
             rule_name: escapeTelegramHtml(ruleDisplayName),
+            rule_comment: escapeTelegramHtml(ruleDisplayComment),
             warnings_current: String(warningsCurrent),
             warnings_max: String(plan.warningsBeforeBan),
             warnings_left: String(Math.max(warningsLeft, 0)),

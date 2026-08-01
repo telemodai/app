@@ -12,7 +12,7 @@ describe("rule-name-lookup", () => {
     const ruleRepo = new InMemoryRuleRepository();
     const spam = await ruleRepo.create(TEST_BOT_ID, TEST_CHAT_INTERNAL_ID, {
       name: "Spam",
-      description: "No spam",
+      comment: "No spam",
       ai_prompt: "spam",
     });
 

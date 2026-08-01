@@ -12,10 +12,10 @@ export default defineEventHandler(async (event) => {
   const body = (await readBody(event)) as Omit<CreateRuleRequest, "id">;
   const ruleRepo = new RuleRepository();
 
-  if (!body?.name || !body?.description || !body?.ai_prompt) {
+  if (!body?.name || !body?.ai_prompt) {
     throw createError({
       statusCode: 400,
-      statusMessage: "name, description, and ai_prompt are required",
+      statusMessage: "name and ai_prompt are required",
     });
   }
 

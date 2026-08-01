@@ -53,7 +53,7 @@ export class RuleRepository {
         botId,
         chatId: chatInternalId,
         name: ruleData.name,
-        description: ruleData.description,
+        comment: ruleData.comment ?? null,
         aiPrompt: ruleData.ai_prompt,
         isActive: true,
         deleteOnViolation: ruleData.delete_on_violation ?? false,
@@ -78,8 +78,8 @@ export class RuleRepository {
     };
 
     if (updateData.name !== undefined) updateValues.name = updateData.name;
-    if (updateData.description !== undefined) {
-      updateValues.description = updateData.description;
+    if (updateData.comment !== undefined) {
+      updateValues.comment = updateData.comment;
     }
     if (updateData.ai_prompt !== undefined) {
       updateValues.aiPrompt = updateData.ai_prompt;

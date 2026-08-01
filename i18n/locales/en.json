@@ -393,13 +393,14 @@
       "editTitle": "Edit rule",
       "addTitle": "Add rule",
       "nameLabel": "Rule name",
-      "descriptionLabel": "Description",
+      "commentLabel": "Comment",
+      "commentHint": "Short note for violators — shown in chat via {'{'}rule_comment{'}'} and sent to the AI with the rule.",
       "ruleTextLabel": "Rule text",
       "ruleTextHint": "This text is passed to the AI when checking messages. Describe what counts as a violation and what is allowed.",
       "ruleTextPlaceholder": "Treat ads for products or services as a violation.\nNot a violation: a personal recommendation with no link and no call to buy.",
       "aiAssistToggle": "AI assist",
-      "aiAssistHint": "The AI will rewrite the description and rule text.",
-      "aiAssistHintCreate": "Describe the rule you want; the AI will draft the description and rule text.",
+      "aiAssistHint": "The AI will rewrite the comment and rule text.",
+      "aiAssistHintCreate": "Describe the rule you want; the AI will draft the comment and rule text.",
       "aiAssistInstructionPlaceholder": "Add an exception: sharing a discount is OK when replying to a direct question",
       "aiAssistInstructionPlaceholderCreate": "Ban commercial ads and channel self-promotion",
       "aiAssistSubmitAria": "Update rule text",
@@ -483,7 +484,7 @@
         },
         "placeholders": {
           "title": "Placeholders",
-          "body": "Substituted by the server: {'{'}user_mention{'}'}, {'{'}user_name{'}'}, {'{'}rule_name{'}'}, {'{'}warnings_current{'}'}, {'{'}warnings_max{'}'}, {'{'}warnings_left{'}'} (Warning only). Buttons above the field insert them at the cursor."
+          "body": "Substituted by the server: {'{'}user_mention{'}'}, {'{'}user_name{'}'}, {'{'}rule_name{'}'}, {'{'}rule_comment{'}'}, {'{'}warnings_current{'}'}, {'{'}warnings_max{'}'}, {'{'}warnings_left{'}'} (Warning only). Buttons above the field insert them at the cursor."
         },
         "userMention": {
           "title": "User mention",
@@ -514,8 +515,12 @@
           "hint": "Display name without ping"
         },
         "ruleName": {
-          "label": "Rule",
+          "label": "Rule name",
           "hint": "Violated rule name"
+        },
+        "ruleComment": {
+          "label": "Violation comment",
+          "hint": "Per-rule note for violators ({'{'}rule_comment{'}'})"
         },
         "warningsCurrent": {
           "label": "Warn #",
@@ -540,8 +545,12 @@
           "hint": "Display name without ping"
         },
         "ruleName": {
-          "label": "Rule",
+          "label": "Rule name",
           "hint": "Violated rule name"
+        },
+        "ruleComment": {
+          "label": "Violation comment",
+          "hint": "Per-rule note for violators ({'{'}rule_comment{'}'})"
         }
       }
     }

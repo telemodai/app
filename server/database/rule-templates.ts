@@ -6,7 +6,7 @@ export const RULE_TEMPLATES = [
   {
     id: "commercial-ads",
     name: "Коммерческая реклама",
-    description: "Запрещена реклама товаров, услуг и каналов",
+    comment: "Пожалуйста, не размещайте рекламу товаров, услуг и каналов в этом чате.",
     ai_prompt: `Считать нарушением коммерческую рекламу и самопиар с целью продажи или привлечения клиентов.
 
 Нарушение:
@@ -26,7 +26,7 @@ export const RULE_TEMPLATES = [
   {
     id: "politics",
     name: "Политические темы",
-    description: "Запрещено любое обсуждение политики",
+    comment: "Политические темы в этом чате не обсуждаются.",
     ai_prompt: `Считать нарушением любые политические темы.
 
 Нарушение:
@@ -48,8 +48,8 @@ export const RULE_TEMPLATES = [
   {
     id: "aggression",
     name: "Оскорбления и агрессия",
-    description:
-      "Запрещены оскорбления, унижение, дискриминация и агрессия в адрес людей",
+    comment:
+      "Будьте вежливы — оскорбления, унижение и агрессия в адрес участников запрещены.",
     ai_prompt: `Считать нарушением агрессию, оскорбления, унижение и дискриминацию, направленные на участников общения или конкретных людей.
 
 Нарушение:
@@ -72,7 +72,7 @@ export const RULE_TEMPLATES = [
   {
     id: "religion",
     name: "Религиозные темы",
-    description: "Запрещено любое обсуждение религии",
+    comment: "Религиозные темы в этом чате не обсуждаются.",
     ai_prompt: `Считать нарушением любые религиозные темы.
 
 Нарушение:
@@ -96,7 +96,7 @@ export const RULE_TEMPLATES = [
   {
     id: "spam-flood",
     name: "Спам и флуд",
-    description: "Запрещены спам, флуд и бессмысленный шум",
+    comment: "Пожалуйста, не флудите и не спамьте в чате.",
     ai_prompt: `Считать нарушением спам, флуд и бессмысленный шум.
 
 Нарушение:
@@ -120,7 +120,7 @@ export const RULE_TEMPLATES = [
   {
     id: "scams",
     name: "Мошенничество и фишинг",
-    description: "Запрещены мошенничество, фишинг и обманчивые предложения",
+    comment: "Не распространяйте мошеннические ссылки и обманные предложения.",
     ai_prompt: `Считать нарушением мошенничество, фишинг и обманчивые предложения.
 
 Нарушение:
@@ -143,7 +143,7 @@ export const RULE_TEMPLATES = [
   {
     id: "gambling",
     name: "Азартные игры",
-    description: "Запрещены азартные игры, ставки и их продвижение",
+    comment: "Реклама азартных игр и ставок в чате запрещена.",
     ai_prompt: `Считать нарушением азартные игры, ставки и их продвижение.
 
 Нарушение:
@@ -165,7 +165,8 @@ export const RULE_TEMPLATES = [
   {
     id: "dm-offers",
     name: "Офферы в личные сообщения",
-    description: "Запрещены навязчивые предложения с переводом в ЛС",
+    comment:
+      "Администраторы не приглашают в личные сообщения — опишите предложение в чате.",
     ai_prompt: `Считать нарушением навязчивые предложения с призывом перейти в личные сообщения без запроса и без нормального описания в чате.
 
 Нарушение:
@@ -192,7 +193,7 @@ export type RuleTemplateId = (typeof RULE_TEMPLATES)[number]["id"];
 export type RuleTemplateCatalogItem = {
   id: RuleTemplateId;
   name: string;
-  description: string;
+  comment: string;
   delete_on_violation: boolean;
   ban_on_violation: boolean;
   warnings_before_ban: number | null;
@@ -217,7 +218,7 @@ export async function listRuleTemplatesForChat(
   return RULE_TEMPLATES.map((template) => ({
     id: template.id,
     name: template.name,
-    description: template.description,
+    comment: template.comment,
     delete_on_violation: template.delete_on_violation,
     ban_on_violation: template.ban_on_violation,
     warnings_before_ban: template.warnings_before_ban,
