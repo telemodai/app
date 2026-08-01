@@ -13,7 +13,7 @@ Repository: [github.com/telemodai/app](https://github.com/telemodai/app)
 - **AI moderation** — message analysis via an OpenAI-compatible API (OpenAI, OpenRouter, Polza, etc.)
 - **Per-chat rules** — a dedicated rule set per chat; presets from a catalog; per-rule delete/ban/warnings
 - **Moderator actions** — warnings, deletion, and bans according to each rule
-- **Silent mode** — log decisions in the app only, no actions in Telegram
+- **Silent mode** — full moderation (delete, warn, ban) without posting messages to the chat
 - **Bot team** — owner/manager roles, join via access code
 - **Webhooks** — status: Working / Disabled / Problem
 - **Logs, statistics, audit** — moderation actions and model decisions per bot

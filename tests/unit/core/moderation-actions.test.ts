@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { planViolationModeration } from "../../../server/core/moderation-actions";
 
 describe("planViolationModeration", () => {
-  test("silent mode logs but skips all Telegram actions", () => {
+  test("silent mode runs moderation APIs but skips chat messages", () => {
     const plan = planViolationModeration({
       silentMode: true,
       rule: {
@@ -15,8 +15,8 @@ describe("planViolationModeration", () => {
 
     expect(plan.logBan).toBe(true);
     expect(plan.logDelete).toBe(true);
-    expect(plan.telegramBan).toBe(false);
-    expect(plan.telegramDelete).toBe(false);
+    expect(plan.telegramBan).toBe(true);
+    expect(plan.telegramDelete).toBe(true);
     expect(plan.telegramWarning).toBe(false);
     expect(plan.logAudit).toBe(false);
   });

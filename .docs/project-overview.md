@@ -21,7 +21,7 @@ Manual moderation does not scale; generic bot filters miss context. Teams need p
 
 - **Per-bot rule library** with presets (ads, politics, aggression, scams, etc.)
 - **Per-chat rule subsets** — same bot, different chats, different policies
-- **Actions:** warn / delete / ban per rule; silent mode for dry-run logging
+- **Actions:** warn / delete / ban per rule; silent mode runs moderation without posting to the chat
 - **Team access:** owner + managers via access codes; Telegram login (no separate passwords)
 - **Observability:** dashboard, bot statistics, moderation audit trail
 - **i18n:** English default admin UI + Russian; browser locale detection; footer language switcher

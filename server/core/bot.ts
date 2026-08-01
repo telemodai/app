@@ -575,7 +575,9 @@ export class TelegramBot {
 
         if (plan.telegramBan) {
           await this.banUser(message.chat.id, message.from.id, ruleDisplayName);
+        }
 
+        if (plan.telegramBan && !chatConfig.silent_mode) {
           const banText = renderBotMessage(this.banTemplate, {
             user_mention: buildUserMention(message.from),
             user_name: buildUserName(message.from),
@@ -586,11 +588,7 @@ export class TelegramBot {
         }
 
         logger.warn(
-          `Пользователь ${message.from.id} ${
-            plan.telegramBan ? "забанен" : "would be banned (silent)"
-          } в чате ${message.chat.id} после ${
-            userContext.user_warnings
-          } предупреждений`
+          `Пользователь ${message.from.id} забанен в чате ${message.chat.id} после ${userContext.user_warnings} предупреждений`
         );
       } else if (plan.logWarning) {
         await this.contextService.handleWarning(

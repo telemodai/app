@@ -289,7 +289,7 @@
         "unknown": "Unknown"
       },
       "silentModeValues": {
-        "monitorOnly": "Monitor Only",
+        "monitorOnly": "Silent",
         "fullModeration": "Full Moderation"
       },
       "editModal": {
@@ -297,8 +297,8 @@
         "silentModeTitle": "Silent Mode",
         "enableSilentMode": "Enable Silent Mode",
         "silentModeHelpTitle": "Silent Mode:",
-        "silentModeEnabled": "Enabled: violations logged to DB only — no Telegram delete, ban, or warning messages",
-        "silentModeDisabled": "Disabled: per-rule actions apply (delete, warn, ban as configured on each rule)",
+        "silentModeEnabled": "Enabled: moderation runs (delete, warn, ban per rule) but the bot sends no messages to the chat",
+        "silentModeDisabled": "Disabled: per-rule actions apply, including warning and ban messages in the chat",
         "serviceMessagesTitle": "Service messages",
         "enableServiceMessageCleanup": "Delete service messages",
         "serviceMessageMemberJoined": "Member joined",
