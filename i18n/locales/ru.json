@@ -289,7 +289,7 @@
         "unknown": "Неизвестно"
       },
       "silentModeValues": {
-        "monitorOnly": "Только мониторинг",
+        "monitorOnly": "Тихий",
         "fullModeration": "Полная модерация"
       },
       "editModal": {
@@ -297,8 +297,8 @@
         "silentModeTitle": "Тихий режим",
         "enableSilentMode": "Включить тихий режим",
         "silentModeHelpTitle": "Тихий режим:",
-        "silentModeEnabled": "Включён: нарушения только в БД — без удаления, бана и предупреждений в Telegram",
-        "silentModeDisabled": "Выключен: действия по каждому правилу (удаление, предупреждение, бан — как настроено в правиле)",
+        "silentModeEnabled": "Включён: модерация работает (удаление, предупреждения, бан по правилам), но бот не пишет в чат",
+        "silentModeDisabled": "Выключен: действия по правилам, включая сообщения о предупреждениях и бане в чате",
         "serviceMessagesTitle": "Системные сообщения",
         "enableServiceMessageCleanup": "Удалять системные сообщения",
         "serviceMessageMemberJoined": "Вход в группу",

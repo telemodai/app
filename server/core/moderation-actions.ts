@@ -28,7 +28,8 @@ const DEFAULT_WARNINGS_BEFORE_BAN = 3;
 
 /**
  * Decide which DB logs and Telegram actions to run for a violation.
- * silent_mode suppresses all Telegram side effects but keeps DB audit trail.
+ * silent_mode suppresses outgoing chat messages (warnings, ban notices) but not
+ * moderation API calls (deleteMessage, banChatMember).
  */
 export function planViolationModeration(input: {
   silentMode: boolean;
@@ -46,16 +47,16 @@ export function planViolationModeration(input: {
   const logWarning = input.rule.ban_on_violation && !shouldBan;
   const logDelete = input.rule.delete_on_violation;
   const logAudit = !logWarning && !logBan && !logDelete;
-  const telegramEnabled = !input.silentMode;
+  const chatMessagesEnabled = !input.silentMode;
 
   return {
     logWarning,
     logBan,
     logDelete,
     logAudit,
-    telegramWarning: telegramEnabled && logWarning,
-    telegramBan: telegramEnabled && logBan,
-    telegramDelete: telegramEnabled && logDelete,
+    telegramWarning: chatMessagesEnabled && logWarning,
+    telegramBan: logBan,
+    telegramDelete: logDelete,
     warningsBeforeBan,
   };
 }
