@@ -36,7 +36,7 @@ export class InMemoryRuleRepository {
       id: ruleData.id ?? crypto.randomUUID(),
       chat_id: chatInternalId,
       name: ruleData.name,
-      description: ruleData.description,
+      comment: ruleData.comment,
       ai_prompt: ruleData.ai_prompt,
       is_active: true,
       delete_on_violation: ruleData.delete_on_violation ?? false,
@@ -63,7 +63,7 @@ export class InMemoryRuleRepository {
     const updated: Rule = {
       ...existing,
       name: updateData.name ?? existing.name,
-      description: updateData.description ?? existing.description,
+      comment: updateData.comment ?? existing.comment,
       ai_prompt: updateData.ai_prompt ?? existing.ai_prompt,
       is_active: updateData.is_active ?? existing.is_active,
       delete_on_violation:

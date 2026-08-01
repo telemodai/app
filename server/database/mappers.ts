@@ -23,7 +23,7 @@ export function toRule(row: RuleRow): Rule {
     id: row.id,
     chat_id: row.chatId,
     name: row.name,
-    description: row.description,
+    comment: row.comment,
     ai_prompt: row.aiPrompt,
     is_active: row.isActive,
     delete_on_violation: row.deleteOnViolation,

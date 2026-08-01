@@ -16,7 +16,7 @@ export interface Bot {
 export interface Rule {
   id: string;
   name: string;
-  description: string;
+  comment: string | null;
   ai_prompt: string;
 }
 

@@ -11,7 +11,7 @@ describe("RuleRepository", () => {
     const created = await repo.create(TEST_BOT_ID, TEST_CHAT_INTERNAL_ID, {
       id: "spam",
       name: "Spam",
-      description: "No spam",
+      comment: "No spam",
       ai_prompt: "detect spam",
       delete_on_violation: true,
       ban_on_violation: true,
@@ -37,7 +37,7 @@ describe("RuleRepository", () => {
     await repo.create(TEST_BOT_ID, TEST_CHAT_INTERNAL_ID, {
       id: "spam",
       name: "Spam",
-      description: "No spam",
+      comment: "No spam",
       ai_prompt: "detect spam",
     });
 
@@ -53,7 +53,7 @@ describe("RuleRepository", () => {
     await repo.create(TEST_BOT_ID, TEST_CHAT_INTERNAL_ID, {
       id: "ads",
       name: "Ads",
-      description: "No ads",
+      comment: "No ads",
       ai_prompt: "detect ads",
     });
 
@@ -71,7 +71,7 @@ describe("RuleRepository", () => {
     await repo.create(TEST_BOT_ID, TEST_CHAT_INTERNAL_ID, {
       id: "temp",
       name: "Temp",
-      description: "x",
+      comment: "x",
       ai_prompt: "x",
     });
 

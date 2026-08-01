@@ -71,7 +71,7 @@ describe("buildModerationUserPrompt", () => {
         {
           id: "spam",
           name: "Spam",
-          description: "No spam",
+          comment: "No spam",
           ai_prompt: "commercial links without permission",
         },
       ]
@@ -116,7 +116,7 @@ describe("analyzeMessage", () => {
         {
           id: "spam",
           name: "Spam",
-          description: "No spam",
+          comment: "No spam",
           ai_prompt: "detect spam",
         },
       ],
@@ -160,7 +160,7 @@ describe("analyzeMessage", () => {
         {
           id: "spam",
           name: "Spam",
-          description: "No spam",
+          comment: "No spam",
           ai_prompt: "commercial ads",
         },
       ],

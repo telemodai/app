@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   const input: RuleAssistInput = {
     name: typeof body.name === "string" ? body.name : undefined,
-    description: typeof body.description === "string" ? body.description : "",
+    comment: typeof body.comment === "string" ? body.comment : "",
     ai_prompt: typeof body.ai_prompt === "string" ? body.ai_prompt : "",
     instruction: typeof body.instruction === "string" ? body.instruction : "",
   };

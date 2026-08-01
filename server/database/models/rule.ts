@@ -2,7 +2,7 @@ export interface Rule {
   id: string;
   chat_id: number;
   name: string;
-  description: string;
+  comment: string | null;
   ai_prompt: string;
   is_active: boolean;
   delete_on_violation: boolean;
@@ -15,7 +15,7 @@ export interface Rule {
 export interface CreateRuleRequest {
   id?: string;
   name: string;
-  description: string;
+  comment?: string | null;
   ai_prompt: string;
   delete_on_violation?: boolean;
   ban_on_violation?: boolean;
@@ -24,7 +24,7 @@ export interface CreateRuleRequest {
 
 export interface UpdateRuleRequest {
   name?: string;
-  description?: string;
+  comment?: string | null;
   ai_prompt?: string;
   is_active?: boolean;
   delete_on_violation?: boolean;

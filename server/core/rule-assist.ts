@@ -11,14 +11,14 @@ import type { TokenUsage } from "./llm-cost";
 
 export type RuleAssistInput = {
   name?: string;
-  description: string;
+  comment: string;
   ai_prompt: string;
   instruction: string;
 };
 
 export type RuleAssistResult = {
   name: string;
-  description: string;
+  comment: string;
   ai_prompt: string;
 };
 
@@ -29,9 +29,9 @@ export type RewriteRuleTextOptions = {
 };
 
 export function isRuleAssistDraftMode(
-  input: Pick<RuleAssistInput, "description" | "ai_prompt">
+  input: Pick<RuleAssistInput, "comment" | "ai_prompt">
 ): boolean {
-  return !input.description.trim() && !input.ai_prompt.trim();
+  return !input.comment.trim() && !input.ai_prompt.trim();
 }
 
 export function buildRuleAssistSystemPrompt(): string {
@@ -39,10 +39,10 @@ export function buildRuleAssistSystemPrompt(): string {
 
 The operator provides:
 - optional rule name (context only)
-- current short description and current rule text (criteria the AI uses when checking messages) — either or both may be empty
+- current violator-facing comment and current rule text (criteria the AI uses when checking messages) — either or both may be empty
 - a request in plain language
 
-When description and rule text are empty:
+When comment and rule text are empty:
 - Treat the request as a specification for a new rule. Draft both fields from scratch in the requested language (Russian or English).
 
 When any current text exists:
@@ -52,13 +52,13 @@ When any current text exists:
 Always:
 - Provide a short rule **name** for the rules list (few words, same language as the rule).
 - Write clear plain-language criteria: what counts as a violation and what is allowed (use "Violation:" / "Not a violation:" or "Нарушение:" / "Не нарушение:" sections when helpful, matching existing product templates).
-- Provide a short one-line description for humans and a fuller rule text for the moderation AI.
+- Provide a short **comment** aimed at chat violators (shown in warning/ban messages via {rule_comment}) and a fuller rule text for the moderation AI.
 - Start rule text with a clear framing line when appropriate (e.g. "Treat … as a violation" / "Считать нарушением …").
 
 Respond with JSON only, no markdown fences or extra text:
 {
   "name": "short rule title",
-  "description": "short one-line summary",
+  "comment": "short note for violators in chat",
   "ai_prompt": "full rule text for the moderation AI"
 }`;
 }
@@ -74,8 +74,8 @@ export function buildRuleAssistUserPrompt(input: RuleAssistInput): string {
 
   return `${nameBlock}${mode}
 
-Current description:
-${input.description.trim() || "(empty)"}
+Current comment for violators:
+${input.comment.trim() || "(empty)"}
 
 Current rule text:
 ${input.ai_prompt.trim() || "(empty)"}
@@ -92,21 +92,21 @@ export function parseRuleAssistResponse(raw: string): RuleAssistResult {
 
   const parsed = JSON.parse(jsonMatch[0]) as {
     name?: unknown;
-    description?: unknown;
+    comment?: unknown;
     ai_prompt?: unknown;
   };
 
   const name = typeof parsed.name === "string" ? parsed.name.trim() : "";
-  const description =
-    typeof parsed.description === "string" ? parsed.description.trim() : "";
+  const comment =
+    typeof parsed.comment === "string" ? parsed.comment.trim() : "";
   const ai_prompt =
     typeof parsed.ai_prompt === "string" ? parsed.ai_prompt.trim() : "";
 
-  if (!name || !description || !ai_prompt) {
-    throw new Error("LLM response missing name, description, or ai_prompt");
+  if (!name || !ai_prompt) {
+    throw new Error("LLM response missing name or ai_prompt");
   }
 
-  return { name, description, ai_prompt };
+  return { name, comment, ai_prompt };
 }
 
 export function validateRuleAssistInput(

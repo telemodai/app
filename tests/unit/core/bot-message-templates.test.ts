@@ -15,6 +15,7 @@ describe("bot-message-templates", () => {
       user_mention: "<a>@alice</a>",
       user_name: "Alice",
       rule_name: "Spam",
+      rule_comment: "Please avoid spam.",
       warnings_current: "2",
       warnings_max: "3",
       warnings_left: "1",
@@ -32,6 +33,7 @@ describe("bot-message-templates", () => {
       user_mention: "<a>@bob</a>",
       user_name: "Bob",
       rule_name: "Ads",
+      rule_comment: "",
       warnings_current: "1",
       warnings_max: "3",
       warnings_left: "2",
@@ -47,6 +49,7 @@ describe("bot-message-templates", () => {
       user_mention: "<a>@bob</a>",
       user_name: "Bob",
       rule_name: "Ads",
+      rule_comment: "",
       warnings_current: "1",
       warnings_max: "3",
       warnings_left: "2",
@@ -60,12 +63,14 @@ describe("bot-message-templates", () => {
       user_mention: "<a>@carol</a>",
       user_name: "Carol",
       rule_name: "Hate",
+      rule_comment: "Be respectful.",
     });
 
     expect(text).toContain("Hate");
+    expect(text).toContain("Be respectful.");
     expect(text).not.toContain("{warnings");
     expect(text).toEndWith("<a>@carol</a>");
-    expect(text).toMatch(/Hate<\/b>\n\n<a>@carol<\/a>$/);
+    expect(text).toMatch(/Hate<\/b>\nBe respectful\.\n\n<a>@carol<\/a>$/);
   });
 
   test("separates inline user_mention from glued rule_name in ban template", () => {
@@ -75,6 +80,7 @@ describe("bot-message-templates", () => {
       user_mention: mention,
       user_name: "MacArtur",
       rule_name: "Оскорбления и агрессия",
+      rule_comment: "",
     });
 
     expect(text).toContain("</b>\n\n@MacArtur");
