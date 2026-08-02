@@ -57,6 +57,10 @@ describe("buildModerationUserPrompt", () => {
     const prompt = buildModerationUserPrompt(
       {
         message: "buy now",
+        user_id: 424242,
+        username: "alice",
+        chat_id: 1,
+        rules: ["spam"],
         context: {
           user_warnings: 1,
           chat_history: [
@@ -80,11 +84,29 @@ describe("buildModerationUserPrompt", () => {
     expect(prompt).toContain("MESSAGE TO ANALYZE");
     expect(prompt).toContain("[spam]");
     expect(prompt).toContain("commercial links without permission");
+    expect(prompt).toContain("Telegram user id: 424242");
+    expect(prompt).toContain("Telegram username: @alice");
     expect(prompt).toContain("Previous warnings: 1");
     expect(prompt).toContain('"text":"hello"');
     expect(prompt).toContain("2026-07-11T10:00:00.000Z");
     expect(prompt).not.toContain("JSON response only");
     expect(prompt).not.toContain("You are a chat moderator");
+  });
+
+  test("shows (none) when Telegram username is missing", () => {
+    const prompt = buildModerationUserPrompt(
+      {
+        message: "hi",
+        user_id: 99,
+        chat_id: 1,
+        rules: [],
+        context: { user_warnings: 0, chat_history: [] },
+      },
+      []
+    );
+
+    expect(prompt).toContain("Telegram user id: 99");
+    expect(prompt).toContain("Telegram username: (none)");
   });
 });
 
@@ -102,6 +124,10 @@ describe("analyzeMessage", () => {
     const result = await analyzeMessage(
       {
         message: "buy now",
+        user_id: 111,
+        username: "bob",
+        chat_id: 1,
+        rules: ["spam"],
         context: {
           user_warnings: 1,
           chat_history: [
@@ -154,6 +180,10 @@ describe("analyzeMessage", () => {
     await analyzeMessage(
       {
         message: "hello",
+        user_id: 555,
+        username: "carol",
+        chat_id: 1,
+        rules: ["spam"],
         context: { user_warnings: 0, chat_history: [] },
       },
       [
@@ -179,6 +209,8 @@ describe("analyzeMessage", () => {
 
     expect(system).toContain("chat moderator");
     expect(user).toContain("MESSAGE TO ANALYZE");
+    expect(user).toContain("Telegram user id: 555");
+    expect(user).toContain("Telegram username: @carol");
     expect(user).not.toContain("JSON response only");
     expect(system).toContain("chat_history");
   });
@@ -195,6 +227,9 @@ describe("analyzeMessage", () => {
     const result = await analyzeMessage(
       {
         message: "hello team",
+        user_id: 777,
+        chat_id: 1,
+        rules: [],
         context: {
           user_warnings: 0,
           chat_history: [],

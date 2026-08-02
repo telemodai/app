@@ -32,7 +32,9 @@ export interface ModerationLog {
 
 export interface AIModerationRequest {
   message: string;
+  /** Telegram user id (message.from.id), not an internal DB id. */
   user_id: number;
+  /** Telegram @username without @; omitted when the user has none. */
   username?: string;
   chat_id: number;
   rules: string[];

@@ -61,8 +61,14 @@ export function buildModerationUserPrompt(
     .join("\n");
 
   const historyJson = JSON.stringify(request.context.chat_history);
+  // Telegram identity only (message.from.id / .username) — for rule exemptions by author.
+  const telegramUsername = request.username?.trim()
+    ? `@${request.username.trim()}`
+    : "(none)";
 
   return `USER CONTEXT:
+- Telegram user id: ${request.user_id}
+- Telegram username: ${telegramUsername}
 - Previous warnings: ${request.context.user_warnings}
 - Recent messages (oldest first): ${historyJson}
 
