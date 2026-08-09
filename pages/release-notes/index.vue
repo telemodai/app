@@ -7,13 +7,13 @@
       :subtitle="t('page.releaseNotes.subtitle')"
     />
 
-    <div v-if="loading" class="text-gray-500">{{ t("releaseNotes.loading") }}</div>
+    <div v-if="loading" class="text-fg-muted">{{ t("releaseNotes.loading") }}</div>
 
-    <div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 rounded p-4">
+    <UiAppAlert v-else-if="error" variant="danger">
       {{ error }}
-    </div>
+    </UiAppAlert>
 
-    <div v-else-if="releases.length === 0" class="text-gray-500 text-center py-12">
+    <div v-else-if="releases.length === 0" class="text-fg-muted text-center py-12">
       {{ t("releaseNotes.empty") }}
     </div>
 
@@ -21,19 +21,21 @@
       <article
         v-for="release in releases"
         :key="release.tag"
-        class="border-b border-gray-200 pb-10 last:border-b-0"
+        class="border-b border-line pb-10 last:border-b-0"
       >
         <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
-          <h3 class="text-xl font-semibold text-gray-900">{{ release.tag }}</h3>
-          <time class="text-sm text-gray-500">{{ formatDate(release.date) }}</time>
+          <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+            {{ release.tag }}
+          </h3>
+          <time class="text-body text-fg-muted">{{ formatDate(release.date) }}</time>
         </div>
 
-        <p v-if="isSelfHosted" class="mb-5 text-sm">
+        <p v-if="isSelfHosted" class="mb-5 text-body">
           <a
             :href="release.githubReleaseUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-blue-600 hover:underline"
+            class="text-accent hover:underline"
           >
             {{ t("releaseNotes.githubLink") }}
           </a>
@@ -44,14 +46,14 @@
           :key="`${release.tag}-${section.title}`"
           class="mb-5"
         >
-          <h4 class="text-sm font-semibold uppercase tracking-wide text-gray-700 mb-2">
+          <h4 class="text-body font-semibold uppercase tracking-wide text-fg-muted mb-2">
             {{ section.title }}
           </h4>
           <ul class="space-y-2">
             <li
               v-for="(item, index) in section.items"
               :key="`${release.tag}-${section.title}-${index}`"
-              class="text-gray-800 text-sm leading-relaxed pl-4 border-l-2 border-gray-200"
+              class="text-fg text-body leading-relaxed pl-4 border-l-2 border-line"
             >
               {{ item }}
             </li>
@@ -62,28 +64,28 @@
 
     <nav
       v-if="pagination.total_pages > 1"
-      class="flex items-center justify-between border-t border-gray-200 pt-6 mt-8"
+      class="flex items-center justify-between border-t border-line pt-6 mt-8"
       :aria-label="t('page.releaseNotes.paginationNav')"
     >
-      <button
+      <UiAppButton
         type="button"
-        class="px-3 py-2 border rounded text-sm disabled:opacity-40 hover:bg-gray-50"
+        variant="ghost"
         :disabled="pagination.page <= 1"
         @click="goToPage(pagination.page - 1)"
       >
         {{ t("releaseNotes.back") }}
-      </button>
-      <span class="text-sm text-gray-600">
+      </UiAppButton>
+      <span class="text-body text-fg-muted">
         {{ t("common.pageOf", { page: pagination.page, totalPages: pagination.total_pages }) }}
       </span>
-      <button
+      <UiAppButton
         type="button"
-        class="px-3 py-2 border rounded text-sm disabled:opacity-40 hover:bg-gray-50"
+        variant="ghost"
         :disabled="pagination.page >= pagination.total_pages"
         @click="goToPage(pagination.page + 1)"
       >
         {{ t("releaseNotes.forward") }}
-      </button>
+      </UiAppButton>
     </nav>
   </div>
 </template>

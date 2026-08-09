@@ -7,86 +7,61 @@
       :subtitle="chatName || t('page.moderation.chatSubtitle', { chatId: telegramChatId })"
     >
       <template #actions>
-        <button
-          type="button"
-          class="px-3 py-2 border rounded text-sm hover:bg-gray-50"
-          @click="openTemplateLibrary"
-        >
+        <UiAppButton variant="ghost" @click="openTemplateLibrary">
           {{ t("moderation.addFromTemplate") }}
-        </button>
-        <button
-          type="button"
-          class="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
-          @click="openCreateModal"
-        >
+        </UiAppButton>
+        <UiAppButton variant="primary" @click="openCreateModal">
           {{ t("moderation.addRule") }}
-        </button>
+        </UiAppButton>
       </template>
     </LayoutPageHeader>
 
-    <div
-      v-if="templateError"
-      class="bg-red-50 border border-red-200 text-red-700 rounded p-3 text-sm"
-    >
+    <UiAppAlert v-if="templateError" variant="danger">
       {{ templateError }}
-    </div>
+    </UiAppAlert>
 
-    <div
-      v-if="ruleActionError"
-      class="bg-red-50 border border-red-200 text-red-700 rounded p-3 text-sm"
-    >
+    <UiAppAlert v-if="ruleActionError" variant="danger">
       {{ ruleActionError }}
-    </div>
+    </UiAppAlert>
 
-    <div
-      v-if="userActionError"
-      class="bg-red-50 border border-red-200 text-red-700 rounded p-3 text-sm"
-    >
+    <UiAppAlert v-if="userActionError" variant="danger">
       {{ userActionError }}
-    </div>
+    </UiAppAlert>
 
-    <div v-if="loading" class="text-gray-500">{{ t("moderation.loadingRules") }}</div>
+    <div v-if="loading" class="text-fg-muted">{{ t("moderation.loadingRules") }}</div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div
+      <UiAppCard
         v-for="rule in rules"
         :key="rule.id"
-        class="bg-white border rounded p-4"
+        class="!p-4"
       >
         <div class="flex items-start justify-between mb-2 gap-2">
           <div>
-            <h3 class="font-medium">{{ rule.name }}</h3>
+            <h3 class="font-medium text-fg">{{ rule.name }}</h3>
           </div>
           <div class="flex gap-2 shrink-0">
-            <button
-              type="button"
-              class="text-blue-600 text-sm hover:underline"
-              @click="openEditModal(rule)"
-            >
+            <UiAppButton variant="link" @click="openEditModal(rule)">
               {{ t("common.edit") }}
-            </button>
-            <button
-              type="button"
-              class="text-red-600 text-sm hover:underline"
-              @click="deleteRule(rule)"
-            >
+            </UiAppButton>
+            <UiAppButton variant="destructive" @click="deleteRule(rule)">
               {{ t("common.delete") }}
-            </button>
+            </UiAppButton>
           </div>
         </div>
 
-        <p v-if="rule.comment" class="text-sm text-gray-600 mb-2">{{ rule.comment }}</p>
+        <p v-if="rule.comment" class="text-body text-fg-muted mb-2">{{ rule.comment }}</p>
 
-        <div class="text-xs text-gray-500 space-y-1">
+        <div class="text-caption text-fg-muted space-y-1 normal-case tracking-normal">
           <div>
             {{ t("moderation.deleteOnViolation") }}
-            <span class="font-medium">{{
-              rule.delete_on_violation ? t("common.yes") : t("common.no")
-            }}</span>
+            <span class="font-medium text-fg">
+              {{ rule.delete_on_violation ? t("common.yes") : t("common.no") }}
+            </span>
           </div>
           <div>
             {{ t("moderation.banOnViolation") }}
-            <span class="font-medium">
+            <span class="font-medium text-fg">
               <template v-if="rule.ban_on_violation">
                 {{ t("common.yes") }} {{ t("moderation.afterWarnings", { count: rule.warnings_before_ban ?? 3 }) }}
               </template>
@@ -96,39 +71,40 @@
             </span>
           </div>
         </div>
-      </div>
+      </UiAppCard>
     </div>
 
-    <div v-if="!loading && rules.length === 0" class="text-gray-500">
+    <div v-if="!loading && rules.length === 0" class="text-fg-muted">
       {{ t("moderation.emptyRules") }}
     </div>
 
-    <div class="bg-white border rounded p-4">
+    <UiAppCard class="!p-4">
       <div class="flex items-center justify-between gap-3 mb-3">
-        <h3 class="font-medium">{{ t("moderation.chatUsers.title") }}</h3>
-        <button
-          type="button"
-          class="text-sm text-blue-600 hover:underline"
+        <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+          {{ t("moderation.chatUsers.title") }}
+        </h3>
+        <UiAppButton
+          variant="link"
           :disabled="usersLoading"
           @click="loadUsers()"
         >
           {{ usersLoading ? t("common.loading") : t("common.refresh") }}
-        </button>
+        </UiAppButton>
       </div>
 
-      <p class="text-sm text-gray-500 mb-3">
+      <p class="text-body text-fg-muted mb-3">
         {{ t("moderation.chatUsers.description") }}
       </p>
 
-      <div v-if="usersLoading && !chatUsers.length" class="text-gray-500 text-sm">
+      <div v-if="usersLoading && !chatUsers.length" class="text-fg-muted text-body">
         {{ t("moderation.chatUsers.loading") }}
       </div>
-      <div v-else-if="!chatUsers.length" class="text-gray-500 text-sm">
+      <div v-else-if="!chatUsers.length" class="text-fg-muted text-body">
         {{ t("moderation.chatUsers.empty") }}
       </div>
       <div v-else class="overflow-x-auto">
-        <table class="min-w-full text-sm">
-          <thead class="text-left text-gray-500 border-b">
+        <table class="min-w-full text-body">
+          <thead class="text-left text-fg-muted border-b border-line">
             <tr>
               <th class="py-2 pr-4 font-medium">{{ t("moderation.chatUsers.user") }}</th>
               <th class="py-2 pr-4 font-medium">{{ t("moderation.chatUsers.warnings") }}</th>
@@ -136,49 +112,48 @@
               <th class="py-2 font-medium">{{ t("moderation.chatUsers.actions") }}</th>
             </tr>
           </thead>
-          <tbody class="divide-y">
+          <tbody class="divide-y divide-line">
             <tr v-for="row in chatUsers" :key="row.user_id">
               <td class="py-2 pr-4 align-top">
-                <div class="font-medium">
+                <div class="font-medium text-fg">
                   {{
                     row.username
                       ? `@${row.username}`
                       : row.first_name || t("moderation.chatUsers.userFallback", { userId: row.user_id })
                   }}
                 </div>
-                <div class="text-xs text-gray-500">{{ row.user_id }}</div>
+                <div class="text-caption text-fg-muted normal-case tracking-normal">
+                  {{ row.user_id }}
+                </div>
               </td>
-              <td class="py-2 pr-4 align-top">{{ row.warnings_count }}</td>
+              <td class="py-2 pr-4 align-top text-fg">{{ row.warnings_count }}</td>
               <td class="py-2 pr-4 align-top">
-                <span
-                  v-if="row.is_banned"
-                  class="inline-flex px-2 py-0.5 rounded text-xs bg-red-100 text-red-800"
-                >
+                <UiAppBadge v-if="row.is_banned" class="text-danger">
                   {{ t("moderation.chatUsers.banned") }}
-                </span>
-                <span v-else class="text-gray-500">{{ t("common.dash") }}</span>
+                </UiAppBadge>
+                <span v-else class="text-fg-muted">{{ t("common.dash") }}</span>
               </td>
               <td class="py-2 align-top">
                 <div class="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    class="text-xs px-2 py-1 border rounded hover:bg-gray-50 disabled:opacity-50"
+                  <UiAppButton
+                    variant="ghost"
+                    class="!px-2 !py-1 !text-caption uppercase tracking-wide"
                     :disabled="userActionBusy === row.user_id || row.warnings_count === 0"
                     @click="runUserAction(row.user_id, 'reset-warnings')"
                   >
                     {{ t("moderation.chatUsers.resetWarn") }}
-                  </button>
-                  <button
-                    type="button"
-                    class="text-xs px-2 py-1 border rounded hover:bg-gray-50 disabled:opacity-50"
+                  </UiAppButton>
+                  <UiAppButton
+                    variant="ghost"
+                    class="!px-2 !py-1 !text-caption uppercase tracking-wide"
                     :disabled="userActionBusy === row.user_id || !row.is_banned"
                     @click="runUserAction(row.user_id, 'unban')"
                   >
                     {{ t("moderation.chatUsers.unban") }}
-                  </button>
-                  <button
-                    type="button"
-                    class="text-xs px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                  </UiAppButton>
+                  <UiAppButton
+                    variant="primary"
+                    class="!px-2 !py-1 !text-caption uppercase tracking-wide"
                     :disabled="
                       userActionBusy === row.user_id ||
                       (row.warnings_count === 0 && !row.is_banned)
@@ -186,7 +161,7 @@
                     @click="runUserAction(row.user_id, 'pardon')"
                   >
                     {{ t("moderation.chatUsers.pardon") }}
-                  </button>
+                  </UiAppButton>
                 </div>
               </td>
             </tr>
@@ -195,9 +170,9 @@
 
         <div
           v-if="usersPagination.total_pages > 1"
-          class="flex items-center justify-between gap-3 mt-4 pt-3 border-t text-sm"
+          class="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-line text-body"
         >
-          <span class="text-gray-500">
+          <span class="text-fg-muted">
             {{
               t("common.pageOfWithTotal", {
                 page: usersPagination.page,
@@ -207,53 +182,53 @@
             }}
           </span>
           <div class="flex gap-2">
-            <button
-              type="button"
-              class="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50"
+            <UiAppButton
+              variant="ghost"
+              class="!px-3 !py-1"
               :disabled="usersLoading || usersPagination.page <= 1"
               @click="goToUsersPage(usersPagination.page - 1)"
             >
               {{ t("common.previous") }}
-            </button>
-            <button
-              type="button"
-              class="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50"
+            </UiAppButton>
+            <UiAppButton
+              variant="ghost"
+              class="!px-3 !py-1"
               :disabled="
                 usersLoading || usersPagination.page >= usersPagination.total_pages
               "
               @click="goToUsersPage(usersPagination.page + 1)"
             >
               {{ t("common.next") }}
-            </button>
+            </UiAppButton>
           </div>
         </div>
       </div>
-    </div>
+    </UiAppCard>
 
-    <div
-      v-if="showTemplateLibrary"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    <UiAppModal
+      :open="showTemplateLibrary"
+      title-id="template-library-title"
+      @close="closeTemplateLibrary"
     >
-      <div
-        class="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
-      >
+      <div class="w-full max-w-2xl">
         <div class="flex items-start justify-between gap-4 mb-4">
           <div>
-            <h3 class="text-lg font-semibold">{{ t("moderation.templateLibrary.title") }}</h3>
-            <p class="text-sm text-gray-600 mt-1">
+            <h3
+              id="template-library-title"
+              class="font-display text-heading-sm tracking-[-0.035em] text-fg"
+            >
+              {{ t("moderation.templateLibrary.title") }}
+            </h3>
+            <p class="text-body text-fg-muted mt-1">
               {{ t("moderation.templateLibrary.description") }}
             </p>
           </div>
-          <button
-            type="button"
-            class="text-sm text-gray-500 hover:text-gray-800"
-            @click="closeTemplateLibrary"
-          >
+          <UiAppButton variant="link" @click="closeTemplateLibrary">
             {{ t("common.close") }}
-          </button>
+          </UiAppButton>
         </div>
 
-        <div v-if="templatesLoading" class="text-gray-500 text-sm">
+        <div v-if="templatesLoading" class="text-fg-muted text-body">
           {{ t("moderation.templateLibrary.loading") }}
         </div>
 
@@ -261,23 +236,18 @@
           <div
             v-for="template in templateCatalog"
             :key="template.id"
-            class="border rounded p-4"
+            class="border border-line rounded-card p-4"
           >
             <div class="flex items-start justify-between gap-3">
               <div class="min-w-0">
-                <h4 class="font-medium">{{ template.name }}</h4>
-                <p class="text-sm text-gray-600 mt-1">
+                <h4 class="font-medium text-fg">{{ template.name }}</h4>
+                <p class="text-body text-fg-muted mt-1">
                   {{ template.comment }}
                 </p>
               </div>
-              <button
-                type="button"
-                class="shrink-0 px-3 py-2 rounded text-sm"
-                :class="
-                  template.added
-                    ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                "
+              <UiAppButton
+                variant="primary"
+                class="shrink-0"
                 :disabled="template.added || addingTemplateId === template.id"
                 @click="addTemplate(template.id)"
               >
@@ -288,90 +258,76 @@
                       ? t("common.adding")
                       : t("common.add")
                 }}
-              </button>
+              </UiAppButton>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </UiAppModal>
 
-    <div
-      v-if="showModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-    >
-      <div
-        class="bg-white rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto"
-      >
-        <h3 class="text-lg font-semibold mb-4">
+    <UiAppModal :open="showModal" title-id="rule-modal-title" @close="closeModal">
+      <div class="w-full max-w-lg">
+        <h3
+          id="rule-modal-title"
+          class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-4"
+        >
           {{ editingRule ? t("moderation.ruleModal.editTitle") : t("moderation.ruleModal.addTitle") }}
         </h3>
 
         <form class="space-y-4" @submit.prevent="saveRule">
-          <div
-            v-if="saveError"
-            class="bg-red-50 border border-red-200 text-red-700 rounded p-3 text-sm"
-          >
+          <UiAppAlert v-if="saveError" variant="danger">
             {{ saveError }}
+          </UiAppAlert>
+
+          <div>
+            <label class="block text-body font-medium text-fg mb-1">
+              {{ t("moderation.ruleModal.nameLabel") }}
+            </label>
+            <UiAppInput v-model="form.name" required />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{
-              t("moderation.ruleModal.nameLabel")
-            }}</label>
-            <input
-              v-model="form.name"
-              type="text"
-              class="w-full border rounded px-3 py-2"
-              required
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{
-              t("moderation.ruleModal.commentLabel")
-            }}</label>
-            <p class="text-xs text-gray-500 mb-1">
+            <label class="block text-body font-medium text-fg mb-1">
+              {{ t("moderation.ruleModal.commentLabel") }}
+            </label>
+            <p class="text-caption text-fg-muted mb-1 normal-case tracking-normal">
               {{ t("moderation.ruleModal.commentHint") }}
             </p>
-            <input
-              v-model="form.comment"
-              type="text"
-              class="w-full border rounded px-3 py-2"
-            />
+            <UiAppInput v-model="form.comment" />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{
-              t("moderation.ruleModal.ruleTextLabel")
-            }}</label>
-            <p class="text-xs text-gray-500 mb-1">
+            <label class="block text-body font-medium text-fg mb-1">
+              {{ t("moderation.ruleModal.ruleTextLabel") }}
+            </label>
+            <p class="text-caption text-fg-muted mb-1 normal-case tracking-normal">
               {{ t("moderation.ruleModal.ruleTextHint") }}
             </p>
-            <textarea
+            <UiAppTextarea
               v-model="form.ai_prompt"
-              class="w-full border rounded px-3 py-2"
-              rows="4"
+              :rows="4"
               required
               :placeholder="t('moderation.ruleModal.ruleTextPlaceholder')"
-            ></textarea>
+            />
 
             <div class="mt-2">
-              <button
+              <UiAppButton
                 type="button"
-                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium transition-colors"
+                variant="ghost"
+                class="!rounded-control !text-body normal-case tracking-normal"
                 :class="
                   showAiAssist
-                    ? 'bg-[#f3d4ea] text-[#9d2b7a] ring-1 ring-[#c43d96]/35'
-                    : 'bg-[#fce8f4] text-[#b53592] hover:bg-[#f5d9eb]'
+                    ? 'border-accent text-accent'
+                    : ''
                 "
                 @click="showAiAssist = !showAiAssist"
               >
                 <span aria-hidden="true">🪄</span>
                 {{ t("moderation.ruleModal.aiAssistToggle") }}
-              </button>
+              </UiAppButton>
 
               <div v-if="showAiAssist" class="mt-2 space-y-2">
-                <p class="text-xs text-gray-500">
+                <p class="text-caption text-fg-muted normal-case tracking-normal">
                   {{
                     aiAssistIsDraftMode
                       ? t("moderation.ruleModal.aiAssistHintCreate")
@@ -379,10 +335,9 @@
                   }}
                 </p>
                 <div class="flex gap-2 items-center">
-                  <input
+                  <UiAppInput
                     v-model="aiInstruction"
-                    type="text"
-                    class="flex-1 min-w-0 border rounded px-3 py-2 text-sm"
+                    class="flex-1 min-w-0"
                     :placeholder="
                       aiAssistIsDraftMode
                         ? t('moderation.ruleModal.aiAssistInstructionPlaceholderCreate')
@@ -391,9 +346,10 @@
                     :disabled="aiAssistLoading"
                     @keydown.enter.prevent="submitRuleAssist"
                   />
-                  <button
+                  <UiAppButton
                     type="button"
-                    class="shrink-0 inline-flex items-center justify-center w-10 h-10 border rounded hover:bg-gray-50 disabled:opacity-50"
+                    variant="ghost"
+                    class="!size-10 shrink-0 !p-0"
                     :disabled="aiAssistLoading || !aiInstruction.trim()"
                     :aria-label="t('moderation.ruleModal.aiAssistSubmitAria')"
                     :aria-busy="aiAssistLoading"
@@ -401,7 +357,7 @@
                   >
                     <svg
                       v-if="aiAssistLoading"
-                      class="animate-spin h-5 w-5 text-gray-600"
+                      class="animate-spin h-5 w-5 text-fg-muted"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -422,46 +378,48 @@
                       />
                     </svg>
                     <span v-else class="text-lg leading-none" aria-hidden="true">✨</span>
-                  </button>
+                  </UiAppButton>
                 </div>
-                <p v-if="aiAssistError" class="text-xs text-red-600">
+                <p v-if="aiAssistError" class="text-caption text-danger normal-case tracking-normal">
                   {{ aiAssistError }}
                 </p>
                 <div
                   v-if="ruleVersions.length > 0"
-                  class="flex items-center gap-2 text-xs text-gray-600"
+                  class="flex items-center gap-2 text-caption text-fg-muted normal-case tracking-normal"
                 >
-                  <button
+                  <UiAppButton
                     type="button"
-                    class="px-2 py-1 border rounded hover:bg-gray-50 disabled:opacity-40"
+                    variant="ghost"
+                    class="!px-2 !py-1"
                     :disabled="ruleVersionIndex <= 0"
                     :aria-label="t('common.previous')"
                     @click="goToRuleVersion(ruleVersionIndex - 1)"
                   >
                     ◀
-                  </button>
+                  </UiAppButton>
                   <span>{{
                     t("moderation.ruleModal.aiAssistVersion", {
                       current: ruleVersionIndex + 1,
                       total: ruleVersions.length,
                     })
                   }}</span>
-                  <button
+                  <UiAppButton
                     type="button"
-                    class="px-2 py-1 border rounded hover:bg-gray-50 disabled:opacity-40"
+                    variant="ghost"
+                    class="!px-2 !py-1"
                     :disabled="ruleVersionIndex >= ruleVersions.length - 1"
                     :aria-label="t('common.next')"
                     @click="goToRuleVersion(ruleVersionIndex + 1)"
                   >
                     ▶
-                  </button>
+                  </UiAppButton>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="border-t pt-4 space-y-3">
-            <h4 class="font-medium text-gray-700">{{ t("moderation.ruleModal.actionsTitle") }}</h4>
+          <div class="border-t border-line pt-4 space-y-3">
+            <h4 class="font-medium text-fg">{{ t("moderation.ruleModal.actionsTitle") }}</h4>
 
             <label class="flex items-center">
               <input
@@ -469,7 +427,7 @@
                 type="checkbox"
                 class="mr-2"
               />
-              <span class="text-sm">{{ t("moderation.ruleModal.deleteOnViolation") }}</span>
+              <span class="text-body text-fg">{{ t("moderation.ruleModal.deleteOnViolation") }}</span>
             </label>
 
             <label class="flex items-center">
@@ -478,27 +436,33 @@
                 type="checkbox"
                 class="mr-2"
               />
-              <span class="text-sm">{{ t("moderation.ruleModal.banAfterWarnings") }}</span>
+              <span class="text-body text-fg">{{ t("moderation.ruleModal.banAfterWarnings") }}</span>
             </label>
 
             <div v-if="form.ban_on_violation">
-              <label class="block text-sm font-medium text-gray-700 mb-1">{{
-                t("moderation.ruleModal.warningsBeforeBanLabel")
-              }}</label>
-              <input
-                v-model.number="form.warnings_before_ban"
+              <label class="block text-body font-medium text-fg mb-1">
+                {{ t("moderation.ruleModal.warningsBeforeBanLabel") }}
+              </label>
+              <UiAppInput
+                :model-value="String(form.warnings_before_ban)"
                 type="number"
                 min="1"
                 max="20"
-                class="w-full border rounded px-3 py-2"
+                @update:model-value="
+                  form.warnings_before_ban = Math.min(
+                    20,
+                    Math.max(1, Number($event) || 3)
+                  )
+                "
               />
             </div>
           </div>
 
           <div class="flex gap-2 pt-4">
-            <button
+            <UiAppButton
               type="submit"
-              class="flex-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              variant="primary"
+              class="flex-1"
               :disabled="saving"
             >
               {{
@@ -508,18 +472,14 @@
                     ? t("common.update")
                     : t("common.create")
               }}
-            </button>
-            <button
-              type="button"
-              class="px-3 py-2 border rounded hover:bg-gray-50"
-              @click="closeModal"
-            >
+            </UiAppButton>
+            <UiAppButton type="button" variant="ghost" @click="closeModal">
               {{ t("common.cancel") }}
-            </button>
+            </UiAppButton>
           </div>
         </form>
       </div>
-    </div>
+    </UiAppModal>
   </div>
 </template>
 

@@ -36,7 +36,7 @@ describe("moderation-action-ui", () => {
       moderationActionColorClass(action)
     );
     expect(new Set(classes).size).toBe(MODERATION_ACTION_TYPES.length);
-    expect(moderationActionColorClass("pardon")).toContain("sky");
-    expect(moderationActionColorClass("unban")).toContain("green");
+    expect(moderationActionColorClass("pardon")).toContain("action-pardon");
+    expect(moderationActionColorClass("unban")).toContain("action-unban");
   });
 });

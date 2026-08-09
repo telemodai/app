@@ -7,21 +7,18 @@
       :subtitle="bot ? t('page.audit.subtitle', { botId: bot.id }) : undefined"
     >
       <template #actions>
-        <button
-          @click="loadDecisions"
-          class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-        >
+        <UiAppButton variant="ghost" @click="loadDecisions">
           {{ t("common.refresh") }}
-        </button>
+        </UiAppButton>
       </template>
     </LayoutPageHeader>
 
-    <div v-if="loading" class="text-gray-500">{{ t("audit.loading") }}</div>
+    <div v-if="loading" class="text-fg-muted">{{ t("audit.loading") }}</div>
 
-    <div v-else class="bg-white border rounded overflow-hidden">
+    <UiAppCard v-else :padding="false" class="overflow-hidden">
       <div v-if="decisions.length > 0" class="hidden md:block overflow-x-auto">
-        <table class="min-w-full text-sm">
-          <thead class="bg-gray-50 text-left text-gray-600">
+        <table class="min-w-full text-body">
+          <thead class="bg-surface-3 text-left text-fg-muted">
             <tr>
               <th class="px-4 py-3 font-medium">{{ t("audit.time") }}</th>
               <th class="px-4 py-3 font-medium">{{ t("audit.chat") }}</th>
@@ -33,65 +30,69 @@
               <th class="px-4 py-3 font-medium">{{ t("audit.reasoning") }}</th>
             </tr>
           </thead>
-          <tbody class="divide-y">
+          <tbody class="divide-y divide-line">
             <tr v-for="item in decisions" :key="item._id" class="align-top">
-              <td class="px-4 py-3 whitespace-nowrap text-gray-600">
+              <td class="px-4 py-3 whitespace-nowrap text-fg-muted">
                 {{ formatDate(item.timestamp) }}
               </td>
               <td class="px-4 py-3">
-                <div>{{ chatName(item.chat_id) }}</div>
-                <div class="text-xs text-gray-500">{{ item.chat_id }}</div>
+                <div class="text-fg">{{ chatName(item.chat_id) }}</div>
+                <div class="text-caption text-fg-muted normal-case tracking-normal">
+                  {{ item.chat_id }}
+                </div>
               </td>
-              <td class="px-4 py-3">
-                <div>{{ item.user_id }}</div>
+              <td class="px-4 py-3 text-fg">
+                {{ item.user_id }}
               </td>
               <td class="px-4 py-3 max-w-xs">
-                <button
+                <UiAppButton
                   v-if="isLong(item.message_text)"
-                  type="button"
-                  class="text-left hover:underline"
+                  variant="link"
+                  class="!px-0 !py-0 !text-left !font-normal"
                   @click="toggleExpanded(`msg-${item._id}`)"
                 >
                   {{ displayText(item.message_text, `msg-${item._id}`) }}
-                </button>
-                <span v-else>{{ item.message_text }}</span>
+                </UiAppButton>
+                <span v-else class="text-fg">{{ item.message_text }}</span>
               </td>
               <td class="px-4 py-3">
-                <span :class="resultBadgeClass(item.violation_detected)">
+                <UiAppBadge :class="resultBadgeClass(item.violation_detected)">
                   {{ item.violation_detected ? t("audit.violation") : t("audit.pass") }}
-                </span>
+                </UiAppBadge>
               </td>
-              <td class="px-4 py-3 text-gray-700">
+              <td class="px-4 py-3 text-fg">
                 {{ formatRuleLabel(item) }}
               </td>
-              <td class="px-4 py-3">
+              <td class="px-4 py-3 text-fg">
                 {{ Math.round(item.ai_confidence * 100) }}%
               </td>
               <td class="px-4 py-3 max-w-sm">
-                <button
+                <UiAppButton
                   v-if="isLong(item.ai_reasoning)"
-                  type="button"
-                  class="text-left hover:underline"
+                  variant="link"
+                  class="!px-0 !py-0 !text-left !font-normal"
                   @click="toggleExpanded(`reason-${item._id}`)"
                 >
                   {{ displayText(item.ai_reasoning, `reason-${item._id}`) }}
-                </button>
-                <span v-else>{{ item.ai_reasoning }}</span>
+                </UiAppButton>
+                <span v-else class="text-fg">{{ item.ai_reasoning }}</span>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div v-if="decisions.length > 0" class="md:hidden divide-y">
+      <div v-if="decisions.length > 0" class="md:hidden divide-y divide-line">
         <div v-for="item in decisions" :key="`card-${item._id}`" class="p-4 space-y-2">
           <div class="flex items-center justify-between gap-2">
-            <span :class="resultBadgeClass(item.violation_detected)">
+            <UiAppBadge :class="resultBadgeClass(item.violation_detected)">
               {{ item.violation_detected ? t("audit.violation") : t("audit.pass") }}
+            </UiAppBadge>
+            <span class="text-caption text-fg-muted normal-case tracking-normal">
+              {{ formatDate(item.timestamp) }}
             </span>
-            <span class="text-xs text-gray-500">{{ formatDate(item.timestamp) }}</span>
           </div>
-          <div class="text-sm text-gray-600">
+          <div class="text-body text-fg-muted">
             {{
               t("audit.mobileMeta", {
                 chatName: chatName(item.chat_id),
@@ -99,47 +100,49 @@
               })
             }}
           </div>
-          <div class="text-sm">{{ displayText(item.message_text, `msg-${item._id}`) }}</div>
-          <div v-if="item.rule_violated || item.rule_name" class="text-sm">
+          <div class="text-body text-fg">
+            {{ displayText(item.message_text, `msg-${item._id}`) }}
+          </div>
+          <div v-if="item.rule_violated || item.rule_name" class="text-body text-fg">
             {{ t("audit.mobileRule") }}
             <span class="font-medium">{{ formatRuleLabel(item) }}</span>
             · {{ Math.round(item.ai_confidence * 100) }}%
           </div>
-          <div class="text-sm text-gray-700">
+          <div class="text-body text-fg-muted">
             {{ displayText(item.ai_reasoning, `reason-${item._id}`) }}
           </div>
         </div>
       </div>
 
-      <div v-else class="text-gray-500 text-center py-10 px-4">
+      <div v-else class="text-fg-muted text-center py-10 px-4">
         {{ t("audit.empty") }}
       </div>
 
       <div
         v-if="pagination.total_pages > 1"
-        class="flex items-center justify-between border-t px-4 py-3 text-sm"
+        class="flex items-center justify-between border-t border-line px-4 py-3 text-body"
       >
-        <button
-          type="button"
-          class="px-3 py-1 border rounded disabled:opacity-40"
+        <UiAppButton
+          variant="ghost"
+          class="!px-3 !py-1"
           :disabled="pagination.page <= 1"
           @click="goToPage(pagination.page - 1)"
         >
           {{ t("common.previous") }}
-        </button>
-        <span class="text-gray-600">
+        </UiAppButton>
+        <span class="text-fg-muted">
           {{ t("common.pageOf", { page: pagination.page, totalPages: pagination.total_pages }) }}
         </span>
-        <button
-          type="button"
-          class="px-3 py-1 border rounded disabled:opacity-40"
+        <UiAppButton
+          variant="ghost"
+          class="!px-3 !py-1"
           :disabled="pagination.page >= pagination.total_pages"
           @click="goToPage(pagination.page + 1)"
         >
           {{ t("common.next") }}
-        </button>
+        </UiAppButton>
       </div>
-    </div>
+    </UiAppCard>
   </div>
 </template>
 
@@ -212,9 +215,7 @@ function toggleExpanded(key: string) {
 }
 
 function resultBadgeClass(violation: boolean) {
-  return violation
-    ? "inline-flex px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800"
-    : "inline-flex px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800";
+  return violation ? "text-danger" : "text-fg";
 }
 
 function chatName(chatId: number) {

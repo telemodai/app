@@ -7,51 +7,51 @@
       :subtitle="t('page.botCredits.subtitle')"
     />
 
-    <div
+    <UiAppAlert
       v-if="paymentNotice"
-      class="mb-4 rounded border p-3 text-sm"
-      :class="paymentNoticeClass"
+      class="mb-4"
+      :variant="paymentNoticeAlertVariant"
     >
       {{ paymentNotice }}
-    </div>
+    </UiAppAlert>
 
-    <div class="bg-white border rounded p-6 mb-6">
-      <div class="text-sm text-gray-600">{{ t("billing.balance") }}</div>
-      <div class="text-3xl font-bold text-blue-700 mt-1">{{ balance.toLocaleString() }}</div>
-      <button
-        type="button"
-        class="mt-3 text-sm text-blue-700 hover:underline"
+    <UiAppCard class="!p-6 mb-6">
+      <div class="text-body text-fg-muted">{{ t("billing.balance") }}</div>
+      <div class="font-display text-heading tracking-[-0.035em] text-accent mt-1">
+        {{ balance.toLocaleString() }}
+      </div>
+      <UiAppButton
+        variant="link"
+        class="mt-3 !px-0"
         :disabled="refreshing"
         @click="refreshBalance"
       >
         {{ refreshing ? t("common.loading") : t("common.refresh") }}
-      </button>
-    </div>
+      </UiAppButton>
+    </UiAppCard>
 
-    <div class="bg-white border rounded p-4 mb-6">
-      <label class="block text-sm font-medium text-gray-700 mb-2" for="promo-code">
+    <UiAppCard class="!p-4 mb-6">
+      <label class="block text-body font-medium text-fg mb-2" for="promo-code">
         {{ t("billing.promo.label") }}
       </label>
       <div class="flex flex-wrap gap-2">
-        <input
+        <UiAppInput
           id="promo-code"
           v-model="promoInput"
-          type="text"
-          class="flex-1 min-w-[10rem] border rounded px-3 py-2 text-sm"
+          class="flex-1 min-w-[10rem]"
           :placeholder="t('billing.promo.placeholder')"
           :disabled="applyingPromo"
           @keyup.enter="applyPromo"
         />
-        <button
-          type="button"
-          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 text-sm"
+        <UiAppButton
+          variant="ghost"
           :disabled="applyingPromo || !promoInput.trim()"
           @click="applyPromo"
         >
           {{ applyingPromo ? t("common.loading") : t("billing.promo.apply") }}
-        </button>
+        </UiAppButton>
       </div>
-      <p v-if="appliedPromo?.valid" class="mt-2 text-sm text-green-700">
+      <p v-if="appliedPromo?.valid" class="mt-2 text-body text-fg">
         {{
           t("billing.promo.applied", {
             code: appliedPromo.code,
@@ -59,23 +59,23 @@
           })
         }}
       </p>
-      <p v-if="promoError" class="mt-2 text-sm text-red-600">{{ promoError }}</p>
-    </div>
+      <p v-if="promoError" class="mt-2 text-body text-danger">{{ promoError }}</p>
+    </UiAppCard>
 
     <div class="space-y-3">
-      <div
+      <UiAppCard
         v-for="pkg in packages"
         :key="pkg.id"
-        class="bg-white border rounded p-4 flex items-center justify-between gap-4"
+        class="!p-4 flex items-center justify-between gap-4"
       >
         <div>
-          <div class="font-medium">{{ t(pkg.labelKey) }}</div>
-          <div class="text-sm text-gray-600">
+          <div class="font-medium text-fg">{{ t(pkg.labelKey) }}</div>
+          <div class="text-body text-fg-muted">
             <template v-if="discountedPrice(pkg.id) !== pkg.amountRub">
-              <span class="line-through text-gray-400 mr-2">
+              <span class="line-through text-fg-subtle mr-2">
                 {{ pkg.amountRub.toLocaleString() }} ₽
               </span>
-              <span class="text-green-700 font-medium">
+              <span class="font-medium text-fg">
                 {{ discountedPrice(pkg.id).toLocaleString() }} ₽
               </span>
             </template>
@@ -84,9 +84,8 @@
             </template>
           </div>
         </div>
-        <button
-          type="button"
-          class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 text-sm"
+        <UiAppButton
+          variant="primary"
           :disabled="checkoutPackageId === pkg.id"
           @click="startCheckout(pkg.id)"
         >
@@ -95,11 +94,13 @@
               ? t("billing.purchasing")
               : t("billing.purchase")
           }}
-        </button>
-      </div>
+        </UiAppButton>
+      </UiAppCard>
     </div>
 
-    <p v-if="error" class="mt-4 text-sm text-red-600">{{ error }}</p>
+    <UiAppAlert v-if="error" variant="danger" class="mt-4">
+      {{ error }}
+    </UiAppAlert>
   </div>
 </template>
 
@@ -175,14 +176,11 @@ function discountedPrice(packageId: CreditPackageId): number {
   return discountedByPackage.value.get(packageId) ?? CREDIT_PACKAGES[packageId].amountRub;
 }
 
-const paymentNoticeClass = computed(() => {
-  if (paymentNoticeTone.value === "success") {
-    return "border-green-200 bg-green-50 text-green-900";
-  }
+const paymentNoticeAlertVariant = computed(() => {
   if (paymentNoticeTone.value === "warning") {
-    return "border-amber-200 bg-amber-50 text-amber-900";
+    return "danger" as const;
   }
-  return "border-blue-200 bg-blue-50 text-blue-900";
+  return "neutral" as const;
 });
 
 function setPaymentNotice(message: string, tone: "info" | "success" | "warning") {

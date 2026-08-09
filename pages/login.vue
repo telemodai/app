@@ -1,33 +1,41 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-    <div class="w-full max-w-md bg-white rounded-lg shadow p-6 space-y-6 text-center">
-      <h1 class="text-xl font-semibold">{{ appName }}</h1>
-      <p class="text-sm text-gray-600">
+  <div class="min-h-screen flex items-center justify-center bg-surface-1 p-4">
+    <UiAppCard class="w-full max-w-md !p-6 space-y-6 text-center">
+      <h1 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+        {{ appName }}
+      </h1>
+      <p class="text-body text-fg-muted">
         {{ t("login.subtitle") }}
       </p>
-      <a
+      <UiAppButton
+        variant="primary"
         :href="telegramAuthHref"
-        class="inline-flex w-full items-center justify-center rounded bg-blue-600 px-4 py-3 text-white hover:bg-blue-700"
+        class="w-full"
       >
         {{ t("login.signInButton") }}
-      </a>
-      <p v-if="botLoginDeepLink" class="text-sm text-gray-600">
+      </UiAppButton>
+      <p v-if="botLoginDeepLink" class="text-body text-fg-muted">
         {{ t("login.trouble") }}
-        <a :href="botLoginDeepLink" class="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
+        <a
+          :href="botLoginDeepLink"
+          class="text-accent hover:underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {{ t("login.getLinkFromBot") }}
         </a>
       </p>
-      <div class="pt-2 flex flex-wrap items-center justify-center gap-x-2 text-sm text-gray-500">
+      <div class="pt-2 flex flex-wrap items-center justify-center gap-x-2 text-body text-fg-muted">
         <span>
           {{ appName }}
-          <NuxtLink to="/release-notes" class="hover:text-gray-800 hover:underline">
+          <NuxtLink to="/release-notes" class="hover:text-fg hover:underline">
             v{{ appVersion }}
           </NuxtLink>
         </span>
-        <span class="text-gray-300">|</span>
+        <span class="text-fg-subtle">|</span>
         <LayoutLocaleSwitcher />
       </div>
-    </div>
+    </UiAppCard>
   </div>
 </template>
 

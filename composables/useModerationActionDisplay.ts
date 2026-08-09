@@ -17,7 +17,7 @@ export function useModerationActionDisplay() {
 
   function actionClass(action: string): string {
     if (!isModerationActionType(action)) {
-      return "text-gray-700";
+      return "text-fg";
     }
     return moderationActionColorClass(action);
   }
