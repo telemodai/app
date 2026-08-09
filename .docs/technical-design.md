@@ -5,7 +5,7 @@
 | Layer | Technology |
 |-------|------------|
 | Runtime | Bun |
-| App | Nuxt 4, Nitro, Vue 3, Tailwind, **@nuxtjs/i18n** (en + ru admin UI) |
+| App | Nuxt 4, Nitro, Vue 3, Tailwind CSS 4 (`@tailwindcss/vite`), **@nuxtjs/i18n** (en + ru admin UI) |
 | Database | PostgreSQL, Drizzle ORM |
 | Auth | Custom Telegram OIDC (PKCE + `jose` JWT verify) — **not** Better Auth |
 | LLM | OpenAI-compatible client (`LLM_API_KEY`, optional `LLM_BASE_URL`, `LLM_MODEL`) |
@@ -57,7 +57,9 @@
 
 ```
 pages/           # Nuxt UI (bots, rules, login, dashboard)
-i18n/locales/    # en.json, ru.json — admin UI strings
+assets/brand/  # Vendored design tokens + DESIGN.md (see sync-brand-* scripts)
+components/ui/ # AppButton, AppCard, … — design system primitives
+i18n/locales/  # en.json, ru.json — admin UI strings
 composables/     # useAppLocale, usePageBreadcrumbs, …
 components/      # layout, dashboard, bots
 server/api/      # Nitro routes
