@@ -1,16 +1,16 @@
-import { requireBotAccess } from "../../../../utils/bot-access";
-import { requireBotIdParam } from "../../../../utils/get-bot-id-param";
-import { isSaasMode } from "../../../../core/deployment-mode";
-import { createBillingProvider } from "../../../../core/billing/yookassa-provider";
-import { resolveCreditPackage } from "../../../../core/credit-packages";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
+import { isSaasMode } from "@/server/core/deployment-mode";
+import { createBillingProvider } from "@/server/core/billing/yookassa-provider";
+import { resolveCreditPackage } from "@/server/core/credit-packages";
 import {
   PromoService,
   promoValidationErrorMessage,
-} from "../../../../core/promo-service";
-import { ProviderPaymentRepository } from "../../../../database/repositories/provider-payment-repository";
-import { getWebhookBaseUrl } from "../../../../utils/telegram-webhook";
-import { readPromoCookie } from "../../../../utils/promo-cookie";
-import { readReferralCookie } from "../../../../utils/referral-cookie";
+} from "@/server/core/promo-service";
+import { ProviderPaymentRepository } from "@/server/database/repositories/provider-payment-repository";
+import { getWebhookBaseUrl } from "@/server/utils/telegram-webhook";
+import { readPromoCookie } from "@/server/utils/promo-cookie";
+import { readReferralCookie } from "@/server/utils/referral-cookie";
 
 type CheckoutBody = {
   package_id?: string;

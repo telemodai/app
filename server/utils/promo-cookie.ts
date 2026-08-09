@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
 import { deleteCookie, getCookie, setCookie } from "h3";
-import { normalizePromoCode } from "../core/billing/promo-discount";
+import { normalizePromoCode } from "@/server/core/billing/promo-discount";
 
 export const PROMO_COOKIE_NAME = "tg_promo_code";
 

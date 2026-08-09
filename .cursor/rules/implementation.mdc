@@ -20,6 +20,7 @@ alwaysApply: false
 - **No legacy** — when changing stack, remove old deps, files, compose services in the same change.
 - **Minimal diff** — do not touch unrelated code.
 - **Commits** — only when the user explicitly asks.
+- **Imports** — cross-directory: `@/…` from project root (`tsconfig.json` `paths` + Nuxt alias). Same-folder `./` OK. Exception: `nuxt.config.ts` — relative `./` only (loaded before aliases). Nuxt `css: ["~/assets/…"]` keeps `~/`.
 
 ## `.env`
 

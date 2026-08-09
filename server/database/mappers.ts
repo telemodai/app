@@ -5,7 +5,7 @@ import type { ModerationAction } from "./models/moderation-action";
 import type { UserContext } from "./models/user-context";
 import type { UserMessage } from "./models/user-message";
 import type { ChatStatistics } from "./models/chat-statistics";
-import { DEFAULT_SERVICE_MESSAGE_CLEANUP } from "../../lib/service-message-cleanup";
+import { DEFAULT_SERVICE_MESSAGE_CLEANUP } from "@/lib/service-message-cleanup";
 
 type RuleRow = typeof import("./schema").rules.$inferSelect;
 type BotRow = typeof import("./schema").bots.$inferSelect;

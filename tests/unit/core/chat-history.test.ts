@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   buildChatHistoryForPrompt,
   selectOldestMessageIdsToPrune,
-} from "../../../server/core/chat-history";
+} from "@/server/core/chat-history";
 
 describe("chat-history", () => {
   test("buildChatHistoryForPrompt returns chronological JSON entries", () => {

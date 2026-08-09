@@ -3,8 +3,8 @@ import {
   type ThemeChoice,
   type ThemeRegister,
   brandAssets,
-} from "~/lib/brand";
-import { runThemeTransition } from "~/lib/theme-transition.client";
+} from "@/lib/brand";
+import { runThemeTransition } from "@/lib/theme-transition.client";
 
 const CYCLE_ORDER: ThemeChoice[] = ["system", "light", "dark"];
 

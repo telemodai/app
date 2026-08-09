@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { fetchSession } from "~/lib/fetch-session";
+import { fetchSession } from "@/lib/fetch-session";
 
 const { t, locale } = useI18n();
 const appName = useAppName();

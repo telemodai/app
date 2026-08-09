@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { planViolationModeration } from "../../../server/core/moderation-actions";
+import { planViolationModeration } from "@/server/core/moderation-actions";
 
 describe("planViolationModeration", () => {
   test("silent mode runs moderation APIs but skips chat messages", () => {

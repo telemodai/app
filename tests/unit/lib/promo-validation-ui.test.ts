@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { promoStatusMessageToI18nKey } from "../../../lib/promo-validation-messages";
-import { resolvePromoUserMessage } from "../../../lib/promo-validation-ui";
+import { promoStatusMessageToI18nKey } from "@/lib/promo-validation-messages";
+import { resolvePromoUserMessage } from "@/lib/promo-validation-ui";
 
 const t = (key: string) => `i18n:${key}`;
 

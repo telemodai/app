@@ -1,6 +1,6 @@
-import { initializeDatabase } from "../database/connection";
-import { logger } from "../core/logger";
-import { setupWebhooks } from "../index";
+import { initializeDatabase } from "@/server/database/connection";
+import { logger } from "@/server/core/logger";
+import { setupWebhooks } from "@/server/index";
 
 let startupCompleted = false;
 

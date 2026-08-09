@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { buildCliProgram } from "../../../scripts/cli";
+import { buildCliProgram } from "@/scripts/cli";
 
 describe("operator cli program", () => {
   test("registers promo create and global help", () => {

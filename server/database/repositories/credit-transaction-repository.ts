@@ -1,10 +1,10 @@
 import { and, eq, sql } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { creditTransactions } from "../schema";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { creditTransactions } from "@/server/database/schema";
 import type {
   CreateCreditTransactionInput,
   CreditTransaction,
-} from "../models/credit-transaction";
+} from "@/server/database/models/credit-transaction";
 
 function toCreditTransaction(
   row: typeof creditTransactions.$inferSelect

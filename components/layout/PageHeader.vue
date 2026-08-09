@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BreadcrumbItem } from "~/composables/usePageBreadcrumbs";
+import type { BreadcrumbItem } from "@/composables/usePageBreadcrumbs";
 
 const { t } = useI18n();
 

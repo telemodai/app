@@ -1,10 +1,10 @@
-import { BotRepository } from "../database/repositories/bot-repository";
-import type { TelegramUserProfilePhotos } from "../types/telegram";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import type { TelegramUserProfilePhotos } from "@/server/types/telegram";
 import {
   telegramGetMe,
   telegramGetUserProfilePhotos,
-} from "../utils/telegram-bot-api";
-import type { TelegramFetch } from "../utils/telegram-fetch";
+} from "@/server/utils/telegram-bot-api";
+import type { TelegramFetch } from "@/server/utils/telegram-fetch";
 import { logger } from "./logger";
 
 export function resolveProfilePhotoFileId(

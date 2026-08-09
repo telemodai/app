@@ -8,7 +8,7 @@ import {
   parseReleaseSections,
   resolveReleasesDirectory,
   RELEASES_DIR,
-} from "../../../server/core/release-notes";
+} from "@/server/core/release-notes";
 
 describe("release-notes", () => {
   test("resolveReleasesDirectory uses project cwd, not import.meta.dir", () => {

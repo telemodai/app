@@ -684,13 +684,13 @@ import {
   DEFAULT_BAN_TEMPLATE_PREVIEW,
   DEFAULT_WARNING_TEMPLATE_PREVIEW,
   WARNING_TEMPLATE_PLACEHOLDERS,
-} from "~/lib/bot-message-template-ui";
-import type { ChatActivationStartMode } from "~/composables/useChatActivationWait";
-import type { BotMemberRole } from "~/types/bot";
+} from "@/lib/bot-message-template-ui";
+import type { ChatActivationStartMode } from "@/composables/useChatActivationWait";
+import type { BotMemberRole } from "@/types/bot";
 import {
   DEFAULT_SERVICE_MESSAGE_CLEANUP,
   type ServiceMessageKindId,
-} from "~/lib/service-message-cleanup";
+} from "@/lib/service-message-cleanup";
 
 const { t, tm, locale } = useI18n();
 const { actionLabel: logActionLabel, actionClass: logActionClass } = useModerationActionDisplay();

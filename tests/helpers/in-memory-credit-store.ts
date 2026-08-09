@@ -1,5 +1,5 @@
-import type { CreditTransaction } from "../../server/database/models/credit-transaction";
-import type { CreditLedger, CreditStore } from "../../server/core/credit-service";
+import type { CreditTransaction } from "@/server/database/models/credit-transaction";
+import type { CreditLedger, CreditStore } from "@/server/core/credit-service";
 
 type LedgerRow = CreditTransaction;
 

@@ -1,6 +1,6 @@
-import { BotMemberRepository } from "../../../../database/repositories/bot-member-repository";
-import { requireBotAccess } from "../../../../utils/bot-access";
-import { requireBotIdParam } from "../../../../utils/get-bot-id-param";
+import { BotMemberRepository } from "@/server/database/repositories/bot-member-repository";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
 
 export default defineEventHandler(async (event) => {
   const botId = requireBotIdParam(event);

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { isBotEligibleForUpdates } from "../../../server/index";
+import { isBotEligibleForUpdates } from "@/server/index";
 
 describe("isBotEligibleForUpdates", () => {
   test("returns false for inactive bot", () => {

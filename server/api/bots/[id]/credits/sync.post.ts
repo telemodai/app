@@ -1,12 +1,12 @@
-import { CreditService } from "../../../../core/credit-service";
-import { isSaasMode } from "../../../../core/deployment-mode";
+import { CreditService } from "@/server/core/credit-service";
+import { isSaasMode } from "@/server/core/deployment-mode";
 import {
   syncBotOpenProviderPayments,
   syncBotPurchaseFromProvider,
-} from "../../../../core/payment-sync";
-import { ProviderPaymentRepository } from "../../../../database/repositories/provider-payment-repository";
-import { requireBotAccess } from "../../../../utils/bot-access";
-import { requireBotIdParam } from "../../../../utils/get-bot-id-param";
+} from "@/server/core/payment-sync";
+import { ProviderPaymentRepository } from "@/server/database/repositories/provider-payment-repository";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
 
 type SyncBody = {
   payment_id?: string;

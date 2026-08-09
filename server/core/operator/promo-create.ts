@@ -1,8 +1,8 @@
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
-import { PromoCodeRepository } from "../../database/repositories/promo-code-repository";
-import type { PromoCode } from "../../database/models/promo-code";
-import { normalizePromoCode } from "../billing/promo-discount";
+import { PromoCodeRepository } from "@/server/database/repositories/promo-code-repository";
+import type { PromoCode } from "@/server/database/models/promo-code";
+import { normalizePromoCode } from "@/server/core/billing/promo-discount";
 
 export type PromoCreateInput = {
   code: string;

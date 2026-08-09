@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { joinBotWithAccessCode } from "../../../server/core/bot-team-join";
+import { joinBotWithAccessCode } from "@/server/core/bot-team-join";
 
 describe("joinBotWithAccessCode", () => {
   test("rejects empty code", async () => {

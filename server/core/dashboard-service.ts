@@ -1,9 +1,9 @@
-import type { BotResponse } from "../database/models/bot";
+import type { BotResponse } from "@/server/database/models/bot";
 import type {
   ModerationAction,
   ModerationActionType,
-} from "../database/models/moderation-action";
-import { toDateKey } from "../database/mappers";
+} from "@/server/database/models/moderation-action";
+import { toDateKey } from "@/server/database/mappers";
 
 export interface DashboardKpi {
   bots_total: number;

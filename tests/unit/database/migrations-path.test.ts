@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { resolveMigrationsFolder, MIGRATIONS_DIR } from "../../../server/database/migrations-path";
+import { resolveMigrationsFolder, MIGRATIONS_DIR } from "@/server/database/migrations-path";
 
 describe("resolveMigrationsFolder", () => {
   test("finds meta/_journal.json from project root", () => {

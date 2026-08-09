@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import type { BotRepository } from "../../../server/database/repositories/bot-repository";
+import type { BotRepository } from "@/server/database/repositories/bot-repository";
 import {
   BotLifecycleError,
   disableBot,
   enableBot,
   reconcileBotWebhook,
-} from "../../../server/utils/bot-lifecycle";
-import { InMemoryBotRepository } from "../../helpers/in-memory-bot-repository";
-import { TEST_OWNER_USER_ID } from "../../helpers/constants";
+} from "@/server/utils/bot-lifecycle";
+import { InMemoryBotRepository } from "@/tests/helpers/in-memory-bot-repository";
+import { TEST_OWNER_USER_ID } from "@/tests/helpers/constants";
 
 const originalBaseUrl = process.env.BASE_URL;
 

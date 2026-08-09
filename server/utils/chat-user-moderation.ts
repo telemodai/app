@@ -1,10 +1,10 @@
-import { BotRepository } from "../database/repositories/bot-repository";
-import { UserContextRepository } from "../database/repositories/user-context-repository";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { UserContextRepository } from "@/server/database/repositories/user-context-repository";
 import {
   createDefaultPardonDeps,
   pardonUserInChat,
   type PardonOperation,
-} from "../core/pardon-service";
+} from "@/server/core/pardon-service";
 import { requireBotAccess } from "./bot-access";
 import { requireBotIdParam } from "./get-bot-id-param";
 import { requireBotChat } from "./require-bot-chat";

@@ -1,6 +1,6 @@
-import { requireSession } from "../../utils/session";
-import { isSelfHostedMode } from "../../core/deployment-mode";
-import { InstanceSettingsRepository } from "../../database/repositories/instance-settings-repository";
+import { requireSession } from "@/server/utils/session";
+import { isSelfHostedMode } from "@/server/core/deployment-mode";
+import { InstanceSettingsRepository } from "@/server/database/repositories/instance-settings-repository";
 
 type UpdateBody = {
   api_key?: string | null;

@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
 import { getCookie, setCookie } from "h3";
-import { REFERRAL_COOKIE_DAYS } from "../../lib/referral-config";
+import { REFERRAL_COOKIE_DAYS } from "@/lib/referral-config";
 
 export const REFERRAL_COOKIE_NAME = "tg_referral_code";
 

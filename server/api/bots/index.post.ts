@@ -1,20 +1,20 @@
-import { BotRepository } from "../../database/repositories/bot-repository";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
 import {
   BotCreateValidationError,
   resolveBotIdentityFromGetMe,
-} from "../../core/resolve-bot-from-token";
-import { registerBotWebhook } from "../../utils/bot-lifecycle";
-import { getBotDeliveryHealth, withDeliveryHealth } from "../../utils/bot-delivery";
-import { requireSession } from "../../utils/session";
-import { CreditService } from "../../core/credit-service";
+} from "@/server/core/resolve-bot-from-token";
+import { registerBotWebhook } from "@/server/utils/bot-lifecycle";
+import { getBotDeliveryHealth, withDeliveryHealth } from "@/server/utils/bot-delivery";
+import { requireSession } from "@/server/utils/session";
+import { CreditService } from "@/server/core/credit-service";
 import {
   TelegramBotApiError,
   telegramGetMe,
-} from "../../utils/telegram-bot-api";
+} from "@/server/utils/telegram-bot-api";
 import {
   fetchBotProfilePhotoFileId,
   refreshBotAvatar,
-} from "../../core/bot-avatar";
+} from "@/server/core/bot-avatar";
 
 export default defineEventHandler(async (event) => {
   const body = (await readBody(event)) as { token?: string };

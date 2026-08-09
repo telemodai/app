@@ -56,7 +56,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from "vue";
-import { TELEGRAM_HTML_DOCS_URL } from "~/lib/bot-message-template-ui";
+import { TELEGRAM_HTML_DOCS_URL } from "@/lib/bot-message-template-ui";
 
 const htmlHelpSectionKeys = [
   "format",

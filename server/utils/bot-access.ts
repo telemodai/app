@@ -1,5 +1,5 @@
 import type { H3Event } from "h3";
-import { BotMemberRepository, type BotMemberRole } from "../database/repositories/bot-member-repository";
+import { BotMemberRepository, type BotMemberRole } from "@/server/database/repositories/bot-member-repository";
 import { requireSession } from "./session";
 
 export function enforceBotAccess(

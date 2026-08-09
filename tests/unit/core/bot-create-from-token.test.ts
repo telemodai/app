@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { InMemoryBotRepository } from "../../helpers/in-memory-bot-repository";
-import { TEST_OWNER_USER_ID } from "../../helpers/constants";
-import { resolveBotIdentityFromGetMe } from "../../../server/core/resolve-bot-from-token";
+import { InMemoryBotRepository } from "@/tests/helpers/in-memory-bot-repository";
+import { TEST_OWNER_USER_ID } from "@/tests/helpers/constants";
+import { resolveBotIdentityFromGetMe } from "@/server/core/resolve-bot-from-token";
 
 describe("bot create from resolved token identity", () => {
   test("create sets owner in bot_members", async () => {

@@ -1,7 +1,7 @@
-import { listRuleTemplatesForChat } from "../../../../../database/rule-templates";
-import { requireBotAccess } from "../../../../../utils/bot-access";
-import { requireBotIdParam } from "../../../../../utils/get-bot-id-param";
-import { requireBotChat } from "../../../../../utils/require-bot-chat";
+import { listRuleTemplatesForChat } from "@/server/database/rule-templates";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
+import { requireBotChat } from "@/server/utils/require-bot-chat";
 
 export default defineEventHandler(async (event) => {
   const botId = requireBotIdParam(event);

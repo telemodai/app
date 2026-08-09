@@ -2,10 +2,10 @@ import { describe, expect, test } from "bun:test";
 import {
   deleteBotPermanently,
   DeleteBotError,
-} from "../../../server/core/delete-bot";
-import { enforceBotAccess } from "../../../server/utils/bot-access";
-import { InMemoryBotRepository } from "../../helpers/in-memory-bot-repository";
-import { TEST_OWNER_USER_ID } from "../../helpers/constants";
+} from "@/server/core/delete-bot";
+import { enforceBotAccess } from "@/server/utils/bot-access";
+import { InMemoryBotRepository } from "@/tests/helpers/in-memory-bot-repository";
+import { TEST_OWNER_USER_ID } from "@/tests/helpers/constants";
 
 describe("deleteBotPermanently", () => {
   test("deletes bot row after best-effort webhook removal", async () => {

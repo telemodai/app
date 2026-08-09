@@ -2,7 +2,7 @@ import type {
   CreateRuleRequest,
   Rule,
   UpdateRuleRequest,
-} from "../../server/database/models/rule";
+} from "@/server/database/models/rule";
 
 function ruleKey(botId: string, chatInternalId: number, id: string) {
   return `${botId}:${chatInternalId}:${id}`;

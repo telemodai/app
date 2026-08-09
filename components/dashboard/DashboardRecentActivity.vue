@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRecentActivityItem } from "~/types/dashboard";
+import type { DashboardRecentActivityItem } from "@/types/dashboard";
 
 const { t, locale } = useI18n();
 const { actionLabel, actionClass } = useModerationActionDisplay();

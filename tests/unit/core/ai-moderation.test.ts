@@ -4,7 +4,7 @@ import {
   analyzeMessage,
   buildModerationSystemPrompt,
   buildModerationUserPrompt,
-} from "../../../server/core/ai-moderation";
+} from "@/server/core/ai-moderation";
 
 function createCapturingClient(
   responseContent: string,

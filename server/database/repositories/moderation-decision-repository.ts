@@ -1,11 +1,11 @@
 import { and, desc, eq, lt, sql } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
+import { getDatabaseConnection } from "@/server/database/connection";
 import {
   CreateModerationDecisionRequest,
   ModerationDecision,
-} from "../models/moderation-decision";
-import { moderationDecisions } from "../schema";
-import { toModerationDecision } from "../mappers";
+} from "@/server/database/models/moderation-decision";
+import { moderationDecisions } from "@/server/database/schema";
+import { toModerationDecision } from "@/server/database/mappers";
 
 export type ListDecisionsOptions = {
   page: number;

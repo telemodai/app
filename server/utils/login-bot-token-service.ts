@@ -7,7 +7,7 @@ import {
   type IssueLoginBotLinkInput,
   type IssueLoginBotLinkResult,
   type RedeemLoginBotTokenResult,
-} from "../core/login-bot-link";
+} from "@/server/core/login-bot-link";
 import { getWebhookBaseUrl } from "./telegram-webhook";
 
 type LoginBotTokenStore = {

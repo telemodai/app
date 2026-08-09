@@ -3,7 +3,7 @@ import {
   moderationActionColorClass,
   moderationActionI18nKey,
   type ModerationActionType,
-} from "~/lib/moderation-action-ui";
+} from "@/lib/moderation-action-ui";
 
 export function useModerationActionDisplay() {
   const { t } = useI18n();

@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   fetchBotProfilePhotoFileId,
   resolveProfilePhotoFileId,
-} from "../../../server/core/bot-avatar";
+} from "@/server/core/bot-avatar";
 
 describe("bot-avatar", () => {
   test("resolveProfilePhotoFileId picks biggest size from latest photo set", () => {

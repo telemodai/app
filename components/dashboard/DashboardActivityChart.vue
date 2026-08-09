@@ -56,11 +56,11 @@ import {
   ArcElement,
 } from "chart.js";
 import { Line, Doughnut } from "vue-chartjs";
-import { chartColor, chartColorAlpha } from "~/lib/chart-theme";
+import { chartColor, chartColorAlpha } from "@/lib/chart-theme";
 import type {
   DashboardActionBreakdown,
   DashboardTrendDay,
-} from "~/types/dashboard";
+} from "@/types/dashboard";
 
 ChartJS.register(
   Title,

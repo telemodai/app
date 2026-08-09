@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { applyCreditPurchaseFromBillingEvent } from "../../../server/core/apply-credit-purchase";
-import { InMemoryCreditStore } from "../../helpers/in-memory-credit-store";
-import { CreditService } from "../../../server/core/credit-service";
-import type { BillingWebhookEvent } from "../../../server/core/billing-provider";
+import { applyCreditPurchaseFromBillingEvent } from "@/server/core/apply-credit-purchase";
+import { InMemoryCreditStore } from "@/tests/helpers/in-memory-credit-store";
+import { CreditService } from "@/server/core/credit-service";
+import type { BillingWebhookEvent } from "@/server/core/billing-provider";
 
 const paidEvent: BillingWebhookEvent = {
   providerPaymentId: "pay-100",

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { resolveMigrationsFolder } from "../../../server/database/migrations-path";
+import { resolveMigrationsFolder } from "@/server/database/migrations-path";
 
 const CASCADE_TABLES = [
   "chat_statistics",

@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { buildTelegramAuthHref } from "~/lib/auth-return-to";
+import { buildTelegramAuthHref } from "@/lib/auth-return-to";
 
 definePageMeta({
   layout: false,

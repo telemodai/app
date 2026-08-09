@@ -1,6 +1,6 @@
-import { handleLoginBotUpdate } from "../../../core/login-bot-webhook";
-import { assertTelegramLoginWebhookSecret } from "../../../utils/telegram-login-bot";
-import { logger } from "../../../core/logger";
+import { handleLoginBotUpdate } from "@/server/core/login-bot-webhook";
+import { assertTelegramLoginWebhookSecret } from "@/server/utils/telegram-login-bot";
+import { logger } from "@/server/core/logger";
 
 export default defineEventHandler(async (event) => {
   const secretToken = getHeader(event, "x-telegram-bot-api-secret-token");

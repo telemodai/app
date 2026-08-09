@@ -4,7 +4,7 @@ import {
   isSelfHostedMode,
   resetDeploymentModeCacheForTests,
   resolveDeploymentMode,
-} from "../../../server/core/deployment-mode";
+} from "@/server/core/deployment-mode";
 
 describe("deployment-mode", () => {
   beforeEach(() => {

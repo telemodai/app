@@ -3,8 +3,8 @@ import {
   createPromoCodeOperator,
   parseExpiresAt,
   validateDiscountPercent,
-} from "../../../../server/core/operator/promo-create";
-import type { PromoCode } from "../../../../server/database/models/promo-code";
+} from "@/server/core/operator/promo-create";
+import type { PromoCode } from "@/server/database/models/promo-code";
 
 function createPromo(overrides: Partial<PromoCode> = {}): PromoCode {
   return {

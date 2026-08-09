@@ -1,22 +1,22 @@
-import type { BotMemberRole } from "../database/repositories/bot-member-repository";
-import { BotMemberRepository } from "../database/repositories/bot-member-repository";
-import type { BotChatRow } from "../database/repositories/chat-repository";
-import type { ChatHealthStatus } from "../database/repositories/chat-repository";
-import { ChatRepository } from "../database/repositories/chat-repository";
-import { ChatActivationPendingRepository } from "../database/repositories/chat-activation-pending-repository";
-import { UserRepository } from "../database/repositories/user-repository";
+import type { BotMemberRole } from "@/server/database/repositories/bot-member-repository";
+import { BotMemberRepository } from "@/server/database/repositories/bot-member-repository";
+import type { BotChatRow } from "@/server/database/repositories/chat-repository";
+import type { ChatHealthStatus } from "@/server/database/repositories/chat-repository";
+import { ChatRepository } from "@/server/database/repositories/chat-repository";
+import { ChatActivationPendingRepository } from "@/server/database/repositories/chat-activation-pending-repository";
+import { UserRepository } from "@/server/database/repositories/user-repository";
 import type {
   ChatMember,
   ChatMemberAdministrator,
   TelegramChatFull,
   TelegramUpdate,
-} from "../types/telegram";
+} from "@/server/types/telegram";
 import {
   isChatMemberAdministrator,
   telegramGetChat,
   telegramGetChatMember,
-} from "../utils/telegram-bot-api";
-import type { TelegramFetch } from "../utils/telegram-fetch";
+} from "@/server/utils/telegram-bot-api";
+import type { TelegramFetch } from "@/server/utils/telegram-fetch";
 
 export type ChatActivationErrorCode =
   | "not_owner"

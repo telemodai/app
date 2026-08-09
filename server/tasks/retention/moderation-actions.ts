@@ -1,4 +1,4 @@
-import { cleanupModerationActionsRetention } from "../../core/retention-cleanup";
+import { cleanupModerationActionsRetention } from "@/server/core/retention-cleanup";
 
 export default defineTask({
   meta: {

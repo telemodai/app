@@ -5,7 +5,7 @@ import {
   normalizeAuthReturnTo,
   resolveReturnToPath,
   sanitizeReturnToPath,
-} from "../../../lib/auth-return-to";
+} from "@/lib/auth-return-to";
 
 describe("auth returnTo", () => {
   test("sanitizeReturnToPath accepts in-app paths", () => {

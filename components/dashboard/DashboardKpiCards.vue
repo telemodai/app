@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardKpi } from "~/types/dashboard";
+import type { DashboardKpi } from "@/types/dashboard";
 
 const { t } = useI18n();
 

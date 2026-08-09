@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { InMemoryBotRepository } from "../../helpers/in-memory-bot-repository";
-import { TEST_OWNER_USER_ID } from "../../helpers/constants";
+import { InMemoryBotRepository } from "@/tests/helpers/in-memory-bot-repository";
+import { TEST_OWNER_USER_ID } from "@/tests/helpers/constants";
 
 describe("BotRepository", () => {
   test("creates bot with chats", async () => {

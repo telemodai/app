@@ -485,7 +485,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import { readFetchError } from "~/lib/fetch-error";
+import { readFetchError } from "@/lib/fetch-error";
 
 const { t } = useI18n();
 

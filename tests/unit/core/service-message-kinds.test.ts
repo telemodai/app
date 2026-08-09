@@ -2,8 +2,8 @@ import { describe, expect, test } from "bun:test";
 import {
   classifyServiceMessage,
   isSelfBotJoinMessage,
-} from "../../../server/core/service-message-kinds";
-import type { TelegramMessage } from "../../../server/types/telegram";
+} from "@/server/core/service-message-kinds";
+import type { TelegramMessage } from "@/server/types/telegram";
 
 function baseMessage(overrides: Partial<TelegramMessage> = {}): TelegramMessage {
   return {

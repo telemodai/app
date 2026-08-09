@@ -199,9 +199,9 @@
 </template>
 
 <script setup lang="ts">
-import { readFetchError } from "~/lib/fetch-error";
+import { readFetchError } from "@/lib/fetch-error";
 import { ref, computed, onMounted } from "vue";
-import type { BotListItem, BotMemberRole } from "~/types/bot";
+import type { BotListItem, BotMemberRole } from "@/types/bot";
 
 const { t } = useI18n();
 const config = useRuntimeConfig();

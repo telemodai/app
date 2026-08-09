@@ -2,9 +2,9 @@ import { describe, expect, test } from "bun:test";
 import {
   applyDatabaseLlmEnvOverrides,
   resolveLlmConfig,
-} from "../../../server/core/instance-llm-settings";
-import { encryptSecret } from "../../../server/core/settings-encryption";
-import { resetDeploymentModeCacheForTests } from "../../../server/core/deployment-mode";
+} from "@/server/core/instance-llm-settings";
+import { encryptSecret } from "@/server/core/settings-encryption";
+import { resetDeploymentModeCacheForTests } from "@/server/core/deployment-mode";
 
 const ENCRYPTION_ENV = {
   SETTINGS_ENCRYPTION_KEY: "test-secret-key-for-unit-tests-only",

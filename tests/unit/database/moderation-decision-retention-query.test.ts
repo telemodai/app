@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { lt } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { moderationDecisions } from "../../../server/database/schema";
+import { moderationDecisions } from "@/server/database/schema";
 
 describe("moderation decisions retention delete query", () => {
   test("uses Drizzle lt() so postgres driver receives a typed Date param", () => {

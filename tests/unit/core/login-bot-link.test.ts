@@ -3,11 +3,11 @@ import {
   buildLoginBotLinkUrl,
   isLoginBotStartCommand,
   LOGIN_BOT_TOKEN_RATE_LIMIT_MAX,
-} from "../../../server/core/login-bot-link";
+} from "@/server/core/login-bot-link";
 import {
   issueLoginBotLink,
   redeemLoginBotToken,
-} from "../../../server/utils/login-bot-token-service";
+} from "@/server/utils/login-bot-token-service";
 
 type TokenRow = {
   id: string;

@@ -1,11 +1,11 @@
 import type {
   CreateModerationDecisionRequest,
   ModerationDecision,
-} from "../../../server/database/models/moderation-decision";
+} from "@/server/database/models/moderation-decision";
 import type {
   ListDecisionsOptions,
   PaginatedDecisions,
-} from "../../../server/database/repositories/moderation-decision-repository";
+} from "@/server/database/repositories/moderation-decision-repository";
 
 let nextId = 1;
 

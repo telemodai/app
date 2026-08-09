@@ -1,6 +1,6 @@
 import { and, desc, eq, isNull } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { chatActivationPending } from "../schema";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { chatActivationPending } from "@/server/database/schema";
 
 export type ChatActivationPendingRow =
   typeof chatActivationPending.$inferSelect;

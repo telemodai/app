@@ -1,11 +1,11 @@
 import { and, eq, inArray, lt } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { providerPayments } from "../schema";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { providerPayments } from "@/server/database/schema";
 import type {
   CreateProviderPaymentInput,
   ProviderPayment,
   ProviderPaymentStatus,
-} from "../models/provider-payment";
+} from "@/server/database/models/provider-payment";
 
 function toProviderPayment(
   row: typeof providerPayments.$inferSelect

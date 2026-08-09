@@ -1,12 +1,12 @@
 import { and, eq, gte, lte, asc, sql, inArray } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
+import { getDatabaseConnection } from "@/server/database/connection";
 import {
   ChatStatistics,
   CreateChatStatisticsRequest,
   UpdateChatStatisticsRequest,
-} from "../models/chat-statistics";
-import { chatStatistics } from "../schema";
-import { toChatStatistics, toDateKey } from "../mappers";
+} from "@/server/database/models/chat-statistics";
+import { chatStatistics } from "@/server/database/schema";
+import { toChatStatistics, toDateKey } from "@/server/database/mappers";
 
 export class ChatStatisticsRepository {
   private get db() {

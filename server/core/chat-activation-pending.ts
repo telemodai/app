@@ -1,7 +1,7 @@
-import type { Chat } from "../database/models/bot";
-import type { ChatActivationPendingRow } from "../database/repositories/chat-activation-pending-repository";
-import { ChatRepository } from "../database/repositories/chat-repository";
-import { toChat } from "../database/mappers";
+import type { Chat } from "@/server/database/models/bot";
+import type { ChatActivationPendingRow } from "@/server/database/repositories/chat-activation-pending-repository";
+import { ChatRepository } from "@/server/database/repositories/chat-repository";
+import { toChat } from "@/server/database/mappers";
 
 export type PendingActivationStatus =
   | "waiting"

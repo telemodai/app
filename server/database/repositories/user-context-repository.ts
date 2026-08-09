@@ -10,14 +10,14 @@ import {
   countDistinct,
   count,
 } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
+import { getDatabaseConnection } from "@/server/database/connection";
 import {
   UserContext,
   CreateUserContextRequest,
   UpdateUserContextRequest,
-} from "../models/user-context";
-import { userContexts } from "../schema";
-import { toUserContext } from "../mappers";
+} from "@/server/database/models/user-context";
+import { userContexts } from "@/server/database/schema";
+import { toUserContext } from "@/server/database/mappers";
 
 export class UserContextRepository {
   private get db() {

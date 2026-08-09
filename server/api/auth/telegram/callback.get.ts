@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto";
-import { exchangeTelegramCode, verifyTelegramIdToken } from "../../../utils/telegram-oidc";
-import { resolveReturnToPath } from "../../../../lib/auth-return-to";
+import { exchangeTelegramCode, verifyTelegramIdToken } from "@/server/utils/telegram-oidc";
+import { resolveReturnToPath } from "@/lib/auth-return-to";
 import {
   clearOidcCookies,
   createUserSession,
   readOidcCookies,
-} from "../../../utils/session";
-import { UserRepository } from "../../../database/repositories/user-repository";
+} from "@/server/utils/session";
+import { UserRepository } from "@/server/database/repositories/user-repository";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);

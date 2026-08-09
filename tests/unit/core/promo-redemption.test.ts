@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { reconcileProviderPayment } from "../../../server/core/provider-payment-reconciliation";
-import { InMemoryCreditStore } from "../../helpers/in-memory-credit-store";
-import { CreditService } from "../../../server/core/credit-service";
-import type { BillingWebhookEvent } from "../../../server/core/billing-provider";
-import type { ProviderPayment } from "../../../server/database/models/provider-payment";
+import { reconcileProviderPayment } from "@/server/core/provider-payment-reconciliation";
+import { InMemoryCreditStore } from "@/tests/helpers/in-memory-credit-store";
+import { CreditService } from "@/server/core/credit-service";
+import type { BillingWebhookEvent } from "@/server/core/billing-provider";
+import type { ProviderPayment } from "@/server/database/models/provider-payment";
 
 const paidEvent: BillingWebhookEvent = {
   providerPaymentId: "pay-promo-1",

@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { APP_LINKS } from "~/lib/app-config";
+import { APP_LINKS } from "@/lib/app-config";
 
 const { t } = useI18n();
 const appName = useAppName();

@@ -1,8 +1,8 @@
 import type {
   ServiceMessageCleanupSettings,
   ServiceMessageKindId,
-} from "../../lib/service-message-cleanup";
-import type { TelegramMessage } from "../types/telegram";
+} from "@/lib/service-message-cleanup";
+import type { TelegramMessage } from "@/server/types/telegram";
 import { isSelfBotJoinMessage } from "./service-message-kinds";
 
 export function shouldDeleteServiceMessage(input: {

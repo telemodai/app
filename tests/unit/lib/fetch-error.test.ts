@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { readFetchError } from "../../../lib/fetch-error";
+import { readFetchError } from "@/lib/fetch-error";
 
 describe("readFetchError", () => {
   test("prefers API statusMessage from data", () => {

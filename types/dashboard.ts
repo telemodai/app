@@ -1,4 +1,4 @@
-import type { ModerationActionType } from "~/lib/moderation-action-ui";
+import type { ModerationActionType } from "@/lib/moderation-action-ui";
 
 export interface DashboardKpi {
   bots_total: number;

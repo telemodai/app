@@ -1,7 +1,7 @@
-import { UserContextRepository } from "../database/repositories/user-context-repository";
-import { UserMessageRepository } from "../database/repositories/user-message-repository";
-import { ModerationActionRepository } from "../database/repositories/moderation-action-repository";
-import { ChatStatisticsRepository } from "../database/repositories/chat-statistics-repository";
+import { UserContextRepository } from "@/server/database/repositories/user-context-repository";
+import { UserMessageRepository } from "@/server/database/repositories/user-message-repository";
+import { ModerationActionRepository } from "@/server/database/repositories/moderation-action-repository";
+import { ChatStatisticsRepository } from "@/server/database/repositories/chat-statistics-repository";
 import { logger } from "./logger";
 import { buildChatHistoryForPrompt } from "./chat-history";
 

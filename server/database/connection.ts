@@ -1,6 +1,6 @@
 import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { logger } from "../core/logger";
+import { logger } from "@/server/core/logger";
 import * as schema from "./schema";
 import * as authSchema from "./auth-schema";
 import { runMigrations } from "./migrate";

@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { instanceSettings } from "../schema";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { instanceSettings } from "@/server/database/schema";
 import type {
   InstanceSettings,
   UpdateInstanceSettingsRequest,
-} from "../models/instance-settings";
-import { encryptSecret } from "../../core/settings-encryption";
+} from "@/server/database/models/instance-settings";
+import { encryptSecret } from "@/server/core/settings-encryption";
 
 function toInstanceSettings(
   row: typeof instanceSettings.$inferSelect

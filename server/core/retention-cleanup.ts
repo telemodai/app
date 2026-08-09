@@ -1,13 +1,13 @@
 import { sql } from "drizzle-orm";
-import { getDatabaseConnection } from "../database/connection";
+import { getDatabaseConnection } from "@/server/database/connection";
 import { logger } from "./logger";
 import {
   moderationRetentionCutoff,
   USER_MESSAGES_PER_SCOPE,
 } from "./retention-policy";
-import { ModerationActionRepository } from "../database/repositories/moderation-action-repository";
-import { ModerationDecisionRepository } from "../database/repositories/moderation-decision-repository";
-import { UserMessageRepository } from "../database/repositories/user-message-repository";
+import { ModerationActionRepository } from "@/server/database/repositories/moderation-action-repository";
+import { ModerationDecisionRepository } from "@/server/database/repositories/moderation-decision-repository";
+import { UserMessageRepository } from "@/server/database/repositories/user-message-repository";
 
 export const RETENTION_LOCK_KEYS = {
   userMessages: 59_001,

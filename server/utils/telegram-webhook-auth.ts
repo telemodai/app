@@ -1,4 +1,4 @@
-import { BotRepository } from "../database/repositories/bot-repository";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
 import { isValidWebhookSecret } from "./webhook-auth";
 
 export type WebhookRejectReason =

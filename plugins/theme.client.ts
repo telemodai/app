@@ -1,4 +1,4 @@
-import { initTheme } from "~/lib/theme.client";
+import { initTheme } from "@/lib/theme.client";
 
 export default defineNuxtPlugin(() => {
   initTheme();

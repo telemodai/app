@@ -1,6 +1,6 @@
-import { getDatabaseConnection } from "../connection";
-import { llmUsage } from "../schema";
-import type { CreateLlmUsageInput, LlmUsageRecord } from "../models/llm-usage";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { llmUsage } from "@/server/database/schema";
+import type { CreateLlmUsageInput, LlmUsageRecord } from "@/server/database/models/llm-usage";
 
 function toLlmUsage(row: typeof llmUsage.$inferSelect): LlmUsageRecord {
   return {

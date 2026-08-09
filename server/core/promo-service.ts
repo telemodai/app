@@ -3,13 +3,13 @@ import {
   computeDiscountedAmountRub,
   normalizePromoCode,
 } from "./billing/promo-discount";
-import { PROMO_VALIDATION_STATUS_MESSAGES } from "../../lib/promo-validation-messages";
-import type { PromoCode } from "../database/models/promo-code";
+import { PROMO_VALIDATION_STATUS_MESSAGES } from "@/lib/promo-validation-messages";
+import type { PromoCode } from "@/server/database/models/promo-code";
 import {
   isPromoCodeCurrentlyValid,
   PromoCodeRepository,
   PromoRedemptionRepository,
-} from "../database/repositories/promo-code-repository";
+} from "@/server/database/repositories/promo-code-repository";
 
 export type PromoValidationError =
   | "not_saas"

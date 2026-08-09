@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { parseUsersPaginationQuery } from "../../../server/utils/chat-user-moderation";
+import { parseUsersPaginationQuery } from "@/server/utils/chat-user-moderation";
 
 describe("parseUsersPaginationQuery", () => {
   test("defaults to page 1 and limit 25", () => {

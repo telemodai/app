@@ -3,11 +3,11 @@ import { randomUUID } from "node:crypto";
 import { isSaasMode } from "./deployment-mode";
 import { logger } from "./logger";
 import { SIGNUP_CREDIT_GRANT } from "./credit-packages";
-import { BotRepository } from "../database/repositories/bot-repository";
-import { CreditTransactionRepository } from "../database/repositories/credit-transaction-repository";
-import { bots } from "../database/schema";
-import { getDatabaseConnection } from "../database/connection";
-import type { CreditTransaction } from "../database/models/credit-transaction";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { CreditTransactionRepository } from "@/server/database/repositories/credit-transaction-repository";
+import { bots } from "@/server/database/schema";
+import { getDatabaseConnection } from "@/server/database/connection";
+import type { CreditTransaction } from "@/server/database/models/credit-transaction";
 
 export type DebitModerationInput = {
   botId: string;

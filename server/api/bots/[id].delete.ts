@@ -1,6 +1,6 @@
-import { deleteBotPermanently, DeleteBotError } from "../../core/delete-bot";
-import { requireBotAccess } from "../../utils/bot-access";
-import { requireBotIdParam } from "../../utils/get-bot-id-param";
+import { deleteBotPermanently, DeleteBotError } from "@/server/core/delete-bot";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
 
 export default defineEventHandler(async (event) => {
   const botId = requireBotIdParam(event);

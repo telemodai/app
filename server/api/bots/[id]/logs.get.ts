@@ -1,9 +1,9 @@
-import { logger } from "../../../core/logger";
-import { loadRuleNameMap, resolveRuleName } from "../../../core/rule-name-lookup";
-import { BotRepository } from "../../../database/repositories/bot-repository";
-import { ModerationActionRepository } from "../../../database/repositories/moderation-action-repository";
-import { requireBotAccess } from "../../../utils/bot-access";
-import { requireBotIdParam } from "../../../utils/get-bot-id-param";
+import { logger } from "@/server/core/logger";
+import { loadRuleNameMap, resolveRuleName } from "@/server/core/rule-name-lookup";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { ModerationActionRepository } from "@/server/database/repositories/moderation-action-repository";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
 
 export default defineEventHandler(async (event) => {
   try {

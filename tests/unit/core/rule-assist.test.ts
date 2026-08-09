@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   isRuleAssistDraftMode,
   parseRuleAssistResponse,
-} from "../../../server/core/rule-assist";
+} from "@/server/core/rule-assist";
 
 describe("rule-assist", () => {
   test("isRuleAssistDraftMode when comment and ai_prompt are empty", () => {

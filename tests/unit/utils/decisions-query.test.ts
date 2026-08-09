@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   buildDecisionsPagination,
   parseDecisionsQuery,
-} from "../../../server/utils/decisions-query";
+} from "@/server/utils/decisions-query";
 
 describe("decisions query", () => {
   test("parseDecisionsQuery defaults to page 1 and limit 100", () => {

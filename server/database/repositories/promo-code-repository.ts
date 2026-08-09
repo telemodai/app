@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { promoCodes, promoRedemptions } from "../schema";
-import type { PromoCode, PromoRedemption } from "../models/promo-code";
-import { normalizePromoCode } from "../../core/billing/promo-discount";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { promoCodes, promoRedemptions } from "@/server/database/schema";
+import type { PromoCode, PromoRedemption } from "@/server/database/models/promo-code";
+import { normalizePromoCode } from "@/server/core/billing/promo-discount";
 
 function toPromoCode(row: typeof promoCodes.$inferSelect): PromoCode {
   return {

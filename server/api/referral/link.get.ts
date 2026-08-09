@@ -1,7 +1,7 @@
-import { isSaasMode } from "../../core/deployment-mode";
-import { UserRepository } from "../../database/repositories/user-repository";
-import { requireSession } from "../../utils/session";
-import { getWebhookBaseUrl } from "../../utils/telegram-webhook";
+import { isSaasMode } from "@/server/core/deployment-mode";
+import { UserRepository } from "@/server/database/repositories/user-repository";
+import { requireSession } from "@/server/utils/session";
+import { getWebhookBaseUrl } from "@/server/utils/telegram-webhook";
 
 export default defineEventHandler(async (event) => {
   if (!isSaasMode()) {

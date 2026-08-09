@@ -4,12 +4,12 @@ import {
   computeReferralBonusCredits,
   REFERRAL_REFEREE_PERCENT,
   REFERRAL_REFERRER_PERCENT,
-} from "../../lib/referral-config";
-import type { AppUser } from "../database/models/user";
-import { ReferralRepository } from "../database/repositories/referral-repository";
-import { UserRepository } from "../database/repositories/user-repository";
-import { BotMemberRepository } from "../database/repositories/bot-member-repository";
-import { normalizeReferralCode } from "../utils/referral-cookie";
+} from "@/lib/referral-config";
+import type { AppUser } from "@/server/database/models/user";
+import { ReferralRepository } from "@/server/database/repositories/referral-repository";
+import { UserRepository } from "@/server/database/repositories/user-repository";
+import { BotMemberRepository } from "@/server/database/repositories/bot-member-repository";
+import { normalizeReferralCode } from "@/server/utils/referral-cookie";
 
 export type ReferralProcessResult =
   | { status: "applied"; referral_id: number }

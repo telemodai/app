@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { InMemoryRuleRepository } from "../../helpers/in-memory-rule-repository";
+import { InMemoryRuleRepository } from "@/tests/helpers/in-memory-rule-repository";
 import {
   TEST_BOT_ID,
   TEST_CHAT_INTERNAL_ID,
-} from "../../helpers/constants";
+} from "@/tests/helpers/constants";
 
 describe("RuleRepository", () => {
   test("creates and finds chat-scoped rules with action fields", async () => {

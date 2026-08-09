@@ -2,8 +2,8 @@ import { describe, expect, test } from "bun:test";
 import {
   canModeratorPardon,
   pardonUserInChat,
-} from "../../../server/core/pardon-service";
-import type { UserContext } from "../../../server/database/models/user-context";
+} from "@/server/core/pardon-service";
+import type { UserContext } from "@/server/database/models/user-context";
 
 const baseUser = (): UserContext => ({
   bot_id: "bot-1",

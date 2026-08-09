@@ -17,7 +17,7 @@ import {
   primaryKey,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import type { ServiceMessageCleanupSettings } from "../../lib/service-message-cleanup";
+import type { ServiceMessageCleanupSettings } from "@/lib/service-message-cleanup";
 import { users } from "./auth-schema";
 
 export const actionTypeEnum = pgEnum("action_type", [

@@ -1,6 +1,6 @@
-import type { BotResponse } from "../database/models/bot";
-import { BotRepository } from "../database/repositories/bot-repository";
-import { logger } from "../core/logger";
+import type { BotResponse } from "@/server/database/models/bot";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { logger } from "@/server/core/logger";
 import {
   evaluateDeliveryHealth,
   type BotDeliveryHealth,

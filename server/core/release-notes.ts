@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { githubReleaseUrl } from "../../lib/app-config";
+import { githubReleaseUrl } from "@/lib/app-config";
 
 export type ReleaseNoteSection = {
   title: string;

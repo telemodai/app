@@ -1,5 +1,5 @@
-import { BotRepository } from "../../database/repositories/bot-repository";
-import { requireSession } from "../../utils/session";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { requireSession } from "@/server/utils/session";
 
 export default defineEventHandler(async (event) => {
   try {

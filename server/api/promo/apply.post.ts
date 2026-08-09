@@ -1,11 +1,11 @@
-import { isSaasMode } from "../../core/deployment-mode";
+import { isSaasMode } from "@/server/core/deployment-mode";
 import {
   PromoService,
   promoValidationErrorMessage,
-} from "../../core/promo-service";
-import { requireSession } from "../../utils/session";
-import { setPromoCookie } from "../../utils/promo-cookie";
-import { CREDIT_PACKAGES } from "../../../lib/credit-packages";
+} from "@/server/core/promo-service";
+import { requireSession } from "@/server/utils/session";
+import { setPromoCookie } from "@/server/utils/promo-cookie";
+import { CREDIT_PACKAGES } from "@/lib/credit-packages";
 
 type ApplyBody = {
   code?: string;

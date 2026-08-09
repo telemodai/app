@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   computeReferralBonusCredits,
   REFERRAL_REFEREE_PERCENT,
-} from "../../../lib/referral-config";
+} from "@/lib/referral-config";
 
 describe("referral-config", () => {
   test("computeReferralBonusCredits floors percent of package credits", () => {

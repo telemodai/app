@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import type { DashboardData } from "~/types/dashboard";
+import type { DashboardData } from "@/types/dashboard";
 
 const { t } = useI18n();
 

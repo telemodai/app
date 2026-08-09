@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { and, eq, isNull } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { botAccessCodes } from "../schema";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { botAccessCodes } from "@/server/database/schema";
 
 function generateAccessCode(): string {
   return randomBytes(6).toString("hex");

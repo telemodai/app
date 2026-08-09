@@ -1,9 +1,9 @@
 import { describe, expect, test, beforeEach } from "bun:test";
-import { ReferralService } from "../../../server/core/referral-service";
-import { InMemoryCreditStore } from "../../helpers/in-memory-credit-store";
-import { CreditService } from "../../../server/core/credit-service";
-import { resetDeploymentModeCacheForTests } from "../../../server/core/deployment-mode";
-import type { AppUser } from "../../../server/database/models/user";
+import { ReferralService } from "@/server/core/referral-service";
+import { InMemoryCreditStore } from "@/tests/helpers/in-memory-credit-store";
+import { CreditService } from "@/server/core/credit-service";
+import { resetDeploymentModeCacheForTests } from "@/server/core/deployment-mode";
+import type { AppUser } from "@/server/database/models/user";
 
 function user(
   id: string,

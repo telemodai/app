@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach } from "bun:test";
-import { PromoService } from "../../../server/core/promo-service";
-import { resetDeploymentModeCacheForTests } from "../../../server/core/deployment-mode";
-import type { PromoCode } from "../../../server/database/models/promo-code";
+import { PromoService } from "@/server/core/promo-service";
+import { resetDeploymentModeCacheForTests } from "@/server/core/deployment-mode";
+import type { PromoCode } from "@/server/database/models/promo-code";
 
 function createPromo(overrides: Partial<PromoCode> = {}): PromoCode {
   return {

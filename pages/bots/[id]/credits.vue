@@ -105,11 +105,11 @@
 </template>
 
 <script setup lang="ts">
-import { CREDIT_PACKAGES, type CreditPackageId } from "~/lib/credit-packages";
-import { readFetchError } from "~/lib/fetch-error";
+import { CREDIT_PACKAGES, type CreditPackageId } from "@/lib/credit-packages";
+import { readFetchError } from "@/lib/fetch-error";
 import {
   resolvePromoApplyFetchError,
-} from "~/lib/promo-validation-ui";
+} from "@/lib/promo-validation-ui";
 
 const { t } = useI18n();
 const config = useRuntimeConfig();

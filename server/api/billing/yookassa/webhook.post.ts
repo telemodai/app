@@ -1,7 +1,7 @@
-import { reconcileProviderPayment } from "../../../core/provider-payment-reconciliation";
-import { createBillingProvider } from "../../../core/billing/yookassa-provider";
-import { isSaasMode } from "../../../core/deployment-mode";
-import { logger } from "../../../core/logger";
+import { reconcileProviderPayment } from "@/server/core/provider-payment-reconciliation";
+import { createBillingProvider } from "@/server/core/billing/yookassa-provider";
+import { isSaasMode } from "@/server/core/deployment-mode";
+import { logger } from "@/server/core/logger";
 
 export default defineEventHandler(async (event) => {
   if (!isSaasMode()) {

@@ -4,7 +4,7 @@ import type {
   ChatMember,
   ChatMemberAdministrator,
   TelegramUserProfilePhotos,
-} from "../types/telegram";
+} from "@/server/types/telegram";
 import type { TelegramFetch } from "./telegram-fetch";
 
 export class TelegramBotApiError extends Error {
