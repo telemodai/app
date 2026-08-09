@@ -1,14 +1,14 @@
 import { describe, expect, test } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { resolveMigrationsFolder } from "../../../server/database/migrations-path";
+import { resolveMigrationsFolder, MIGRATIONS_DIR } from "../../../server/database/migrations-path";
 
 describe("resolveMigrationsFolder", () => {
   test("finds meta/_journal.json from project root", () => {
     const folder = resolveMigrationsFolder();
     expect(existsSync(path.join(folder, "meta/_journal.json"))).toBe(true);
     expect(existsSync(path.join(folder, "0000_init.sql"))).toBe(true);
-    expect(folder).toEndWith("/server/database/migrations");
+    expect(folder).toBe(path.join(process.cwd(), MIGRATIONS_DIR));
   });
 
   test("journal lists incremental migrations", () => {
