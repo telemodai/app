@@ -1,8 +1,8 @@
 import { logger } from "./logger";
-import type { Bot } from "../database/models/bot";
-import { BotRepository } from "../database/repositories/bot-repository";
-import { telegramDeleteWebhook } from "../utils/telegram-webhook";
-import type { TelegramFetch } from "../utils/telegram-fetch";
+import type { Bot } from "@/server/database/models/bot";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { telegramDeleteWebhook } from "@/server/utils/telegram-webhook";
+import type { TelegramFetch } from "@/server/utils/telegram-fetch";
 
 export class DeleteBotError extends Error {
   constructor(

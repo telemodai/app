@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach } from "bun:test";
-import { InMemoryCreditStore } from "../../helpers/in-memory-credit-store";
-import { CreditService } from "../../../server/core/credit-service";
-import { resetDeploymentModeCacheForTests } from "../../../server/core/deployment-mode";
+import { InMemoryCreditStore } from "@/tests/helpers/in-memory-credit-store";
+import { CreditService } from "@/server/core/credit-service";
+import { resetDeploymentModeCacheForTests } from "@/server/core/deployment-mode";
 
 function createService(env: NodeJS.ProcessEnv = { DEPLOYMENT_MODE: "saas" }) {
   resetDeploymentModeCacheForTests();

@@ -5,7 +5,7 @@ import {
   loadLlmConfig,
   resolveLlmLogHost,
   resolveLlmModel,
-} from "../../../server/core/llm-provider";
+} from "@/server/core/llm-provider";
 
 describe("llm-provider", () => {
   test("loadLlmConfig reads LLM_* env vars", () => {

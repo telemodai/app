@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { InMemoryBotRepository } from "../../helpers/in-memory-bot-repository";
-import { TEST_OWNER_USER_ID } from "../../helpers/constants";
-import { validateBotMessageTemplate } from "../../../server/utils/bot-message-template-validation";
+import { InMemoryBotRepository } from "@/tests/helpers/in-memory-bot-repository";
+import { TEST_OWNER_USER_ID } from "@/tests/helpers/constants";
+import { validateBotMessageTemplate } from "@/server/utils/bot-message-template-validation";
 
 describe("bot message template API fields", () => {
   test("PUT persistence via repository update stores templates", async () => {

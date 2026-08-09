@@ -1,6 +1,6 @@
-import { isSaasMode } from "../../core/deployment-mode";
-import { ReferralService } from "../../core/referral-service";
-import { requireSession } from "../../utils/session";
+import { isSaasMode } from "@/server/core/deployment-mode";
+import { ReferralService } from "@/server/core/referral-service";
+import { requireSession } from "@/server/utils/session";
 
 export default defineEventHandler(async (event) => {
   if (!isSaasMode()) {

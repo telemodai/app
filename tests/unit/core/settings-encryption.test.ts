@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   encryptSecret,
   decryptSecret,
-} from "../../../server/core/settings-encryption";
+} from "@/server/core/settings-encryption";
 
 const TEST_ENV = {
   SETTINGS_ENCRYPTION_KEY: "test-secret-key-for-unit-tests-only",

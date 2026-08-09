@@ -1,5 +1,5 @@
 import { and, eq, inArray } from "drizzle-orm";
-import { ChatRepository } from "../database/repositories/chat-repository";
+import { ChatRepository } from "@/server/database/repositories/chat-repository";
 
 export type ChatNameLookup = Pick<
   ChatRepository,

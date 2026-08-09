@@ -3,7 +3,7 @@ import {
   moderationActionColorClass,
   moderationActionI18nKey,
   type ModerationActionType,
-} from "~/lib/moderation-action-ui";
+} from "@/lib/moderation-action-ui";
 
 export function useModerationActionDisplay() {
   const { t } = useI18n();
@@ -17,7 +17,7 @@ export function useModerationActionDisplay() {
 
   function actionClass(action: string): string {
     if (!isModerationActionType(action)) {
-      return "text-gray-700";
+      return "text-fg";
     }
     return moderationActionColorClass(action);
   }

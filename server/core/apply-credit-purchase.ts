@@ -1,8 +1,8 @@
 import type { BillingWebhookEvent } from "./billing-provider";
 import { CreditService } from "./credit-service";
-import { CreditTransactionRepository } from "../database/repositories/credit-transaction-repository";
-import { PromoCodeRepository } from "../database/repositories/promo-code-repository";
-import { ProviderPaymentRepository } from "../database/repositories/provider-payment-repository";
+import { CreditTransactionRepository } from "@/server/database/repositories/credit-transaction-repository";
+import { PromoCodeRepository } from "@/server/database/repositories/promo-code-repository";
+import { ProviderPaymentRepository } from "@/server/database/repositories/provider-payment-repository";
 import { resolveCreditPackage } from "./credit-packages";
 import { logger } from "./logger";
 

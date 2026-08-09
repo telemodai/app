@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   generateOidcState,
   generatePkcePair,
-} from "../../../server/utils/telegram-oidc";
+} from "@/server/utils/telegram-oidc";
 
 describe("telegram oidc helpers", () => {
   test("generatePkcePair creates verifier and S256 challenge", () => {

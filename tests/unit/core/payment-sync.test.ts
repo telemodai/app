@@ -2,19 +2,19 @@ import { describe, expect, test } from "bun:test";
 import type {
   BillingProvider,
   BillingWebhookEvent,
-} from "../../../server/core/billing-provider";
-import { applyCreditPurchaseFromBillingEvent } from "../../../server/core/apply-credit-purchase";
+} from "@/server/core/billing-provider";
+import { applyCreditPurchaseFromBillingEvent } from "@/server/core/apply-credit-purchase";
 import {
   reconcileProviderPayment,
   mapBillingEventToProviderStatus,
-} from "../../../server/core/provider-payment-reconciliation";
+} from "@/server/core/provider-payment-reconciliation";
 import {
   syncBotOpenProviderPayments,
   syncBotPurchaseFromProvider,
-} from "../../../server/core/payment-sync";
-import { InMemoryCreditStore } from "../../helpers/in-memory-credit-store";
-import { InMemoryProviderPaymentStore } from "../../helpers/in-memory-provider-payment-store";
-import { CreditService } from "../../../server/core/credit-service";
+} from "@/server/core/payment-sync";
+import { InMemoryCreditStore } from "@/tests/helpers/in-memory-credit-store";
+import { InMemoryProviderPaymentStore } from "@/tests/helpers/in-memory-provider-payment-store";
+import { CreditService } from "@/server/core/credit-service";
 
 class MockBillingProvider implements BillingProvider {
   constructor(private payments = new Map<string, BillingWebhookEvent>()) {}

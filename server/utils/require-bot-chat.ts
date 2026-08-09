@@ -1,6 +1,6 @@
 import type { H3Event } from "h3";
-import { ChatRepository } from "../database/repositories/chat-repository";
-import type { BotChatRow } from "../database/repositories/chat-repository";
+import { ChatRepository } from "@/server/database/repositories/chat-repository";
+import type { BotChatRow } from "@/server/database/repositories/chat-repository";
 import { requireTelegramChatIdParam } from "./require-telegram-chat-id-param";
 
 export async function requireBotChat(

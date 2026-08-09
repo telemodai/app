@@ -1,0 +1,49 @@
+/* App-only tokens — not part of upstream site/brand. */
+
+:root {
+  --tm-action-warning: oklch(0.78 0.14 85);
+  --tm-action-delete: oklch(0.72 0.13 48);
+  --tm-action-ban: var(--tm-danger);
+  --tm-action-reset: oklch(0.68 0.11 255);
+  --tm-action-unban: oklch(0.72 0.09 155);
+  --tm-action-pardon: oklch(0.70 0.08 220);
+  --tm-action-warning-surface: oklch(0.28 0.05 85);
+  --tm-action-delete-surface: oklch(0.27 0.05 48);
+  --tm-action-reset-surface: oklch(0.28 0.04 255);
+  --tm-action-unban-surface: oklch(0.27 0.04 155);
+  --tm-action-pardon-surface: oklch(0.27 0.04 220);
+  /* Readable label on filled accent buttons (cabinet CTA). */
+  --tm-accent-on: var(--tm-ink);
+}
+
+[data-theme="light"] {
+  --tm-action-warning: oklch(0.52 0.12 75);
+  --tm-action-delete: oklch(0.50 0.12 45);
+  --tm-action-ban: var(--tm-danger);
+  --tm-action-reset: oklch(0.42 0.09 255);
+  --tm-action-unban: oklch(0.45 0.08 155);
+  --tm-action-pardon: oklch(0.44 0.07 220);
+  --tm-action-warning-surface: oklch(0.94 0.04 85);
+  --tm-action-delete-surface: oklch(0.94 0.03 48);
+  --tm-action-reset-surface: oklch(0.93 0.03 255);
+  --tm-action-unban-surface: oklch(0.93 0.03 155);
+  --tm-action-pardon-surface: oklch(0.93 0.03 220);
+  --tm-accent-on: var(--tm-white);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --tm-action-warning: oklch(0.52 0.12 75);
+    --tm-action-delete: oklch(0.50 0.12 45);
+    --tm-action-ban: var(--tm-danger);
+    --tm-action-reset: oklch(0.42 0.09 255);
+    --tm-action-unban: oklch(0.45 0.08 155);
+    --tm-action-pardon: oklch(0.44 0.07 220);
+    --tm-action-warning-surface: oklch(0.94 0.04 85);
+    --tm-action-delete-surface: oklch(0.94 0.03 48);
+    --tm-action-reset-surface: oklch(0.93 0.03 255);
+    --tm-action-unban-surface: oklch(0.93 0.03 155);
+    --tm-action-pardon-surface: oklch(0.93 0.03 220);
+    --tm-accent-on: var(--tm-white);
+  }
+}

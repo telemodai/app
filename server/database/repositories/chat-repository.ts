@@ -1,7 +1,7 @@
 import { and, eq, inArray } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { chats } from "../schema";
-import type { ChatHealthStatus } from "../models/bot";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { chats } from "@/server/database/schema";
+import type { ChatHealthStatus } from "@/server/database/models/bot";
 
 export type BotChatRow = typeof chats.$inferSelect;
 

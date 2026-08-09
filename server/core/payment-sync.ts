@@ -4,7 +4,7 @@ import {
   reconcileProviderPayment,
   type ReconcileProviderPaymentDeps,
 } from "./provider-payment-reconciliation";
-import { ProviderPaymentRepository } from "../database/repositories/provider-payment-repository";
+import { ProviderPaymentRepository } from "@/server/database/repositories/provider-payment-repository";
 
 export type PaymentSyncStatus =
   | "applied"

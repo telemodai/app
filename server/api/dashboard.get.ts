@@ -1,11 +1,11 @@
-import { loadDashboardData } from "../core/dashboard-service";
-import { loadChatNameMap, resolveChatName } from "../core/chat-name-lookup";
-import { loadRuleNameMap, resolveRuleName } from "../core/rule-name-lookup";
-import { BotRepository } from "../database/repositories/bot-repository";
-import { ChatStatisticsRepository } from "../database/repositories/chat-statistics-repository";
-import { ModerationActionRepository } from "../database/repositories/moderation-action-repository";
-import { UserContextRepository } from "../database/repositories/user-context-repository";
-import { requireSession } from "../utils/session";
+import { loadDashboardData } from "@/server/core/dashboard-service";
+import { loadChatNameMap, resolveChatName } from "@/server/core/chat-name-lookup";
+import { loadRuleNameMap, resolveRuleName } from "@/server/core/rule-name-lookup";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { ChatStatisticsRepository } from "@/server/database/repositories/chat-statistics-repository";
+import { ModerationActionRepository } from "@/server/database/repositories/moderation-action-repository";
+import { UserContextRepository } from "@/server/database/repositories/user-context-repository";
+import { requireSession } from "@/server/utils/session";
 
 export default defineEventHandler(async (event) => {
   try {

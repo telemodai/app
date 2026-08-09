@@ -1,9 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from "@tailwindcss/vite";
 import pkg from "./package.json";
 import { resolveAppName } from "./lib/app-config";
+import { brandPublic, THEME_STORAGE_KEY } from "./lib/brand";
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-08-11",
+  css: ["~/assets/css/main.css"],
+  vite: {
+    plugins: [tailwindcss()],
+  },
   app: {
     head: {
       htmlAttrs: {
@@ -18,11 +24,41 @@ export default defineNuxtConfig({
           name: "googlebot",
           content: "noindex, nofollow, noarchive, nosnippet",
         },
+        {
+          name: "theme-color",
+          content: brandPublic.themeColor,
+          id: "theme-color-meta",
+        },
+      ],
+      link: [
+        {
+          rel: "icon",
+          href: brandPublic.faviconIco,
+          sizes: "48x48",
+          id: "theme-favicon-ico",
+        },
+        {
+          rel: "icon",
+          href: brandPublic.faviconSvg,
+          type: "image/svg+xml",
+          id: "theme-favicon-svg",
+        },
+        {
+          rel: "apple-touch-icon",
+          href: brandPublic.appleTouchIcon,
+          id: "theme-apple-touch",
+        },
+      ],
+      script: [
+        {
+          innerHTML: `try{const s=localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});if(s==="dark"||s==="light")document.documentElement.dataset.theme=s}catch{}`,
+          tagPosition: "head",
+        },
       ],
     },
   },
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "@nuxt/fonts", "@nuxtjs/i18n"],
+  modules: ["@nuxtjs/i18n"],
   i18n: {
     defaultLocale: "en",
     locales: [
@@ -51,7 +87,6 @@ export default defineNuxtConfig({
       deploymentMode: process.env.DEPLOYMENT_MODE || "self-hosted",
       baseUrl: process.env.BASE_URL || "",
     },
-    // Переменные только для сервера
     llmApiKey: process.env.LLM_API_KEY,
     llmBaseUrl: process.env.LLM_BASE_URL,
     llmModel: process.env.LLM_MODEL || "gpt-4.1-nano-2025-04-14",
@@ -87,7 +122,6 @@ export default defineNuxtConfig({
   typescript: {
     strict: true,
   },
-  // Настройки для прослушивания всех интерфейсов
   devServer: {
     host: "0.0.0.0",
     port: 3001,

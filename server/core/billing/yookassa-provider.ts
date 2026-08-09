@@ -2,9 +2,9 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import type {
   BillingProvider,
   BillingWebhookEvent,
-} from "../billing-provider";
-import { resolveCreditPackage } from "../credit-packages";
-import { logger } from "../logger";
+} from "@/server/core/billing-provider";
+import { resolveCreditPackage } from "@/server/core/credit-packages";
+import { logger } from "@/server/core/logger";
 
 const YOOKASSA_API = "https://api.yookassa.ru/v3";
 

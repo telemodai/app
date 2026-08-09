@@ -1,4 +1,4 @@
-import { loadPaginatedReleaseNotes } from "../../core/release-notes";
+import { loadPaginatedReleaseNotes } from "@/server/core/release-notes";
 
 const MAX_LIMIT = 10;
 const DEFAULT_LIMIT = 5;

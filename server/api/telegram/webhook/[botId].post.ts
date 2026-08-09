@@ -1,9 +1,9 @@
-import { handleTelegramUpdate } from "../../../index";
-import { logger } from "../../../core/logger";
+import { handleTelegramUpdate } from "@/server/index";
+import { logger } from "@/server/core/logger";
 import {
   assertValidTelegramWebhook,
   resolveWebhookRejectReason,
-} from "../../../utils/telegram-webhook-auth";
+} from "@/server/utils/telegram-webhook-auth";
 
 export default defineEventHandler(async (event) => {
   try {

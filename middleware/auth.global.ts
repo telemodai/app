@@ -1,8 +1,8 @@
-import { fetchSession } from "~/lib/fetch-session";
+import { fetchSession } from "@/lib/fetch-session";
 import {
   normalizeAuthReturnTo,
   sanitizeReturnToPath,
-} from "~/lib/auth-return-to";
+} from "@/lib/auth-return-to";
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const publicPaths = ["/login"];

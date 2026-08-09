@@ -8,12 +8,12 @@ import {
   parseReleaseSections,
   resolveReleasesDirectory,
   RELEASES_DIR,
-} from "../../../server/core/release-notes";
+} from "@/server/core/release-notes";
 
 describe("release-notes", () => {
   test("resolveReleasesDirectory uses project cwd, not import.meta.dir", () => {
     const folder = resolveReleasesDirectory();
-    expect(folder).toEndWith(RELEASES_DIR);
+    expect(folder).toBe(path.join(process.cwd(), RELEASES_DIR));
     expect(folder).not.toContain("undefined");
   });
 

@@ -1,5 +1,5 @@
 import type { H3Event } from "h3";
-import { ChatRepository } from "../database/repositories/chat-repository";
+import { ChatRepository } from "@/server/database/repositories/chat-repository";
 import { requireBotIdParam } from "./get-bot-id-param";
 
 export async function requireBotChatByRowId(

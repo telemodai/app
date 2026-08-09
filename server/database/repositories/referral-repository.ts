@@ -1,7 +1,7 @@
 import { and, eq, inArray, ne, sql } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { referrals, creditTransactions } from "../schema";
-import type { Referral, ReferrerStatus } from "../models/referral";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { referrals, creditTransactions } from "@/server/database/schema";
+import type { Referral, ReferrerStatus } from "@/server/database/models/referral";
 
 function toReferral(row: typeof referrals.$inferSelect): Referral {
   return {

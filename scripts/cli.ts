@@ -3,15 +3,15 @@ import { Command } from "commander";
 import {
   closeDatabase,
   getDatabaseConnection,
-} from "../server/database/connection";
+} from "@/server/database/connection";
 import {
   createPromoCodeOperator,
   formatPromoCreated,
   parseExpiresAt,
   promptInteractivePromoCreate,
   validateDiscountPercent,
-} from "../server/core/operator/promo-create";
-import { CreditService } from "../server/core/credit-service";
+} from "@/server/core/operator/promo-create";
+import { CreditService } from "@/server/core/credit-service";
 import {
   CREDITS_GRANT_ERROR_MESSAGES,
   formatCreditsGrantResult,
@@ -19,7 +19,7 @@ import {
   promptInteractiveCreditsGrant,
   runCreditsGrantOperator,
   validateGrantReason,
-} from "../server/core/operator/credits-grant";
+} from "@/server/core/operator/credits-grant";
 
 async function withDatabase<T>(fn: () => Promise<T>): Promise<T> {
   const connection = getDatabaseConnection();

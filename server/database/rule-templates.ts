@@ -1,5 +1,5 @@
 import { RuleRepository } from "./repositories/rule-repository";
-import { logger } from "../core/logger";
+import { logger } from "@/server/core/logger";
 
 /** Preset catalog in code. `id` is template slug for API only; rules in DB get a UUID. */
 export const RULE_TEMPLATES = [

@@ -1,8 +1,8 @@
-import { rewriteRuleText, type RuleAssistInput } from "../../../../../../core/rule-assist";
-import { logger } from "../../../../../../core/logger";
-import { requireBotAccess } from "../../../../../../utils/bot-access";
-import { requireBotIdParam } from "../../../../../../utils/get-bot-id-param";
-import { requireBotChat } from "../../../../../../utils/require-bot-chat";
+import { rewriteRuleText, type RuleAssistInput } from "@/server/core/rule-assist";
+import { logger } from "@/server/core/logger";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
+import { requireBotChat } from "@/server/utils/require-bot-chat";
 
 export default defineEventHandler(async (event) => {
   const botId = requireBotIdParam(event);

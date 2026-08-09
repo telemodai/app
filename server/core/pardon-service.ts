@@ -1,10 +1,10 @@
-import type { BotMemberRole } from "../database/repositories/bot-member-repository";
-import { ModerationActionRepository } from "../database/repositories/moderation-action-repository";
-import { UserContextRepository } from "../database/repositories/user-context-repository";
-import type { UserContext } from "../database/models/user-context";
-import type { ModerationActionType } from "../database/models/moderation-action";
-import { telegramUnbanChatMember } from "../utils/telegram-bot-api";
-import type { TelegramFetch } from "../utils/telegram-fetch";
+import type { BotMemberRole } from "@/server/database/repositories/bot-member-repository";
+import { ModerationActionRepository } from "@/server/database/repositories/moderation-action-repository";
+import { UserContextRepository } from "@/server/database/repositories/user-context-repository";
+import type { UserContext } from "@/server/database/models/user-context";
+import type { ModerationActionType } from "@/server/database/models/moderation-action";
+import { telegramUnbanChatMember } from "@/server/utils/telegram-bot-api";
+import type { TelegramFetch } from "@/server/utils/telegram-fetch";
 
 export type PardonOperation = "pardon" | "reset_warnings" | "unban";
 

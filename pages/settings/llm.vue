@@ -7,62 +7,65 @@
       :subtitle="t('page.settingsLlm.subtitle')"
     />
 
-    <p class="text-sm text-gray-600 mb-4">{{ t("billing.envOverrideHint") }}</p>
+    <p class="text-body text-fg-muted mb-4">{{ t("billing.envOverrideHint") }}</p>
 
-    <div v-if="loading" class="text-gray-500">{{ t("common.loading") }}</div>
+    <div v-if="loading" class="text-fg-muted">{{ t("common.loading") }}</div>
 
-    <form v-else class="bg-white border rounded p-6 space-y-4" @submit.prevent="save">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          {{ t("billing.settings.apiKey") }}
-        </label>
-        <input
-          v-model="apiKey"
-          type="password"
-          class="w-full border rounded px-3 py-2"
-          :placeholder="settings?.has_api_key ? t('billing.settings.apiKeyPlaceholder') : ''"
-          autocomplete="off"
-        />
-        <p v-if="settings?.has_api_key && !apiKey" class="text-xs text-green-700 mt-1">
-          {{ t("billing.settings.apiKeyConfigured") }}
-        </p>
-      </div>
+    <UiAppCard v-else>
+      <form class="space-y-4" @submit.prevent="save">
+        <div>
+          <label class="block text-body font-medium text-fg mb-1">
+            {{ t("billing.settings.apiKey") }}
+          </label>
+          <UiAppInput
+            v-model="apiKey"
+            type="password"
+            :placeholder="settings?.has_api_key ? t('billing.settings.apiKeyPlaceholder') : ''"
+            autocomplete="off"
+          />
+          <p v-if="settings?.has_api_key && !apiKey" class="text-xs text-fg-muted mt-1">
+            {{ t("billing.settings.apiKeyConfigured") }}
+          </p>
+        </div>
 
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          {{ t("billing.settings.baseUrl") }}
-        </label>
-        <input
-          v-model="baseUrl"
-          type="url"
-          class="w-full border rounded px-3 py-2"
-          :placeholder="t('billing.settings.baseUrlPlaceholder')"
-        />
-      </div>
+        <div>
+          <label class="block text-body font-medium text-fg mb-1">
+            {{ t("billing.settings.baseUrl") }}
+          </label>
+          <UiAppInput
+            v-model="baseUrl"
+            type="url"
+            :placeholder="t('billing.settings.baseUrlPlaceholder')"
+          />
+        </div>
 
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          {{ t("billing.settings.model") }}
-        </label>
-        <input
-          v-model="model"
-          type="text"
-          class="w-full border rounded px-3 py-2"
-          :placeholder="t('billing.settings.modelPlaceholder')"
-        />
-      </div>
+        <div>
+          <label class="block text-body font-medium text-fg mb-1">
+            {{ t("billing.settings.model") }}
+          </label>
+          <UiAppInput
+            v-model="model"
+            type="text"
+            :placeholder="t('billing.settings.modelPlaceholder')"
+          />
+        </div>
 
-      <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
-      <p v-if="success" class="text-sm text-green-700">{{ t("billing.settings.saved") }}</p>
+        <UiAppAlert v-if="error" variant="danger">
+          {{ error }}
+        </UiAppAlert>
+        <UiAppAlert v-if="success">
+          {{ t("billing.settings.saved") }}
+        </UiAppAlert>
 
-      <button
-        type="submit"
-        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-        :disabled="saving"
-      >
-        {{ saving ? t("common.saving") : t("common.save") }}
-      </button>
-    </form>
+        <UiAppButton
+          type="submit"
+          variant="primary"
+          :disabled="saving"
+        >
+          {{ saving ? t("common.saving") : t("common.save") }}
+        </UiAppButton>
+      </form>
+    </UiAppCard>
   </div>
 </template>
 

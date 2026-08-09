@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   buildPendingActivationView,
   resolvePendingActivationStatus,
-} from "../../../server/core/chat-activation-pending";
+} from "@/server/core/chat-activation-pending";
 
 const basePending = {
   id: 1,

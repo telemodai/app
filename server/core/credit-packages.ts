@@ -4,4 +4,4 @@ export {
   resolveCreditPackage,
   type CreditPackage,
   type CreditPackageId,
-} from "../../lib/credit-packages";
+} from "@/lib/credit-packages";

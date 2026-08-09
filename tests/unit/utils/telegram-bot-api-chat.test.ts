@@ -4,7 +4,7 @@ import {
   telegramGetChatMember,
   telegramGetFile,
   buildTelegramFileUrl,
-} from "../../../server/utils/telegram-bot-api";
+} from "@/server/utils/telegram-bot-api";
 
 describe("telegram-bot-api chat helpers", () => {
   test("telegramGetChat returns chat profile", async () => {

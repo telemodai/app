@@ -3,7 +3,7 @@ import type {
   BotResponse,
   CreateBotInput,
   UpdateBotRequest,
-} from "../../server/database/models/bot";
+} from "@/server/database/models/bot";
 
 export class InMemoryBotRepository {
   private bots = new Map<string, Bot>();

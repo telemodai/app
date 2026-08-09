@@ -3,8 +3,8 @@ import {
   BAN_TEMPLATE_PLACEHOLDERS,
   TELEGRAM_HTML_DOCS_URL,
   WARNING_TEMPLATE_PLACEHOLDERS,
-} from "../../../lib/bot-message-template-ui";
-import { MAX_BOT_MESSAGE_TEMPLATE_LENGTH } from "../../../server/utils/bot-message-template-validation";
+} from "@/lib/bot-message-template-ui";
+import { MAX_BOT_MESSAGE_TEMPLATE_LENGTH } from "@/server/utils/bot-message-template-validation";
 
 describe("bot-message-template-ui help content", () => {
   test("placeholder chips expose i18n label and hint keys", () => {

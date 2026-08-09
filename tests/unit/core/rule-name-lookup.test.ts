@@ -3,9 +3,9 @@ import {
   enrichWithRuleName,
   loadRuleNameMap,
   resolveRuleName,
-} from "../../../server/core/rule-name-lookup";
-import { InMemoryRuleRepository } from "../../helpers/in-memory-rule-repository";
-import { TEST_BOT_ID, TEST_CHAT_INTERNAL_ID } from "../../helpers/constants";
+} from "@/server/core/rule-name-lookup";
+import { InMemoryRuleRepository } from "@/tests/helpers/in-memory-rule-repository";
+import { TEST_BOT_ID, TEST_CHAT_INTERNAL_ID } from "@/tests/helpers/constants";
 
 describe("rule-name-lookup", () => {
   test("loadRuleNameMap resolves ids to names", async () => {

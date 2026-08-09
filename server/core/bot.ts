@@ -1,17 +1,17 @@
-import { TelegramUpdate, TelegramMessage, ChatMemberUpdated } from "../types/telegram";
-import { Bot as DbBot } from "../database/models/bot";
-import { AIModerationRequest, AIModerationResponse } from "../types/moderation";
-import { Bot, Chat as ConfigChat } from "../types/config";
-import { Rule as DbRule } from "../database/models/rule";
+import { TelegramUpdate, TelegramMessage, ChatMemberUpdated } from "@/server/types/telegram";
+import { Bot as DbBot } from "@/server/database/models/bot";
+import { AIModerationRequest, AIModerationResponse } from "@/server/types/moderation";
+import { Bot, Chat as ConfigChat } from "@/server/types/config";
+import { Rule as DbRule } from "@/server/database/models/rule";
 import { analyzeMessage } from "./ai-moderation";
 import { logger } from "./logger";
 import { CreditService } from "./credit-service";
 import { isSaasMode } from "./deployment-mode";
 import { estimateLlmCostRub } from "./llm-cost";
-import { LlmUsageRepository } from "../database/repositories/llm-usage-repository";
-import { RuleRepository } from "../database/repositories/rule-repository";
-import { BotRepository } from "../database/repositories/bot-repository";
-import { ChatRepository } from "../database/repositories/chat-repository";
+import { LlmUsageRepository } from "@/server/database/repositories/llm-usage-repository";
+import { RuleRepository } from "@/server/database/repositories/rule-repository";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { ChatRepository } from "@/server/database/repositories/chat-repository";
 import { ContextService } from "./context-service";
 import { planViolationModeration } from "./moderation-actions";
 import {
@@ -39,10 +39,10 @@ import {
   isChatMemberAdministrator,
   telegramGetMe,
   telegramSendMessage,
-} from "../utils/telegram-bot-api";
+} from "@/server/utils/telegram-bot-api";
 import { classifyServiceMessage } from "./service-message-kinds";
 import { shouldDeleteServiceMessage } from "./service-message-cleanup";
-import { DEFAULT_SERVICE_MESSAGE_CLEANUP } from "../../lib/service-message-cleanup";
+import { DEFAULT_SERVICE_MESSAGE_CLEANUP } from "@/lib/service-message-cleanup";
 
 export class TelegramBot {
   private token: string;

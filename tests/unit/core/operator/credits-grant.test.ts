@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   parseGrantAmount,
   validateGrantReason,
-} from "../../../server/core/operator/credits-grant";
+} from "@/server/core/operator/credits-grant";
 
 describe("operator credits-grant helpers", () => {
   test("parseGrantAmount accepts signed non-zero integers", () => {

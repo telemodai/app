@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { Rule, CreateRuleRequest, UpdateRuleRequest } from "../models/rule";
-import { rules } from "../schema";
-import { toRule } from "../mappers";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { Rule, CreateRuleRequest, UpdateRuleRequest } from "@/server/database/models/rule";
+import { rules } from "@/server/database/schema";
+import { toRule } from "@/server/database/mappers";
 
 export class RuleRepository {
   private get db() {

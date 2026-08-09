@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { InMemoryModerationDecisionRepository } from "../../helpers/in-memory-moderation-decision-repository";
+import { InMemoryModerationDecisionRepository } from "@/tests/helpers/in-memory-moderation-decision-repository";
 
 describe("ModerationDecisionRepository", () => {
   test("creates and lists decisions by bot with pagination", async () => {

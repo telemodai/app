@@ -1,4 +1,4 @@
-import type { BotMemberRole } from "../database/repositories/bot-member-repository";
+import type { BotMemberRole } from "@/server/database/repositories/bot-member-repository";
 
 export type JoinBotResult =
   | { ok: true; botId: string; alreadyOwner: boolean }

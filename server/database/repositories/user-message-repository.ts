@@ -1,12 +1,12 @@
 import { and, eq, gte, lte, desc, asc, inArray, ne, sql } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
+import { getDatabaseConnection } from "@/server/database/connection";
 import {
   UserMessage,
   CreateUserMessageRequest,
-} from "../models/user-message";
-import { userMessages } from "../schema";
-import { toUserMessage } from "../mappers";
-import { selectOldestMessageIdsToPrune } from "../../core/chat-history";
+} from "@/server/database/models/user-message";
+import { userMessages } from "@/server/database/schema";
+import { toUserMessage } from "@/server/database/mappers";
+import { selectOldestMessageIdsToPrune } from "@/server/core/chat-history";
 
 export class UserMessageRepository {
   private get db() {

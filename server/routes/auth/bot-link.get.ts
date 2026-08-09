@@ -2,11 +2,11 @@ import { randomUUID } from "node:crypto";
 import {
   createLoginBotTokenStore,
   redeemLoginBotToken,
-} from "../../core/login-bot-webhook";
-import { LoginBotTokenRepository } from "../../database/repositories/login-bot-token-repository";
-import { UserRepository } from "../../database/repositories/user-repository";
-import { createUserSession } from "../../utils/session";
-import { DEFAULT_POST_LOGIN_PATH } from "../../../lib/auth-return-to";
+} from "@/server/core/login-bot-webhook";
+import { LoginBotTokenRepository } from "@/server/database/repositories/login-bot-token-repository";
+import { UserRepository } from "@/server/database/repositories/user-repository";
+import { createUserSession } from "@/server/utils/session";
+import { DEFAULT_POST_LOGIN_PATH } from "@/lib/auth-return-to";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);

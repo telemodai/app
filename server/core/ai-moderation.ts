@@ -1,6 +1,6 @@
 import type OpenAI from "openai";
-import { AIModerationRequest, AIModerationResponse } from "../types/moderation";
-import { Rule } from "../types/config";
+import { AIModerationRequest, AIModerationResponse } from "@/server/types/moderation";
+import { Rule } from "@/server/types/config";
 import { logger } from "./logger";
 import {
   createLlmClient,

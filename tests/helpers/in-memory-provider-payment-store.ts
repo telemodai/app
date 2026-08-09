@@ -2,7 +2,7 @@ import type {
   CreateProviderPaymentInput,
   ProviderPayment,
   ProviderPaymentStatus,
-} from "../../server/database/models/provider-payment";
+} from "@/server/database/models/provider-payment";
 
 export class InMemoryProviderPaymentStore {
   private rows = new Map<string, ProviderPayment>();

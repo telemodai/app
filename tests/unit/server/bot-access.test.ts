@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { enforceBotAccess } from "../../../server/utils/bot-access";
+import { enforceBotAccess } from "@/server/utils/bot-access";
 
 describe("enforceBotAccess", () => {
   test("allows any member when roles are not restricted", () => {

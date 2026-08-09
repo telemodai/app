@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
-import { resolveMigrationsFolder } from "../server/database/migrations-path";
+import { resolveMigrationsFolder } from "@/server/database/migrations-path";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {

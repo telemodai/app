@@ -21,22 +21,22 @@ export function moderationActionI18nKey(
   return `common.actions.${action}`;
 }
 
-/** Tailwind text color classes for action badges in activity tables. */
+/** Tailwind text color classes for action badges — app-only action tokens. */
 export function moderationActionColorClass(action: ModerationActionType): string {
   switch (action) {
     case "warning":
-      return "text-yellow-600 font-medium";
+      return "text-action-warning font-medium";
     case "delete":
-      return "text-orange-600 font-medium";
+      return "text-action-delete font-medium";
     case "ban":
-      return "text-red-600 font-medium";
+      return "text-action-ban font-medium";
     case "reset_warnings":
-      return "text-blue-600 font-medium";
+      return "text-action-reset font-medium";
     case "unban":
-      return "text-green-600 font-medium";
+      return "text-action-unban font-medium";
     case "pardon":
-      return "text-sky-600 font-medium";
+      return "text-action-pardon font-medium";
     default:
-      return "text-gray-700";
+      return "text-fg";
   }
 }

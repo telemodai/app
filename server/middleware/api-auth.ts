@@ -1,4 +1,4 @@
-import { requireSession } from "../utils/session";
+import { requireSession } from "@/server/utils/session";
 
 export default defineEventHandler(async (event) => {
   const path = event.path;

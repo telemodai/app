@@ -1,7 +1,7 @@
 import type { BillingWebhookEvent } from "./billing-provider";
-import type { ProviderPaymentStatus } from "../database/models/provider-payment";
-import { ProviderPaymentRepository } from "../database/repositories/provider-payment-repository";
-import { PromoRedemptionRepository } from "../database/repositories/promo-code-repository";
+import type { ProviderPaymentStatus } from "@/server/database/models/provider-payment";
+import { ProviderPaymentRepository } from "@/server/database/repositories/provider-payment-repository";
+import { PromoRedemptionRepository } from "@/server/database/repositories/promo-code-repository";
 import { ReferralService } from "./referral-service";
 import { applyCreditPurchaseFromBillingEvent } from "./apply-credit-purchase";
 import type { PaymentSyncStatus } from "./payment-sync";

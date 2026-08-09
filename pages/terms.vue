@@ -6,7 +6,7 @@
       :title="t('page.terms.title')"
       :subtitle="t('page.terms.subtitle')"
     />
-    <p class="text-gray-600">
+    <p class="text-body text-fg-muted">
       {{ t("page.terms.body") }}
     </p>
   </div>

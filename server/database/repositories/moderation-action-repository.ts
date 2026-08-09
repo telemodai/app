@@ -1,12 +1,12 @@
 import { and, eq, gte, lte, desc, countDistinct, sql, inArray, lt } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
+import { getDatabaseConnection } from "@/server/database/connection";
 import {
   ModerationAction,
   CreateModerationActionRequest,
   type ModerationActionType,
-} from "../models/moderation-action";
-import { moderationActions } from "../schema";
-import { toModerationAction } from "../mappers";
+} from "@/server/database/models/moderation-action";
+import { moderationActions } from "@/server/database/schema";
+import { toModerationAction } from "@/server/database/mappers";
 
 export class ModerationActionRepository {
   private get db() {

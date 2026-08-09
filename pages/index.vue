@@ -6,40 +6,34 @@
       :title="t('page.dashboard.title')"
     >
       <template #actions>
-        <button
+        <UiAppButton
+          variant="primary"
           type="button"
-          class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
           :disabled="loading"
           @click="load"
         >
           {{ loading ? t("common.loading") : t("common.refresh") }}
-        </button>
+        </UiAppButton>
       </template>
     </LayoutPageHeader>
 
-    <div v-if="loading" class="text-gray-500">{{ t("page.dashboard.loading") }}</div>
+    <div v-if="loading" class="text-fg-muted">{{ t("page.dashboard.loading") }}</div>
 
-    <div
-      v-else-if="error"
-      class="bg-red-50 border border-red-200 text-red-700 rounded p-4"
-    >
+    <UiAppAlert v-else-if="error" variant="danger">
       {{ error }}
-    </div>
+    </UiAppAlert>
 
-    <div
+    <UiAppCard
       v-else-if="dashboard && !dashboard.has_bots"
-      class="bg-white border rounded p-8 text-center"
+      class="!p-8 text-center"
     >
-      <p class="text-gray-600 mb-4">
+      <p class="text-fg-muted mb-4">
         {{ t("page.dashboard.emptyState") }}
       </p>
-      <NuxtLink
-        to="/bots"
-        class="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
-      >
+      <UiAppButton variant="primary" to="/bots">
         {{ t("page.dashboard.manageBots") }}
-      </NuxtLink>
-    </div>
+      </UiAppButton>
+    </UiAppCard>
 
     <div v-else-if="dashboard" class="space-y-6">
       <DashboardKpiCards :kpi="dashboard.kpi" />
@@ -50,9 +44,9 @@
           :action-breakdown="dashboard.action_breakdown"
         />
         <template #fallback>
-          <div class="bg-white border rounded p-6 text-gray-500 text-sm">
+          <UiAppCard class="text-fg-muted text-body">
             {{ t("common.loadingCharts") }}
-          </div>
+          </UiAppCard>
         </template>
       </ClientOnly>
 
@@ -63,7 +57,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import type { DashboardData } from "~/types/dashboard";
+import type { DashboardData } from "@/types/dashboard";
 
 const { t } = useI18n();
 

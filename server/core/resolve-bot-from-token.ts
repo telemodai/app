@@ -1,4 +1,4 @@
-import type { TelegramBot } from "../types/telegram";
+import type { TelegramBot } from "@/server/types/telegram";
 
 export class BotCreateValidationError extends Error {
   readonly code: "missing_token" | "missing_username";

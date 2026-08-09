@@ -1,13 +1,13 @@
 import type { H3Event } from "h3";
 import { getCookie, setCookie, deleteCookie } from "h3";
 import { randomUUID } from "node:crypto";
-import { SessionRepository } from "../database/repositories/session-repository";
+import { SessionRepository } from "@/server/database/repositories/session-repository";
 import {
   UserRepository,
   toSessionUser,
-} from "../database/repositories/user-repository";
-import type { SessionUser } from "../database/models/user";
-import { logger } from "../core/logger";
+} from "@/server/database/repositories/user-repository";
+import type { SessionUser } from "@/server/database/models/user";
+import { logger } from "@/server/core/logger";
 
 export const SESSION_COOKIE_NAME = "tg_moderator_session";
 const OIDC_STATE_COOKIE = "tg_oidc_state";

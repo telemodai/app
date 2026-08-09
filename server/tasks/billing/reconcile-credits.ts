@@ -1,7 +1,7 @@
-import { CreditService } from "../../core/credit-service";
-import { BotRepository } from "../../database/repositories/bot-repository";
-import { isSaasMode } from "../../core/deployment-mode";
-import { logger } from "../../core/logger";
+import { CreditService } from "@/server/core/credit-service";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { isSaasMode } from "@/server/core/deployment-mode";
+import { logger } from "@/server/core/logger";
 
 export default defineTask({
   meta: {

@@ -4,7 +4,7 @@ import {
   getWebhookBaseUrl,
   telegramDeleteWebhook,
   telegramSetWebhook,
-} from "../../../server/utils/telegram-webhook";
+} from "@/server/utils/telegram-webhook";
 
 const originalBaseUrl = process.env.BASE_URL;
 

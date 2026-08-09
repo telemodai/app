@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   DEFAULT_SERVICE_MESSAGE_CLEANUP,
   normalizeServiceMessageCleanup,
-} from "../../../lib/service-message-cleanup";
+} from "@/lib/service-message-cleanup";
 
 describe("normalizeServiceMessageCleanup", () => {
   test("defaults for invalid input", () => {

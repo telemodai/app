@@ -1,4 +1,4 @@
-import { cleanupUserMessagesRetention } from "../../core/retention-cleanup";
+import { cleanupUserMessagesRetention } from "@/server/core/retention-cleanup";
 
 export default defineTask({
   meta: {

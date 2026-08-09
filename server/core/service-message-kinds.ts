@@ -1,5 +1,5 @@
-import type { ServiceMessageKindId } from "../../lib/service-message-cleanup";
-import type { TelegramMessage, TelegramUser } from "../types/telegram";
+import type { ServiceMessageKindId } from "@/lib/service-message-cleanup";
+import type { TelegramMessage, TelegramUser } from "@/server/types/telegram";
 
 type ServiceMessageKind = {
   id: ServiceMessageKindId;

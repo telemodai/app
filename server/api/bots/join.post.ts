@@ -1,7 +1,7 @@
-import { BotAccessCodeRepository } from "../../database/repositories/bot-access-code-repository";
-import { BotMemberRepository } from "../../database/repositories/bot-member-repository";
-import { joinBotWithAccessCode } from "../../core/bot-team-join";
-import { requireSession } from "../../utils/session";
+import { BotAccessCodeRepository } from "@/server/database/repositories/bot-access-code-repository";
+import { BotMemberRepository } from "@/server/database/repositories/bot-member-repository";
+import { joinBotWithAccessCode } from "@/server/core/bot-team-join";
+import { requireSession } from "@/server/utils/session";
 
 export default defineEventHandler(async (event) => {
   const body = (await readBody(event)) as { code?: string };

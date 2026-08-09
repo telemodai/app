@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { YooKassaBillingProvider } from "../../../server/core/billing/yookassa-provider";
+import { YooKassaBillingProvider } from "@/server/core/billing/yookassa-provider";
 
 const TEST_ENV = {
   YOOKASSA_SHOP_ID: "shop-test",

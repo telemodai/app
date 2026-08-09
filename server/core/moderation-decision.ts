@@ -1,7 +1,7 @@
 import { logger } from "./logger";
-import { AIModerationResponse } from "../types/moderation";
-import { CreateModerationDecisionRequest } from "../database/models/moderation-decision";
-import { ModerationDecisionRepository } from "../database/repositories/moderation-decision-repository";
+import { AIModerationResponse } from "@/server/types/moderation";
+import { CreateModerationDecisionRequest } from "@/server/database/models/moderation-decision";
+import { ModerationDecisionRepository } from "@/server/database/repositories/moderation-decision-repository";
 
 export function buildModerationDecisionRequest(input: {
   botId: string;

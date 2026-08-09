@@ -1,6 +1,6 @@
-import { getDatabaseConnection } from "../database/connection";
-import { seedDatabase } from "../database/seed";
-import { logger } from "../core/logger";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { seedDatabase } from "@/server/database/seed";
+import { logger } from "@/server/core/logger";
 
 let isInitialized = false;
 

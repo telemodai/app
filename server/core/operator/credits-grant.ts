@@ -1,9 +1,9 @@
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { randomUUID } from "node:crypto";
-import { BotRepository } from "../../database/repositories/bot-repository";
-import type { CreditTransaction } from "../../database/models/credit-transaction";
-import type { CreditService } from "../credit-service";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import type { CreditTransaction } from "@/server/database/models/credit-transaction";
+import type { CreditService } from "@/server/core/credit-service";
 
 export type CreditsGrantInput = {
   bot_id: string;

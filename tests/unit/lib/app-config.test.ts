@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { DEFAULT_APP_NAME, resolveAppName } from "../../../lib/app-config";
+import { DEFAULT_APP_NAME, resolveAppName } from "@/lib/app-config";
 
 describe("resolveAppName", () => {
   test("defaults to Telemodai", () => {

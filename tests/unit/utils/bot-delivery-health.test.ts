@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { evaluateDeliveryHealth } from "../../../server/utils/bot-delivery-health";
+import { evaluateDeliveryHealth } from "@/server/utils/bot-delivery-health";
 
 const NOW = new Date("2026-07-10T12:00:00.000Z").getTime();
 

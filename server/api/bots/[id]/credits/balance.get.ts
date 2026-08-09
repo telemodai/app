@@ -1,7 +1,7 @@
-import { requireBotAccess } from "../../../../utils/bot-access";
-import { requireBotIdParam } from "../../../../utils/get-bot-id-param";
-import { isSaasMode } from "../../../../core/deployment-mode";
-import { CreditService } from "../../../../core/credit-service";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
+import { isSaasMode } from "@/server/core/deployment-mode";
+import { CreditService } from "@/server/core/credit-service";
 
 export default defineEventHandler(async (event) => {
   if (!isSaasMode()) {

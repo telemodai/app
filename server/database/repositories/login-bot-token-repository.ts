@@ -1,6 +1,6 @@
 import { and, eq, gte, isNull, sql } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { loginBotTokens } from "../auth-schema";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { loginBotTokens } from "@/server/database/auth-schema";
 
 export class LoginBotTokenRepository {
   private get db() {

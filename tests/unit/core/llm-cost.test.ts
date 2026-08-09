@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   PLANNING_LLM_COST_RUB,
   estimateLlmCostRub,
-} from "../../../server/core/llm-cost";
+} from "@/server/core/llm-cost";
 
 describe("llm-cost", () => {
   test("returns zero for failed moderation", () => {

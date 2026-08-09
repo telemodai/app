@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   computeDiscountedAmountRub,
   normalizePromoCode,
-} from "../../../server/core/billing/promo-discount";
+} from "@/server/core/billing/promo-discount";
 
 describe("promo-discount", () => {
   test("normalizePromoCode uppercases and trims", () => {

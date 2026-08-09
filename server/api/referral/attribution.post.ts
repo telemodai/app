@@ -1,7 +1,7 @@
-import { isSaasMode } from "../../core/deployment-mode";
-import { UserRepository } from "../../database/repositories/user-repository";
-import { getSessionUser } from "../../utils/session";
-import { normalizeReferralCode, setReferralCookie } from "../../utils/referral-cookie";
+import { isSaasMode } from "@/server/core/deployment-mode";
+import { UserRepository } from "@/server/database/repositories/user-repository";
+import { getSessionUser } from "@/server/utils/session";
+import { normalizeReferralCode, setReferralCookie } from "@/server/utils/referral-cookie";
 
 type AttributionBody = {
   code?: string;

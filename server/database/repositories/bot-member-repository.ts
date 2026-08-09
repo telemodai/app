@@ -1,7 +1,7 @@
 import { and, eq, inArray } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { botMembers, bots } from "../schema";
-import { users } from "../auth-schema";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { botMembers, bots } from "@/server/database/schema";
+import { users } from "@/server/database/auth-schema";
 
 export type BotMemberRole = "owner" | "manager";
 

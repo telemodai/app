@@ -6,8 +6,8 @@ import {
   isActivateCommandText,
   isChatActivationUpdate,
   resolveChatTitle,
-} from "../../../server/core/chat-activation";
-import type { ChatMemberAdministrator } from "../../../server/types/telegram";
+} from "@/server/core/chat-activation";
+import type { ChatMemberAdministrator } from "@/server/types/telegram";
 
 const adminMember = (
   overrides: Partial<ChatMemberAdministrator> = {}

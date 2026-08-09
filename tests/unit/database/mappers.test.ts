@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { toBotResponse, toChat, toDateKey, toRule } from "../../../server/database/mappers";
+import { toBotResponse, toChat, toDateKey, toRule } from "@/server/database/mappers";
 
 describe("database mappers", () => {
   test("toRule maps drizzle row to API shape", () => {

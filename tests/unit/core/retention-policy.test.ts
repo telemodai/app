@@ -3,8 +3,8 @@ import {
   MODERATION_RETENTION_DAYS,
   USER_MESSAGES_PER_SCOPE,
   moderationRetentionCutoff,
-} from "../../../server/core/retention-policy";
-import { MAX_USER_MESSAGES_PER_SCOPE } from "../../../server/core/chat-history";
+} from "@/server/core/retention-policy";
+import { MAX_USER_MESSAGES_PER_SCOPE } from "@/server/core/chat-history";
 
 describe("retention-policy", () => {
   test("exports hardcoded limits", () => {

@@ -1,4 +1,4 @@
-import { RuleRepository } from "../database/repositories/rule-repository";
+import { RuleRepository } from "@/server/database/repositories/rule-repository";
 
 export type RuleNameLookup = Pick<RuleRepository, "findByIds">;
 

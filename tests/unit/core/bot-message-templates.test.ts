@@ -7,7 +7,7 @@ import {
   ensureMentionOnOwnLine,
   renderBotMessage,
   resolveModerationReplyToMessageId,
-} from "../../../server/core/bot-message-templates";
+} from "@/server/core/bot-message-templates";
 
 describe("bot-message-templates", () => {
   test("renders warning placeholders", () => {

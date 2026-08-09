@@ -3,7 +3,7 @@ import {
   chatNameKey,
   loadChatNameMap,
   resolveChatName,
-} from "../../../server/core/chat-name-lookup";
+} from "@/server/core/chat-name-lookup";
 
 describe("chat-name-lookup", () => {
   test("builds composite lookup keys", () => {

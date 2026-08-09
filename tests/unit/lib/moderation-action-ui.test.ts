@@ -4,7 +4,7 @@ import {
   moderationActionColorClass,
   moderationActionI18nKey,
   MODERATION_ACTION_TYPES,
-} from "../../../lib/moderation-action-ui";
+} from "@/lib/moderation-action-ui";
 
 describe("moderation-action-ui", () => {
   test("lists all moderation action types", () => {
@@ -36,7 +36,7 @@ describe("moderation-action-ui", () => {
       moderationActionColorClass(action)
     );
     expect(new Set(classes).size).toBe(MODERATION_ACTION_TYPES.length);
-    expect(moderationActionColorClass("pardon")).toContain("sky");
-    expect(moderationActionColorClass("unban")).toContain("green");
+    expect(moderationActionColorClass("pardon")).toContain("action-pardon");
+    expect(moderationActionColorClass("unban")).toContain("action-unban");
   });
 });

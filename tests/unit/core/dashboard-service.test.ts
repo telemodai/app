@@ -6,9 +6,9 @@ import {
   countViolations,
   getLast7DayKeys,
   mapRecentActivity,
-} from "../../../server/core/dashboard-service";
-import type { BotResponse } from "../../../server/database/models/bot";
-import type { ModerationAction } from "../../../server/database/models/moderation-action";
+} from "@/server/core/dashboard-service";
+import type { BotResponse } from "@/server/database/models/bot";
+import type { ModerationAction } from "@/server/database/models/moderation-action";
 
 const referenceDate = new Date("2026-07-11T12:00:00");
 

@@ -3,12 +3,12 @@ import {
   applyRuleTemplateToChat,
   listRuleTemplatesForChat,
   RULE_TEMPLATES,
-} from "../../../server/database/rule-templates";
-import { InMemoryRuleRepository } from "../../helpers/in-memory-rule-repository";
+} from "@/server/database/rule-templates";
+import { InMemoryRuleRepository } from "@/tests/helpers/in-memory-rule-repository";
 import {
   TEST_BOT_ID,
   TEST_CHAT_INTERNAL_ID,
-} from "../../helpers/constants";
+} from "@/tests/helpers/constants";
 
 describe("rule templates", () => {
   test("listRuleTemplatesForChat marks added templates", async () => {

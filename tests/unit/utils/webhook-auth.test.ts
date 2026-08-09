@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   generateWebhookSecret,
   isValidWebhookSecret,
-} from "../../../server/utils/webhook-auth";
+} from "@/server/utils/webhook-auth";
 
 describe("webhook-auth", () => {
   test("generateWebhookSecret returns hex string", () => {

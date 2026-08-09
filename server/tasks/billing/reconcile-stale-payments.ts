@@ -1,6 +1,6 @@
-import { reconcileStaleProviderPayments } from "../../core/payment-sync";
-import { isSaasMode } from "../../core/deployment-mode";
-import { logger } from "../../core/logger";
+import { reconcileStaleProviderPayments } from "@/server/core/payment-sync";
+import { isSaasMode } from "@/server/core/deployment-mode";
+import { logger } from "@/server/core/logger";
 
 export default defineTask({
   meta: {

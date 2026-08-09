@@ -20,6 +20,7 @@ alwaysApply: false
 - **No legacy** — when changing stack, remove old deps, files, compose services in the same change.
 - **Minimal diff** — do not touch unrelated code.
 - **Commits** — only when the user explicitly asks.
+- **Imports** — cross-directory: `@/…` from project root (`tsconfig.json` `paths` + Nuxt alias). Same-folder `./` OK. Exception: `nuxt.config.ts` — relative `./` only (loaded before aliases). Nuxt `css: ["~/assets/…"]` keeps `~/`.
 
 ## `.env`
 
@@ -65,3 +66,30 @@ When changing **user-facing UI** (`pages/`, `components/`, `layouts/`, client co
 - After locale edits: `bun test tests/unit/i18n/locale-key-parity.test.ts` + `bun run build`.
 - **Do not translate:** per-bot warn/ban templates, `RULE_TEMPLATES`, API `statusMessage`, release note bodies.
 - README: edit **`README.md` and `README.ru.md`** together (not the same as `i18n/locales/`).
+
+## Design system (admin UI)
+
+- **Source of truth:** [`assets/brand/DESIGN.md`](assets/brand/DESIGN.md) (vendored from `site/brand` + Appendix A for moderation action colors).
+- **CSS:** `assets/css/main.css` imports `assets/brand/css/theme.css` + `theme-app.css`. Docker/CI use committed files — no `brand/` symlink.
+- **Local dev:** optional junction `brand/` → `../site/brand` (gitignored). Sync upstream CSS: `bun scripts/sync-brand-css.mjs`; favicons: `bun scripts/sync-brand-public.mjs`.
+- **Tokens:** use `bg-surface-*`, `text-fg*`, `border-line`, `text-heading-*`, `rounded-control` / `rounded-card` — **not** stock Tailwind `gray-*`, `blue-*`, `bg-white`.
+- **Components:** prefer `components/ui/*` (`UiAppButton`, `UiAppCard`, …) over inline utility soup.
+- **Theme:** `data-theme` on `<html>`, storage key `tm-theme`, toggle in header. Anti-flash script in `nuxt.config.ts` head.
+
+### Icons — Lucide only (`lucide-vue-next`)
+
+**All UI icons** in `components/` and `pages/` come from **Lucide** — tree-shakable Vue components.
+
+**Do**
+
+- Named import: `import { ArrowRight } from "lucide-vue-next"`
+- Default props (brand `DESIGN.md` §10 — outline, monochrome): `size`, `stroke-width: 1.5`, `absolute-stroke-width`
+- Colour via Tailwind on the icon: `class="text-fg-muted"` (`currentColor`)
+
+**Don't**
+
+- Inline `<svg>` in components (except `BrandMark.vue` and logo geometry)
+- Other icon libraries (Iconify, Heroicons, Font Awesome, …)
+- Filled/solid variants unless explicitly required
+
+**Exceptions:** `BrandMark.vue`; synced brand assets under `public/{dark,light}/`.

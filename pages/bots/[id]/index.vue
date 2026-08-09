@@ -7,609 +7,568 @@
       :subtitle="bot ? `@${bot.id}` : undefined"
     >
       <template #actions>
-        <button
+        <UiAppButton
+          :variant="bot?.is_active ? 'destructive' : 'primary'"
           @click="toggleBotStatus"
-          :class="
-            bot?.is_active
-              ? 'bg-red-600 hover:bg-red-700'
-              : 'bg-green-600 hover:bg-green-700'
-          "
-          class="px-3 py-2 text-white rounded text-sm"
         >
           {{ bot?.is_active ? t("common.disable") : t("common.enable") }}
-        </button>
+        </UiAppButton>
       </template>
     </LayoutPageHeader>
 
-    <div v-if="loading" class="text-gray-500">{{ t("common.loading") }}</div>
+    <div v-if="loading" class="text-fg-muted">{{ t("common.loading") }}</div>
 
     <template v-else>
-      <div
+      <UiAppAlert
         v-if="chatActivation.status.value !== 'idle'"
-        class="mb-4 rounded border p-4 text-sm"
-        :class="activationBannerClass"
+        class="mb-4"
+        :variant="activationAlertVariant"
       >
         <p>{{ chatActivation.message.value }}</p>
-        <button
+        <UiAppButton
           v-if="chatActivation.status.value === 'failed' || chatActivation.status.value === 'expired'"
-          type="button"
-          class="mt-2 text-blue-700 hover:underline"
+          variant="link"
+          class="mt-2 !px-0"
           @click="retryChatActivation"
         >
           {{ t("chat.activation.retry") }}
-        </button>
-      </div>
+        </UiAppButton>
+      </UiAppAlert>
 
       <div v-if="bot" class="space-y-6">
-      <div class="flex gap-1 border-b">
-        <button
-          v-for="tab in botTabs"
-          :key="tab.id"
-          type="button"
-          class="px-4 py-2 text-sm border-b-2 -mb-px"
-          :class="
-            activeTab === tab.id
-              ? 'border-blue-600 text-blue-700 font-medium'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
-          "
-          @click="activeTab = tab.id"
-        >
-          {{ tab.label }}
-        </button>
-      </div>
-
-      <template v-if="activeTab === 'overview'">
-      <div class="flex flex-wrap items-center gap-2">
-        <span
-          class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium"
-          :class="overviewStatusBadgeClass"
-        >
-          {{ aggregatedStatusText }}
-        </span>
-        <span
-          v-if="bot.my_role"
-          class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
-        >
-          {{ roleLabel(bot.my_role) }}
-        </span>
-        <span class="inline-flex px-2.5 py-1 rounded-full text-xs text-gray-600 bg-gray-50">
-          {{ t("bot.created", { date: formatDate(bot.created_at) }) }}
-        </span>
-        <template v-if="isSaas">
-          <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-800">
-            {{ t("billing.balance") }}: {{ (bot.credit_balance ?? 0).toLocaleString() }}
-          </span>
-          <NuxtLink
-            :to="`/bots/${botId}/credits`"
-            class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-800 hover:bg-green-100"
-          >
-            {{ t("billing.manageCredits") }}
-          </NuxtLink>
-        </template>
-        <p
-          v-if="deliveryProblemMessage"
-          class="w-full text-sm text-red-600"
-        >
-          {{ deliveryProblemMessage }}
-        </p>
-      </div>
-
-      <!-- Чаты -->
-      <div class="bg-white border rounded p-6">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-medium">
-            {{ t("bot.chats.title", { count: bot.chats?.length || 0 }) }}
-          </h3>
+        <div class="flex gap-1 border-b border-line">
           <button
-            v-if="canManageBot"
+            v-for="tab in botTabs"
+            :key="tab.id"
             type="button"
-            class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-            :disabled="chatActivation.status.value === 'waiting'"
-            @click="openAddChatActivationModal"
+            class="tm-tab"
+            :class="{ 'tm-tab--active': activeTab === tab.id }"
+            @click="activeTab = tab.id"
           >
-            {{ t("bot.chats.addChat") }}
+            {{ tab.label }}
           </button>
         </div>
-        <div v-if="bot.chats && bot.chats.length > 0" class="space-y-3">
-          <div
-            v-for="chat in bot.chats"
-            :key="chat.chat_id"
-            class="border rounded p-3"
-          >
-            <div class="flex items-center justify-between gap-3">
-              <div class="flex items-start gap-3 flex-1 min-w-0">
-                <img
-                  v-if="chat.id && chat.photo_file_id"
-                  :src="chatPhotoUrl(chat.id)"
-                  :alt="chat.name"
-                  class="h-10 w-10 rounded-full object-cover bg-gray-100"
-                />
-                <div
-                  v-else
-                  class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-500"
-                >
-                  {{ t("bot.chats.placeholderInitials") }}
-                </div>
-                <div class="min-w-0">
-                  <div class="font-medium truncate">{{ chat.name }}</div>
-                  <div class="text-sm text-gray-600">{{ t("bot.chats.id", { id: chat.chat_id }) }}</div>
-                  <div class="text-sm text-gray-600">
-                    {{ t("bot.chats.rules", { count: chat.rules_count || 0 }) }}
-                  </div>
-                  <div class="text-sm text-gray-600">
-                    {{ t("bot.chats.silentMode") }}
-                    <span :class="getSilentModeClass(chat)">
-                      {{ getSilentModeText(chat) }}
-                    </span>
-                  </div>
-                  <div class="mt-1">
-                    <span
-                      class="inline-flex px-2 py-0.5 rounded text-xs font-medium"
-                      :class="chatHealthBadgeClass(chat)"
+
+        <template v-if="activeTab === 'overview'">
+          <div class="flex flex-wrap items-center gap-2">
+            <UiAppBadge :variant="overviewStatusBadgeVariant">
+              {{ aggregatedStatusText }}
+            </UiAppBadge>
+            <UiAppBadge v-if="bot.my_role">
+              {{ roleLabel(bot.my_role) }}
+            </UiAppBadge>
+            <UiAppBadge variant="muted" class="normal-case tracking-normal">
+              {{ t("bot.created", { date: formatDate(bot.created_at) }) }}
+            </UiAppBadge>
+            <template v-if="isSaas">
+              <UiAppBadge variant="accent">
+                {{ t("billing.balance") }}: {{ (bot.credit_balance ?? 0).toLocaleString() }}
+              </UiAppBadge>
+              <UiAppButton
+                variant="link"
+                class="!px-2.5 !py-1.5 !text-[11px] uppercase tracking-wide"
+                :to="`/bots/${botId}/credits`"
+              >
+                {{ t("billing.manageCredits") }}
+              </UiAppButton>
+            </template>
+            <p
+              v-if="deliveryProblemMessage"
+              class="w-full text-body text-danger"
+            >
+              {{ deliveryProblemMessage }}
+            </p>
+          </div>
+
+          <!-- Chats -->
+          <UiAppCard class="!p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+                {{ t("bot.chats.title", { count: bot.chats?.length || 0 }) }}
+              </h3>
+              <UiAppButton
+                v-if="canManageBot"
+                variant="ghost"
+                :disabled="chatActivation.status.value === 'waiting'"
+                @click="openAddChatActivationModal"
+              >
+                {{ t("bot.chats.addChat") }}
+              </UiAppButton>
+            </div>
+            <div v-if="bot.chats && bot.chats.length > 0" class="space-y-3">
+              <div
+                v-for="chat in bot.chats"
+                :key="chat.chat_id"
+                class="border border-line rounded-card p-3"
+              >
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-start gap-3 flex-1 min-w-0">
+                    <img
+                      v-if="chat.id && chat.photo_file_id"
+                      :src="chatPhotoUrl(chat.id)"
+                      :alt="chat.name"
+                      class="h-10 w-10 rounded-control object-cover bg-surface-3"
+                    />
+                    <div
+                      v-else
+                      class="h-10 w-10 rounded-control bg-surface-3 flex items-center justify-center text-caption text-fg-muted normal-case tracking-normal"
                     >
-                      {{ chatHealthLabel(chat) }}
-                    </span>
-                    <p
-                      v-if="chat.health_message && chat.health_status !== 'ok'"
-                      class="text-xs text-red-600 mt-1"
+                      {{ t("bot.chats.placeholderInitials") }}
+                    </div>
+                    <div class="min-w-0">
+                      <div class="font-medium text-fg truncate">{{ chat.name }}</div>
+                      <div class="text-body text-fg-muted">
+                        {{ t("bot.chats.id", { id: chat.chat_id }) }}
+                      </div>
+                      <div class="text-body text-fg-muted">
+                        {{ t("bot.chats.rules", { count: chat.rules_count || 0 }) }}
+                      </div>
+                      <div class="text-body text-fg-muted">
+                        {{ t("bot.chats.silentMode") }}
+                        <span :class="getSilentModeClass(chat)">
+                          {{ getSilentModeText(chat) }}
+                        </span>
+                      </div>
+                      <div class="mt-1">
+                        <UiAppBadge :variant="chatHealthBadgeVariant(chat)">
+                          {{ chatHealthLabel(chat) }}
+                        </UiAppBadge>
+                        <p
+                          v-if="chat.health_message && chat.health_status !== 'ok'"
+                          class="text-caption text-danger mt-1 normal-case tracking-normal"
+                        >
+                          {{ chat.health_message }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 shrink-0">
+                    <UiAppButton
+                      variant="link"
+                      :to="`/bots/${botId}/chats/${chat.chat_id}/moderation`"
                     >
-                      {{ chat.health_message }}
-                    </p>
+                      {{ t("bot.chats.moderation") }}
+                    </UiAppButton>
+                    <UiAppButton variant="link" @click="editChat(chat)">
+                      {{ t("common.edit") }}
+                    </UiAppButton>
+                    <UiAppButton variant="destructive" @click="removeChat(chat.chat_id)">
+                      {{ t("common.remove") }}
+                    </UiAppButton>
                   </div>
                 </div>
               </div>
+            </div>
+            <div v-else class="tm-empty-state">{{ t("bot.chats.noChats") }}</div>
+          </UiAppCard>
+
+          <!-- Statistics -->
+          <UiAppCard class="!p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+                {{ t("bot.statistics.title") }}
+              </h3>
+              <UiAppButton variant="ghost" @click="loadStatistics">
+                {{ t("common.refresh") }}
+              </UiAppButton>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="text-center">
+                <div class="mb-1 font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-accent">
+                  {{ statistics?.today?.messages_processed || 0 }}
+                </div>
+                <div class="text-body text-fg-muted">{{ t("bot.statistics.messagesToday") }}</div>
+              </div>
+              <div class="text-center">
+                <div class="mb-1 font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-action-warning">
+                  {{ statistics?.today?.warnings_issued || 0 }}
+                </div>
+                <div class="text-body text-fg-muted">{{ t("bot.statistics.warningsToday") }}</div>
+              </div>
+              <div class="text-center">
+                <div class="mb-1 font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-danger">
+                  {{ statistics?.users?.banned_count || 0 }}
+                </div>
+                <div class="text-body text-fg-muted">{{ t("bot.statistics.bannedTotal") }}</div>
+              </div>
+              <div
+                v-if="isSaas && (statistics?.today?.not_moderated || 0) > 0"
+                class="text-center md:col-span-3"
+              >
+                <UiAppAlert class="!p-4">
+                  <div class="font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-action-warning">
+                    {{ statistics?.today?.not_moderated || 0 }}
+                  </div>
+                  <div class="text-body font-medium text-fg">
+                    {{ t("bot.statistics.notModeratedToday") }}
+                  </div>
+                  <p class="text-caption text-fg-muted mt-1 normal-case tracking-normal">
+                    {{ t("bot.statistics.notModeratedHint") }}
+                  </p>
+                </UiAppAlert>
+              </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-surface-3 rounded-card p-4">
+                <h4 class="font-medium text-fg mb-2">{{ t("bot.statistics.thisWeek") }}</h4>
+                <div class="space-y-1 text-body">
+                  <div class="flex justify-between">
+                    <span class="text-fg-muted">{{ t("bot.statistics.totalMessages") }}</span>
+                    <span class="font-medium text-fg">
+                      {{ statistics?.week?.total_messages_processed || 0 }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-fg-muted">{{ t("bot.statistics.totalWarnings") }}</span>
+                    <span class="font-medium text-fg">
+                      {{ statistics?.week?.total_warnings_issued || 0 }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-fg-muted">{{ t("bot.statistics.messagesDeleted") }}</span>
+                    <span class="font-medium text-fg">
+                      {{ statistics?.week?.total_messages_deleted || 0 }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-surface-3 rounded-card p-4">
+                <h4 class="font-medium text-fg mb-2">{{ t("bot.statistics.usersSection") }}</h4>
+                <div class="space-y-1 text-body">
+                  <div class="flex justify-between">
+                    <span class="text-fg-muted">{{ t("bot.statistics.active24h") }}</span>
+                    <span class="font-medium text-fg">
+                      {{ statistics?.users?.active_count || 0 }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-fg-muted">{{ t("bot.statistics.banned") }}</span>
+                    <span class="font-medium text-danger">
+                      {{ statistics?.users?.banned_count || 0 }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-fg-muted">{{ t("bot.statistics.maxUnique") }}</span>
+                    <span class="font-medium text-fg">
+                      {{ statistics?.week?.max_unique_users || 0 }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </UiAppCard>
+
+          <!-- Recent Logs -->
+          <UiAppCard class="!p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+                {{ t("bot.recentActivity.title") }}
+              </h3>
               <div class="flex gap-2">
-                <NuxtLink
-                  :to="`/bots/${botId}/chats/${chat.chat_id}/moderation`"
-                  class="text-green-700 text-sm hover:underline"
+                <UiAppButton variant="ghost" :to="`/bots/${botId}/audit`">
+                  {{ t("bot.recentActivity.audit") }}
+                </UiAppButton>
+                <UiAppButton variant="ghost" @click="loadLogs">
+                  {{ t("common.refresh") }}
+                </UiAppButton>
+              </div>
+            </div>
+            <div v-if="logs.length > 0" class="space-y-2 max-h-64 overflow-y-auto">
+              <div
+                v-for="log in logs"
+                :key="log.id"
+                class="border border-line rounded-card p-2 text-body"
+              >
+                <div class="flex items-center justify-between gap-2">
+                  <div>
+                    <span :class="logActionClass(log.action_type)">
+                      {{ logActionLabel(log.action_type) }}
+                    </span>
+                    <span class="text-fg-muted"> - {{ log.message }}</span>
+                  </div>
+                  <div class="text-caption text-fg-muted normal-case tracking-normal shrink-0">
+                    {{ formatDate(log.timestamp) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else class="text-fg-muted text-center py-4">
+              {{ t("bot.recentActivity.empty") }}
+            </div>
+          </UiAppCard>
+
+          <UiAppCard
+            v-if="isOwner"
+            class="!p-6 border-danger"
+          >
+            <h3 class="font-display text-heading-sm tracking-[-0.035em] text-danger mb-2">
+              {{ t("bot.dangerZone.title") }}
+            </h3>
+            <p class="text-body text-fg-muted mb-4">
+              {{ t("bot.dangerZone.description") }}
+            </p>
+
+            <div v-if="!showDeleteConfirm" class="flex">
+              <UiAppButton variant="destructive" @click="openDeleteConfirm">
+                {{ t("bot.dangerZone.deleteButton") }}
+              </UiAppButton>
+            </div>
+
+            <div v-else class="space-y-3 max-w-md">
+              <p class="text-body text-fg">
+                {{ t("bot.dangerZone.confirmHint", { botId: bot.id }) }}
+              </p>
+              <UiAppInput
+                v-model="deleteConfirmText"
+                :placeholder="t('bot.dangerZone.confirmPlaceholder', { botId: bot.id })"
+              />
+              <UiAppAlert v-if="deleteError" variant="danger">
+                {{ deleteError }}
+              </UiAppAlert>
+              <div class="flex gap-2">
+                <UiAppButton
+                  variant="destructive"
+                  :disabled="!canConfirmDelete || deletingBot"
+                  @click="deleteBot"
                 >
-                  {{ t("bot.chats.moderation") }}
-                </NuxtLink>
-                <button
-                  @click="editChat(chat)"
-                  class="text-blue-600 text-sm hover:underline"
+                  {{ deletingBot ? t("bot.dangerZone.deleting") : t("bot.dangerZone.confirmButton") }}
+                </UiAppButton>
+                <UiAppButton
+                  variant="ghost"
+                  :disabled="deletingBot"
+                  @click="cancelDeleteConfirm"
                 >
-                  {{ t("common.edit") }}
-                </button>
-                <button
-                  @click="removeChat(chat.chat_id)"
-                  class="text-red-600 text-sm hover:underline"
+                  {{ t("common.cancel") }}
+                </UiAppButton>
+              </div>
+            </div>
+          </UiAppCard>
+        </template>
+
+        <UiAppCard v-if="activeTab === 'moderation'" class="!p-6">
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
+            <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+              {{ t("bot.messageTemplates.title") }}
+            </h3>
+            <UiAppButton variant="link" @click="showHtmlHelpModal = true">
+              {{ t("bot.messageTemplates.helpLink") }}
+            </UiAppButton>
+          </div>
+          <p class="text-body text-fg-muted mb-4">
+            {{ t("bot.messageTemplates.description") }}
+          </p>
+
+          <div class="flex gap-2 mb-4 border-b border-line">
+            <button
+              type="button"
+              class="tm-tab"
+              :class="{ 'tm-tab--active': messageTemplateTab === 'warning' }"
+              @click="messageTemplateTab = 'warning'"
+            >
+              {{ t("bot.messageTemplates.warningTab") }}
+            </button>
+            <button
+              type="button"
+              class="tm-tab"
+              :class="{ 'tm-tab--active': messageTemplateTab === 'ban' }"
+              @click="messageTemplateTab = 'ban'"
+            >
+              {{ t("bot.messageTemplates.banTab") }}
+            </button>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mb-3">
+            <UiAppButton
+              v-for="chip in activeTemplateChips"
+              :key="chip.key"
+              variant="ghost"
+              class="!px-2 !py-1 !text-caption uppercase tracking-wide"
+              :title="t(chip.hintKey)"
+              @click="insertTemplatePlaceholder(chip.key)"
+            >
+              {{ t(chip.labelKey) }}
+            </UiAppButton>
+          </div>
+
+          <UiAppTextarea
+            ref="templateTextareaComponentRef"
+            v-model="activeTemplateDraft"
+            :rows="8"
+          />
+
+          <UiAppAlert v-if="templateSaveError" variant="danger" class="mt-2">
+            {{ templateSaveError }}
+          </UiAppAlert>
+          <p v-if="templateSaveSuccess" class="text-body text-fg mt-2">
+            {{ t("bot.messageTemplates.saved") }}
+          </p>
+
+          <div class="flex gap-2 mt-4">
+            <UiAppButton
+              variant="primary"
+              :disabled="savingTemplates"
+              @click="saveMessageTemplates"
+            >
+              {{ savingTemplates ? t("common.saving") : t("common.save") }}
+            </UiAppButton>
+            <UiAppButton
+              variant="ghost"
+              :disabled="savingTemplates"
+              @click="resetAndSaveMessageTemplates"
+            >
+              {{ t("bot.messageTemplates.resetToDefault") }}
+            </UiAppButton>
+          </div>
+        </UiAppCard>
+
+        <UiAppCard v-if="activeTab === 'team'" class="!p-6">
+          <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-4">
+            {{ t("bot.team.title") }}
+          </h3>
+          <div v-if="teamLoading" class="text-fg-muted text-body">
+            {{ t("bot.team.loading") }}
+          </div>
+          <div v-else class="space-y-4">
+            <div v-if="isOwner && accessCode" class="flex flex-wrap items-center gap-3">
+              <div class="text-body text-fg">
+                {{ t("bot.team.accessCode") }}
+                <code class="bg-surface-3 px-2 py-1 rounded-control font-mono text-body">
+                  {{ accessCode }}
+                </code>
+              </div>
+              <UiAppButton variant="link" @click="copyAccessCode">
+                {{ t("common.copy") }}
+              </UiAppButton>
+              <UiAppButton variant="destructive" @click="revokeAccessCode">
+                {{ t("common.revoke") }}
+              </UiAppButton>
+            </div>
+            <p v-else-if="isOwner" class="text-body text-fg-muted">
+              {{ t("bot.team.accessCodeForOperators") }}
+            </p>
+            <p v-else class="text-body text-fg-muted">
+              {{ t("bot.team.ownerManagesTeam") }}
+            </p>
+
+            <div v-if="teamMembers.length" class="space-y-2">
+              <h4 class="text-body font-medium text-fg">{{ t("bot.team.members") }}</h4>
+              <div
+                v-for="member in teamMembers"
+                :key="member.user_id"
+                class="flex items-center justify-between text-body border border-line rounded-card px-3 py-2"
+              >
+                <div>
+                  <span class="font-medium text-fg">
+                    {{ member.username ? `@${member.username}` : member.name }}
+                  </span>
+                  <span class="text-fg-muted ml-2">{{ roleLabel(member.role) }}</span>
+                </div>
+                <UiAppButton
+                  v-if="isOwner && member.role === 'manager' && member.user_id !== bot?.my_user_id"
+                  variant="destructive"
+                  @click="removeMember(member.user_id)"
                 >
                   {{ t("common.remove") }}
-                </button>
+                </UiAppButton>
+                <UiAppButton
+                  v-else-if="isOwner && member.role === 'manager' && member.user_id === bot?.my_user_id"
+                  variant="destructive"
+                  @click="removeMember(member.user_id)"
+                >
+                  {{ t("common.leaveTeam") }}
+                </UiAppButton>
               </div>
             </div>
           </div>
-        </div>
-        <div v-else class="text-gray-500">{{ t("bot.chats.noChats") }}</div>
+        </UiAppCard>
       </div>
 
-      <!-- Статистика -->
-      <div class="bg-white border rounded p-6">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-medium">{{ t("bot.statistics.title") }}</h3>
-          <button
-            @click="loadStatistics"
-            class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-          >
-            {{ t("common.refresh") }}
-          </button>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="text-center">
-            <div class="text-2xl font-bold text-blue-600">
-              {{ statistics?.today?.messages_processed || 0 }}
-            </div>
-            <div class="text-sm text-gray-600">{{ t("bot.statistics.messagesToday") }}</div>
-          </div>
-          <div class="text-center">
-            <div class="text-2xl font-bold text-yellow-600">
-              {{ statistics?.today?.warnings_issued || 0 }}
-            </div>
-            <div class="text-sm text-gray-600">{{ t("bot.statistics.warningsToday") }}</div>
-          </div>
-          <div class="text-center">
-            <div class="text-2xl font-bold text-red-600">
-              {{ statistics?.users?.banned_count || 0 }}
-            </div>
-            <div class="text-sm text-gray-600">{{ t("bot.statistics.bannedTotal") }}</div>
-          </div>
-          <div
-            v-if="isSaas && (statistics?.today?.not_moderated || 0) > 0"
-            class="text-center md:col-span-3"
-          >
-            <div class="rounded border border-amber-200 bg-amber-50 p-4">
-              <div class="text-2xl font-bold text-amber-700">
-                {{ statistics?.today?.not_moderated || 0 }}
-              </div>
-              <div class="text-sm text-amber-900 font-medium">
-                {{ t("bot.statistics.notModeratedToday") }}
-              </div>
-              <p class="text-xs text-amber-800 mt-1">
-                {{ t("bot.statistics.notModeratedHint") }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Дополнительная статистика -->
-        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-gray-50 rounded p-4">
-            <h4 class="font-medium text-gray-700 mb-2">{{ t("bot.statistics.thisWeek") }}</h4>
-            <div class="space-y-1 text-sm">
-              <div class="flex justify-between">
-                <span>{{ t("bot.statistics.totalMessages") }}</span>
-                <span class="font-medium">{{
-                  statistics?.week?.total_messages_processed || 0
-                }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span>{{ t("bot.statistics.totalWarnings") }}</span>
-                <span class="font-medium">{{
-                  statistics?.week?.total_warnings_issued || 0
-                }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span>{{ t("bot.statistics.messagesDeleted") }}</span>
-                <span class="font-medium">{{
-                  statistics?.week?.total_messages_deleted || 0
-                }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="bg-gray-50 rounded p-4">
-            <h4 class="font-medium text-gray-700 mb-2">{{ t("bot.statistics.usersSection") }}</h4>
-            <div class="space-y-1 text-sm">
-              <div class="flex justify-between">
-                <span>{{ t("bot.statistics.active24h") }}</span>
-                <span class="font-medium text-green-600">{{
-                  statistics?.users?.active_count || 0
-                }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span>{{ t("bot.statistics.banned") }}</span>
-                <span class="font-medium text-red-600">{{
-                  statistics?.users?.banned_count || 0
-                }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span>{{ t("bot.statistics.maxUnique") }}</span>
-                <span class="font-medium">{{
-                  statistics?.week?.max_unique_users || 0
-                }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Recent Logs -->
-      <div class="bg-white border rounded p-6">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-medium">{{ t("bot.recentActivity.title") }}</h3>
-          <div class="flex gap-2">
-            <NuxtLink
-              :to="`/bots/${botId}/audit`"
-              class="px-3 py-2 border rounded text-sm hover:bg-gray-50"
-            >
-              {{ t("bot.recentActivity.audit") }}
-            </NuxtLink>
-            <button
-              @click="loadLogs"
-              class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-            >
-              {{ t("common.refresh") }}
-            </button>
-          </div>
-        </div>
-        <div v-if="logs.length > 0" class="space-y-2 max-h-64 overflow-y-auto">
-          <div
-            v-for="log in logs"
-            :key="log.id"
-            class="border rounded p-2 text-sm"
-          >
-            <div class="flex items-center justify-between">
-              <div>
-                <span class="font-medium">{{ logActionLabel(log.action_type) }}</span>
-                <span class="text-gray-600"> - {{ log.message }}</span>
-              </div>
-              <div class="text-xs text-gray-500">
-                {{ formatDate(log.timestamp) }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-else class="text-gray-500 text-center py-4">
-          {{ t("bot.recentActivity.empty") }}
-        </div>
-      </div>
-
-      <div v-if="isOwner" class="bg-white border border-red-200 rounded p-6">
-        <h3 class="text-lg font-medium text-red-700 mb-2">{{ t("bot.dangerZone.title") }}</h3>
-        <p class="text-sm text-gray-600 mb-4">
-          {{ t("bot.dangerZone.description") }}
-        </p>
-
-        <div v-if="!showDeleteConfirm" class="flex">
-          <button
-            type="button"
-            class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
-            @click="openDeleteConfirm"
-          >
-            {{ t("bot.dangerZone.deleteButton") }}
-          </button>
-        </div>
-
-        <div v-else class="space-y-3 max-w-md">
-          <p class="text-sm text-gray-700">
-            {{ t("bot.dangerZone.confirmHint", { botId: bot.id }) }}
-          </p>
-          <input
-            v-model="deleteConfirmText"
-            type="text"
-            class="w-full border rounded px-3 py-2 text-sm"
-            :placeholder="t('bot.dangerZone.confirmPlaceholder', { botId: bot.id })"
-          />
-          <p v-if="deleteError" class="text-sm text-red-600">{{ deleteError }}</p>
-          <div class="flex gap-2">
-            <button
-              type="button"
-              class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm disabled:opacity-50"
-              :disabled="!canConfirmDelete || deletingBot"
-              @click="deleteBot"
-            >
-              {{ deletingBot ? t("bot.dangerZone.deleting") : t("bot.dangerZone.confirmButton") }}
-            </button>
-            <button
-              type="button"
-              class="px-3 py-2 border rounded hover:bg-gray-50 text-sm"
-              :disabled="deletingBot"
-              @click="cancelDeleteConfirm"
-            >
-              {{ t("common.cancel") }}
-            </button>
-          </div>
-        </div>
-      </div>
-      </template>
-
-      <div
-        v-if="activeTab === 'moderation'"
-        class="bg-white border rounded p-6"
-      >
-        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
-          <h3 class="text-lg font-medium">{{ t("bot.messageTemplates.title") }}</h3>
-          <button
-            type="button"
-            class="text-sm text-blue-600 hover:underline"
-            @click="showHtmlHelpModal = true"
-          >
-            {{ t("bot.messageTemplates.helpLink") }}
-          </button>
-        </div>
-        <p class="text-sm text-gray-600 mb-4">
-          {{ t("bot.messageTemplates.description") }}
-        </p>
-
-        <div class="flex gap-2 mb-4 border-b">
-          <button
-            type="button"
-            class="px-3 py-2 text-sm border-b-2 -mb-px"
-            :class="
-              messageTemplateTab === 'warning'
-                ? 'border-blue-600 text-blue-700 font-medium'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            "
-            @click="messageTemplateTab = 'warning'"
-          >
-            {{ t("bot.messageTemplates.warningTab") }}
-          </button>
-          <button
-            type="button"
-            class="px-3 py-2 text-sm border-b-2 -mb-px"
-            :class="
-              messageTemplateTab === 'ban'
-                ? 'border-blue-600 text-blue-700 font-medium'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            "
-            @click="messageTemplateTab = 'ban'"
-          >
-            {{ t("bot.messageTemplates.banTab") }}
-          </button>
-        </div>
-
-        <div class="flex flex-wrap gap-2 mb-3">
-          <button
-            v-for="chip in activeTemplateChips"
-            :key="chip.key"
-            type="button"
-            class="text-xs px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
-            :title="t(chip.hintKey)"
-            @click="insertTemplatePlaceholder(chip.key)"
-          >
-            {{ t(chip.labelKey) }}
-          </button>
-        </div>
-
-        <textarea
-          ref="templateTextareaRef"
-          v-model="activeTemplateDraft"
-          rows="8"
-          class="w-full border rounded px-3 py-2 font-mono text-sm"
-        />
-
-        <p v-if="templateSaveError" class="text-sm text-red-600 mt-2">
-          {{ templateSaveError }}
-        </p>
-        <p v-if="templateSaveSuccess" class="text-sm text-green-600 mt-2">
-          {{ t("bot.messageTemplates.saved") }}
-        </p>
-
-        <div class="flex gap-2 mt-4">
-          <button
-            type="button"
-            class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-            :disabled="savingTemplates"
-            @click="saveMessageTemplates"
-          >
-            {{ savingTemplates ? t("common.saving") : t("common.save") }}
-          </button>
-          <button
-            type="button"
-            class="px-3 py-2 border rounded hover:bg-gray-50 text-sm"
-            :disabled="savingTemplates"
-            @click="resetAndSaveMessageTemplates"
-          >
-            {{ t("bot.messageTemplates.resetToDefault") }}
-          </button>
-        </div>
-      </div>
-
-      <div v-if="activeTab === 'team'" class="bg-white border rounded p-6">
-        <h3 class="text-lg font-medium mb-4">{{ t("bot.team.title") }}</h3>
-        <div v-if="teamLoading" class="text-gray-500 text-sm">{{ t("bot.team.loading") }}</div>
-        <div v-else class="space-y-4">
-          <div v-if="isOwner && accessCode" class="flex flex-wrap items-center gap-3">
-            <div class="text-sm">
-              {{ t("bot.team.accessCode") }}
-              <code class="bg-gray-100 px-2 py-1 rounded">{{ accessCode }}</code>
-            </div>
-            <button
-              type="button"
-              class="text-sm text-blue-600 hover:underline"
-              @click="copyAccessCode"
-            >
-              {{ t("common.copy") }}
-            </button>
-            <button
-              type="button"
-              class="text-sm text-red-600 hover:underline"
-              @click="revokeAccessCode"
-            >
-              {{ t("common.revoke") }}
-            </button>
-          </div>
-          <p v-else-if="isOwner" class="text-sm text-gray-500">
-            {{ t("bot.team.accessCodeForOperators") }}
-          </p>
-          <p v-else class="text-sm text-gray-500">
-            {{ t("bot.team.ownerManagesTeam") }}
-          </p>
-
-          <div v-if="teamMembers.length" class="space-y-2">
-            <h4 class="text-sm font-medium text-gray-700">{{ t("bot.team.members") }}</h4>
-            <div
-              v-for="member in teamMembers"
-              :key="member.user_id"
-              class="flex items-center justify-between text-sm border rounded px-3 py-2"
-            >
-              <div>
-                <span class="font-medium">
-                  {{ member.username ? `@${member.username}` : member.name }}
-                </span>
-                <span class="text-gray-500 ml-2">{{ roleLabel(member.role) }}</span>
-              </div>
-              <button
-                v-if="isOwner && member.role === 'manager' && member.user_id !== bot?.my_user_id"
-                type="button"
-                class="text-red-600 hover:underline"
-                @click="removeMember(member.user_id)"
-              >
-                {{ t("common.remove") }}
-              </button>
-              <button
-                v-else-if="isOwner && member.role === 'manager' && member.user_id === bot?.my_user_id"
-                type="button"
-                class="text-red-600 hover:underline"
-                @click="removeMember(member.user_id)"
-              >
-                {{ t("common.leaveTeam") }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-      <div v-else class="text-gray-500">{{ t("page.botDetail.notFound") }}</div>
+      <div v-else class="text-fg-muted">{{ t("page.botDetail.notFound") }}</div>
     </template>
 
     <!-- Add Chat activation -->
-    <div
-      v-if="showAddChatActivationModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-      @click.self="closeAddChatActivationModal"
+    <UiAppModal
+      :open="showAddChatActivationModal"
+      size="sm"
+      title-id="add-chat-activation-title"
+      @close="closeAddChatActivationModal"
     >
-      <div
-        class="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="add-chat-activation-title"
-      >
-        <h3 id="add-chat-activation-title" class="text-lg font-semibold mb-2">
+      <div>
+        <h3
+          id="add-chat-activation-title"
+          class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-2"
+        >
           {{ t("chatActivation.modal.title") }}
         </h3>
-        <p class="text-sm text-gray-600 mb-4">
+        <p class="text-body text-fg-muted mb-4">
           {{ t("chatActivation.modal.intro") }}
         </p>
 
-        <ul class="text-sm text-gray-600 list-disc pl-5 mb-4 space-y-1">
+        <ul class="text-body text-fg-muted list-disc pl-5 mb-4 space-y-1">
           <li v-for="(item, index) in activationPrerequisites" :key="index">
             {{ item }}
           </li>
         </ul>
 
         <div class="space-y-3">
-          <button
-            type="button"
-            class="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm text-left"
+          <UiAppButton
+            variant="primary"
+            class="w-full !text-left"
             @click="startChatActivation('new_group')"
           >
             <span class="font-medium">{{ t("chatActivation.modal.newGroupTitle") }}</span>
-            <span class="block text-blue-100 text-xs mt-1">
+            <span class="block text-fg-muted text-caption mt-1 normal-case tracking-normal">
               {{ t("chatActivation.modal.newGroupHint") }}
             </span>
-          </button>
-          <button
-            type="button"
-            class="w-full px-3 py-2 border rounded hover:bg-gray-50 text-sm text-left"
+          </UiAppButton>
+          <UiAppButton
+            variant="ghost"
+            class="w-full !text-left"
             @click="startChatActivation('existing_group')"
           >
             <span class="font-medium">{{ t("chatActivation.modal.existingGroupTitle") }}</span>
-            <span class="block text-gray-500 text-xs mt-1">
+            <span class="block text-fg-muted text-caption mt-1 normal-case tracking-normal">
               {{ t("chatActivation.modal.existingGroupHint") }}
             </span>
-          </button>
+          </UiAppButton>
         </div>
 
-        <button
-          type="button"
-          class="mt-4 w-full px-3 py-2 border rounded hover:bg-gray-50 text-sm"
+        <UiAppButton
+          variant="ghost"
+          class="mt-4 w-full"
           @click="closeAddChatActivationModal"
         >
           {{ t("common.cancel") }}
-        </button>
+        </UiAppButton>
       </div>
-    </div>
+    </UiAppModal>
 
     <!-- Modal for chat silent mode -->
-    <div
-      v-if="showAddChatModal && editingChat"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    <UiAppModal
+      :open="showAddChatModal && editingChat"
+      size="sm"
+      title-id="edit-chat-modal-title"
+      @close="closeChatModal"
     >
-      <div
-        class="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
-      >
-        <h3 class="text-lg font-semibold mb-4">{{ t("bot.chats.editModal.title") }}</h3>
+      <div>
+        <h3
+          id="edit-chat-modal-title"
+          class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-4"
+        >
+          {{ t("bot.chats.editModal.title") }}
+        </h3>
 
         <form @submit.prevent="saveChat" class="space-y-4">
-          <div class="text-sm text-gray-600">
-            <div class="font-medium">{{ editingChat?.name }}</div>
+          <div class="text-body text-fg-muted">
+            <div class="font-medium text-fg">{{ editingChat?.name }}</div>
             <div>{{ t("bot.chats.id", { id: editingChat?.chat_id }) }}</div>
           </div>
 
-          <div class="border-t pt-4">
-            <h4 class="font-medium text-gray-700 mb-3">{{ t("bot.chats.editModal.silentModeTitle") }}</h4>
+          <div class="border-t border-line pt-4">
+            <h4 class="font-medium text-fg mb-3">
+              {{ t("bot.chats.editModal.silentModeTitle") }}
+            </h4>
 
             <div class="space-y-3">
               <label class="flex items-center">
@@ -618,21 +577,23 @@
                   type="checkbox"
                   class="mr-2"
                 />
-                <span class="text-sm font-medium text-gray-700">{{
-                  t("bot.chats.editModal.enableSilentMode")
-                }}</span>
+                <span class="text-body font-medium text-fg">
+                  {{ t("bot.chats.editModal.enableSilentMode") }}
+                </span>
               </label>
             </div>
 
-            <div class="mt-3 text-xs text-gray-500 bg-gray-50 p-2 rounded">
-              <p class="font-medium mb-1">{{ t("bot.chats.editModal.silentModeHelpTitle") }}</p>
+            <div class="mt-3 text-caption text-fg-muted bg-surface-3 p-2 rounded-card normal-case tracking-normal">
+              <p class="font-medium mb-1 text-fg">{{ t("bot.chats.editModal.silentModeHelpTitle") }}</p>
               <p>• {{ t("bot.chats.editModal.silentModeEnabled") }}</p>
               <p>• {{ t("bot.chats.editModal.silentModeDisabled") }}</p>
             </div>
           </div>
 
-          <div class="border-t pt-4">
-            <h4 class="font-medium text-gray-700 mb-3">{{ t("bot.chats.editModal.serviceMessagesTitle") }}</h4>
+          <div class="border-t border-line pt-4">
+            <h4 class="font-medium text-fg mb-3">
+              {{ t("bot.chats.editModal.serviceMessagesTitle") }}
+            </h4>
 
             <div class="space-y-3">
               <label class="flex items-center">
@@ -642,9 +603,9 @@
                   class="mr-2"
                   @change="onServiceCleanupEnabledChange"
                 />
-                <span class="text-sm font-medium text-gray-700">{{
-                  t("bot.chats.editModal.enableServiceMessageCleanup")
-                }}</span>
+                <span class="text-body font-medium text-fg">
+                  {{ t("bot.chats.editModal.enableServiceMessageCleanup") }}
+                </span>
               </label>
 
               <div
@@ -658,9 +619,9 @@
                     :checked="newChat.service_message_cleanup.types.includes('member_joined')"
                     @change="setServiceMessageType('member_joined', ($event.target as HTMLInputElement).checked)"
                   />
-                  <span class="text-sm text-gray-700">{{
-                    t("bot.chats.editModal.serviceMessageMemberJoined")
-                  }}</span>
+                  <span class="text-body text-fg">
+                    {{ t("bot.chats.editModal.serviceMessageMemberJoined") }}
+                  </span>
                 </label>
                 <label class="flex items-center">
                   <input
@@ -669,38 +630,35 @@
                     :checked="newChat.service_message_cleanup.types.includes('member_left')"
                     @change="setServiceMessageType('member_left', ($event.target as HTMLInputElement).checked)"
                   />
-                  <span class="text-sm text-gray-700">{{
-                    t("bot.chats.editModal.serviceMessageMemberLeft")
-                  }}</span>
+                  <span class="text-body text-fg">
+                    {{ t("bot.chats.editModal.serviceMessageMemberLeft") }}
+                  </span>
                 </label>
               </div>
             </div>
 
-            <div class="mt-3 text-xs text-gray-500 bg-gray-50 p-2 rounded">
-              <p class="font-medium mb-1">{{ t("bot.chats.editModal.serviceMessagesHelpTitle") }}</p>
+            <div class="mt-3 text-caption text-fg-muted bg-surface-3 p-2 rounded-card normal-case tracking-normal">
+              <p class="font-medium mb-1 text-fg">{{ t("bot.chats.editModal.serviceMessagesHelpTitle") }}</p>
               <p>{{ t("bot.chats.editModal.serviceMessagesHelp") }}</p>
             </div>
           </div>
 
           <div class="flex gap-2 pt-4">
-            <button
+            <UiAppButton
               type="submit"
-              class="flex-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              variant="primary"
+              class="flex-1"
               :disabled="saving"
             >
               {{ saving ? t("common.saving") : t("bot.chats.editModal.updateButton") }}
-            </button>
-            <button
-              type="button"
-              @click="closeChatModal"
-              class="px-3 py-2 border rounded hover:bg-gray-50"
-            >
+            </UiAppButton>
+            <UiAppButton type="button" variant="ghost" @click="closeChatModal">
               {{ t("common.cancel") }}
-            </button>
+            </UiAppButton>
           </div>
         </form>
       </div>
-    </div>
+    </UiAppModal>
   </div>
 
   <BotsBotMessageHtmlHelpModal
@@ -716,16 +674,16 @@ import {
   DEFAULT_BAN_TEMPLATE_PREVIEW,
   DEFAULT_WARNING_TEMPLATE_PREVIEW,
   WARNING_TEMPLATE_PLACEHOLDERS,
-} from "~/lib/bot-message-template-ui";
-import type { ChatActivationStartMode } from "~/composables/useChatActivationWait";
-import type { BotMemberRole } from "~/types/bot";
+} from "@/lib/bot-message-template-ui";
+import type { ChatActivationStartMode } from "@/composables/useChatActivationWait";
+import type { BotMemberRole } from "@/types/bot";
 import {
   DEFAULT_SERVICE_MESSAGE_CLEANUP,
   type ServiceMessageKindId,
-} from "~/lib/service-message-cleanup";
+} from "@/lib/service-message-cleanup";
 
 const { t, tm, locale } = useI18n();
-const { actionLabel: logActionLabel } = useModerationActionDisplay();
+const { actionLabel: logActionLabel, actionClass: logActionClass } = useModerationActionDisplay();
 const config = useRuntimeConfig();
 const isSaas = computed(() => config.public.deploymentMode === "saas");
 
@@ -775,7 +733,10 @@ const statusError = ref("");
 const messageTemplateTab = ref<"warning" | "ban">("warning");
 const warningTemplateDraft = ref("");
 const banTemplateDraft = ref("");
-const templateTextareaRef = ref<HTMLTextAreaElement | null>(null);
+const templateTextareaComponentRef = ref<{ textareaEl: HTMLTextAreaElement | null } | null>(null);
+const templateTextareaEl = computed(
+  () => templateTextareaComponentRef.value?.textareaEl ?? null
+);
 const savingTemplates = ref(false);
 const templateSaveError = ref("");
 const templateSaveSuccess = ref(false);
@@ -823,15 +784,15 @@ const aggregatedStatusText = computed(() => {
   return t("bot.deliveryStatus.unknown");
 });
 
-const overviewStatusBadgeClass = computed(() => {
+const overviewStatusBadgeVariant = computed(() => {
   const status = bot.value?.delivery_status;
   if (status === "healthy") {
-    return "bg-green-100 text-green-800";
+    return "success" as const;
   }
   if (status === "disabled") {
-    return "bg-gray-100 text-gray-700";
+    return "muted" as const;
   }
-  return "bg-red-100 text-red-800";
+  return "danger" as const;
 });
 
 const canManageBot = computed(
@@ -846,11 +807,12 @@ const canConfirmDelete = computed(() => {
   return value === "DELETE" || value === `@${bot.value.id}` || value === bot.value.id;
 });
 
-const activationBannerClass = computed(() => {
+const activationAlertVariant = computed(() => {
   const value = chatActivation.status.value;
-  if (value === "waiting") return "border-blue-200 bg-blue-50 text-blue-900";
-  if (value === "completed") return "border-green-200 bg-green-50 text-green-900";
-  return "border-red-200 bg-red-50 text-red-900";
+  if (value === "failed" || value === "expired") {
+    return "danger" as const;
+  }
+  return "neutral" as const;
 });
 
 const activeTemplateChips = computed(() =>
@@ -875,7 +837,7 @@ const activeTemplateDraft = computed({
 });
 
 const { insertAtCursor: insertTemplatePlaceholder } = useTemplateInsert(
-  templateTextareaRef,
+  templateTextareaEl,
   activeTemplateDraft
 );
 
@@ -1039,11 +1001,11 @@ function chatHealthLabel(chat: any) {
   return t("bot.chats.health.unknown");
 }
 
-function chatHealthBadgeClass(chat: any) {
-  if (chat.health_status === "ok") return "bg-green-100 text-green-800";
-  if (chat.health_status === "degraded") return "bg-yellow-100 text-yellow-800";
-  if (chat.health_status === "unhealthy") return "bg-red-100 text-red-800";
-  return "bg-gray-100 text-gray-800";
+function chatHealthBadgeVariant(chat: any) {
+  if (chat.health_status === "ok") return "success" as const;
+  if (chat.health_status === "degraded") return "warning" as const;
+  if (chat.health_status === "unhealthy") return "danger" as const;
+  return "muted" as const;
 }
 
 async function toggleBotStatus() {
@@ -1188,10 +1150,9 @@ async function loadLogs() {
 
 function getSilentModeClass(chat: any) {
   if (chat.silent_mode) {
-    return "text-gray-600"; // Monitor only
-  } else {
-    return "text-green-600"; // Full moderation
+    return "text-fg-muted";
   }
+  return "text-fg";
 }
 
 function getSilentModeText(chat: any) {

@@ -21,13 +21,13 @@ Rules are stored **per chat**; presets are constants in `rule-templates.ts`, add
 
 Public endpoint without session: `POST /api/telegram/webhook/*` (Telegram). Protection: per-bot `webhook_secret` in the DB + header `X-Telegram-Bot-Api-Secret-Token`.
 
-More: [`.docs/project-overview.md`](.docs/project-overview.md) · [`.docs/technical-design.md`](.docs/technical-design.md) · [`.docs/i18n.md`](.docs/i18n.md) (admin UI locales)
+More: [`.docs/project-overview.md`](.docs/project-overview.md) · [`.docs/technical-design.md`](.docs/technical-design.md) · [`.docs/i18n.md`](.docs/i18n.md) (admin UI locales) · [`assets/brand/DESIGN.md`](assets/brand/DESIGN.md) (design system + app appendix)
 
 GitHub repo: **`README.md` (EN)** and **`README.ru.md` (RU)** — when editing README, update both.
 
 ## Stack
 
-- Bun, Nuxt 4, Nitro, Vue 3, Tailwind, **@nuxtjs/i18n** (admin UI: en + ru)
+- Bun, Nuxt 4, Nitro, Vue 3, **Tailwind CSS 4** (`@tailwindcss/vite`), **@nuxtjs/i18n** (admin UI: en + ru)
 - PostgreSQL, Drizzle
 - Telegram OIDC login (`TELEGRAM_LOGIN_BOT_ID`, `TELEGRAM_LOGIN_CLIENT_SECRET`, `BASE_URL`)
 - LLM: OpenAI-compatible API via `LLM_API_KEY`, optional `LLM_BASE_URL` (OpenRouter/Polza), `LLM_MODEL`

@@ -2,9 +2,9 @@ import {
   buildTelegramAuthorizeUrl,
   generateOidcState,
   generatePkcePair,
-} from "../../utils/telegram-oidc";
-import { resolveReturnToPath } from "../../../lib/auth-return-to";
-import { setOidcCookies } from "../../utils/session";
+} from "@/server/utils/telegram-oidc";
+import { resolveReturnToPath } from "@/lib/auth-return-to";
+import { setOidcCookies } from "@/server/utils/session";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);

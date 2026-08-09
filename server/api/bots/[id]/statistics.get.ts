@@ -1,11 +1,11 @@
-import { logger } from "../../../core/logger";
-import { ChatStatisticsRepository } from "../../../database/repositories/chat-statistics-repository";
-import { ModerationActionRepository } from "../../../database/repositories/moderation-action-repository";
-import { UserContextRepository } from "../../../database/repositories/user-context-repository";
-import { UserMessageRepository } from "../../../database/repositories/user-message-repository";
-import { requireBotAccess } from "../../../utils/bot-access";
-import { requireBotIdParam } from "../../../utils/get-bot-id-param";
-import { isSaasMode } from "../../../core/deployment-mode";
+import { logger } from "@/server/core/logger";
+import { ChatStatisticsRepository } from "@/server/database/repositories/chat-statistics-repository";
+import { ModerationActionRepository } from "@/server/database/repositories/moderation-action-repository";
+import { UserContextRepository } from "@/server/database/repositories/user-context-repository";
+import { UserMessageRepository } from "@/server/database/repositories/user-message-repository";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
+import { isSaasMode } from "@/server/core/deployment-mode";
 
 export default defineEventHandler(async (event) => {
   try {

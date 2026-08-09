@@ -1,8 +1,8 @@
-import { BotRepository } from "../../database/repositories/bot-repository";
-import { getBotDeliveryHealth, withDeliveryHealth } from "../../utils/bot-delivery";
-import { requireBotAccess } from "../../utils/bot-access";
-import { requireBotIdParam } from "../../utils/get-bot-id-param";
-import { refreshBotAvatar } from "../../core/bot-avatar";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { getBotDeliveryHealth, withDeliveryHealth } from "@/server/utils/bot-delivery";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
+import { refreshBotAvatar } from "@/server/core/bot-avatar";
 
 export default defineEventHandler(async (event) => {
   try {

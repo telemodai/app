@@ -1,6 +1,6 @@
 import { eq, and, gt } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { sessions } from "../auth-schema";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { sessions } from "@/server/database/auth-schema";
 
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 

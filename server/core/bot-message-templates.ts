@@ -1,4 +1,4 @@
-import type { TelegramUser } from "../types/telegram";
+import type { TelegramUser } from "@/server/types/telegram";
 
 export const DEFAULT_WARNING_TEMPLATE = `⚠️ <b>Предупреждение!</b>
 

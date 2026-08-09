@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { shouldDeleteServiceMessage } from "../../../server/core/service-message-cleanup";
-import type { TelegramMessage } from "../../../server/types/telegram";
+import { shouldDeleteServiceMessage } from "@/server/core/service-message-cleanup";
+import type { TelegramMessage } from "@/server/types/telegram";
 
 const message: TelegramMessage = {
   message_id: 10,

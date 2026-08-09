@@ -2,8 +2,8 @@ import { describe, expect, test, mock } from "bun:test";
 import {
   buildModerationDecisionRequest,
   saveModerationDecision,
-} from "../../../server/core/moderation-decision";
-import { InMemoryModerationDecisionRepository } from "../../helpers/in-memory-moderation-decision-repository";
+} from "@/server/core/moderation-decision";
+import { InMemoryModerationDecisionRepository } from "@/tests/helpers/in-memory-moderation-decision-repository";
 
 describe("moderation decision save", () => {
   test("buildModerationDecisionRequest maps clean LLM response", () => {

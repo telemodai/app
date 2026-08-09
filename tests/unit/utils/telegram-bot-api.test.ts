@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   TelegramBotApiError,
   telegramGetMe,
-} from "../../../server/utils/telegram-bot-api";
+} from "@/server/utils/telegram-bot-api";
 
 describe("telegram-bot-api", () => {
   test("telegramGetMe returns bot profile on success", async () => {

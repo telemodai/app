@@ -1,16 +1,16 @@
-import { BotRepository } from "../../../database/repositories/bot-repository";
-import { ModerationDecisionRepository } from "../../../database/repositories/moderation-decision-repository";
-import { logger } from "../../../core/logger";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { ModerationDecisionRepository } from "@/server/database/repositories/moderation-decision-repository";
+import { logger } from "@/server/core/logger";
 import {
   buildDecisionsPagination,
   parseDecisionsQuery,
-} from "../../../utils/decisions-query";
+} from "@/server/utils/decisions-query";
 import {
   enrichWithRuleName,
   loadRuleNameMap,
-} from "../../../core/rule-name-lookup";
-import { requireBotAccess } from "../../../utils/bot-access";
-import { requireBotIdParam } from "../../../utils/get-bot-id-param";
+} from "@/server/core/rule-name-lookup";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
 
 export default defineEventHandler(async (event) => {
   try {

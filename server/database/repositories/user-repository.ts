@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
-import { users } from "../auth-schema";
-import type { AppUser, SessionUser } from "../models/user";
-import { generateReferralCode } from "../../core/referral-code";
+import { getDatabaseConnection } from "@/server/database/connection";
+import { users } from "@/server/database/auth-schema";
+import type { AppUser, SessionUser } from "@/server/database/models/user";
+import { generateReferralCode } from "@/server/core/referral-code";
 
 function toAppUser(row: typeof users.$inferSelect): AppUser {
   return {

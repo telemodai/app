@@ -4,7 +4,7 @@ export interface Chat {
   name: string;
   /** When true, violations are logged in DB only — no Telegram delete/ban/warn. */
   silent_mode?: boolean;
-  service_message_cleanup?: import("../lib/service-message-cleanup").ServiceMessageCleanupSettings;
+  service_message_cleanup?: import("@/server/lib/service-message-cleanup").ServiceMessageCleanupSettings;
 }
 
 export interface Bot {

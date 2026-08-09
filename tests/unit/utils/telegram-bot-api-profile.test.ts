@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { telegramGetUserProfilePhotos } from "../../../server/utils/telegram-bot-api";
+import { telegramGetUserProfilePhotos } from "@/server/utils/telegram-bot-api";
 
 describe("telegramGetUserProfilePhotos", () => {
   test("returns profile photos payload", async () => {

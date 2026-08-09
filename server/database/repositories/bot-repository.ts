@@ -1,16 +1,16 @@
 import { eq, inArray, and, sql } from "drizzle-orm";
-import { getDatabaseConnection } from "../connection";
+import { getDatabaseConnection } from "@/server/database/connection";
 import {
   Bot,
   CreateBotInput,
   UpdateBotRequest,
   BotResponse,
   Chat,
-} from "../models/bot";
-import { bots, chats, rules } from "../schema";
-import { toBot, toBotResponse, toChat } from "../mappers";
+} from "@/server/database/models/bot";
+import { bots, chats, rules } from "@/server/database/schema";
+import { toBot, toBotResponse, toChat } from "@/server/database/mappers";
 import { BotMemberRepository } from "./bot-member-repository";
-import { normalizeServiceMessageCleanup } from "../../../lib/service-message-cleanup";
+import { normalizeServiceMessageCleanup } from "@/lib/service-message-cleanup";
 
 type IncomingChat = {
   chat_id: number;

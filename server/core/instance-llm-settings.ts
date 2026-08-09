@@ -1,7 +1,7 @@
 import type { LlmConfig } from "./llm-provider";
 import { decryptSecret } from "./settings-encryption";
 import { isSelfHostedMode } from "./deployment-mode";
-import { InstanceSettingsRepository } from "../database/repositories/instance-settings-repository";
+import { InstanceSettingsRepository } from "@/server/database/repositories/instance-settings-repository";
 
 const DEFAULT_MODEL = "gpt-4.1-nano-2025-04-14";
 

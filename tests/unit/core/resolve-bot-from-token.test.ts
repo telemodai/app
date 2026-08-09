@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   BotCreateValidationError,
   resolveBotIdentityFromGetMe,
-} from "../../../server/core/resolve-bot-from-token";
+} from "@/server/core/resolve-bot-from-token";
 
 describe("resolveBotIdentityFromGetMe", () => {
   test("maps username to id and first_name to name", () => {

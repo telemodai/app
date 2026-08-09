@@ -1,8 +1,8 @@
-import { BotRepository } from "../../../../../../database/repositories/bot-repository";
-import { ChatRepository } from "../../../../../../database/repositories/chat-repository";
-import { requireBotAccess } from "../../../../../../utils/bot-access";
-import { requireBotIdParam } from "../../../../../../utils/get-bot-id-param";
-import { telegramFetchFileStream } from "../../../../../../utils/telegram-bot-api";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
+import { ChatRepository } from "@/server/database/repositories/chat-repository";
+import { requireBotAccess } from "@/server/utils/bot-access";
+import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
+import { telegramFetchFileStream } from "@/server/utils/telegram-bot-api";
 
 export default defineEventHandler(async (event) => {
   const botId = requireBotIdParam(event);
