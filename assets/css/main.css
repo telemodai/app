@@ -1,0 +1,28 @@
+@import "tailwindcss";
+@import "./fonts.css";
+@import "../brand/css/theme.css";
+@import "../brand/css/theme-app.css";
+
+@layer base {
+  html {
+    @apply antialiased scroll-smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    @apply min-h-dvh bg-surface-1 font-sans text-body text-fg;
+  }
+
+  ::selection {
+    @apply bg-accent-surface text-fg;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+}

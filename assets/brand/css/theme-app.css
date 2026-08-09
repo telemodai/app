@@ -1,0 +1,15 @@
+@import "./tokens-app.css";
+
+@theme inline {
+  --color-action-warning: var(--tm-action-warning);
+  --color-action-delete: var(--tm-action-delete);
+  --color-action-ban: var(--tm-action-ban);
+  --color-action-reset: var(--tm-action-reset);
+  --color-action-unban: var(--tm-action-unban);
+  --color-action-pardon: var(--tm-action-pardon);
+  --color-action-warning-surface: var(--tm-action-warning-surface);
+  --color-action-delete-surface: var(--tm-action-delete-surface);
+  --color-action-reset-surface: var(--tm-action-reset-surface);
+  --color-action-unban-surface: var(--tm-action-unban-surface);
+  --color-action-pardon-surface: var(--tm-action-pardon-surface);
+}

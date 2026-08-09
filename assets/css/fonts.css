@@ -1,0 +1,19 @@
+/**
+ * Self-hosted brand fonts (Fontsource) — weights per brand/DESIGN.md §4.
+ */
+
+/* Geologica 500 — display + wordmark */
+@import "@fontsource/geologica/latin-500.css";
+@import "@fontsource/geologica/cyrillic-500.css";
+
+/* Inter 400 / 500 / 600 — body UI */
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-500.css";
+@import "@fontsource/inter/latin-600.css";
+@import "@fontsource/inter/cyrillic-400.css";
+@import "@fontsource/inter/cyrillic-500.css";
+@import "@fontsource/inter/cyrillic-600.css";
+
+/* Fira Code 400 / 600 — mono */
+@import "@fontsource/fira-code/latin-400.css";
+@import "@fontsource/fira-code/latin-600.css";
