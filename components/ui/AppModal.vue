@@ -22,9 +22,11 @@ const panelSizeClass = computed(() => {
     case "sm":
       return "max-w-md";
     case "lg":
-      return "max-w-2xl";
+      // Template library: compact on phones, roomy on desktop.
+      return "max-w-md md:max-w-2xl lg:max-w-3xl";
     default:
-      return "max-w-lg";
+      // Forms (e.g. rule editor): narrow mobile, wider from tablet up.
+      return "max-w-md md:max-w-xl lg:max-w-2xl";
   }
 });
 

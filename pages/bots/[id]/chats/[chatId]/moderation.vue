@@ -306,7 +306,7 @@
             </p>
             <UiAppTextarea
               v-model="form.ai_prompt"
-              :rows="4"
+              :rows="8"
               required
               :placeholder="t('moderation.ruleModal.ruleTextPlaceholder')"
             />
@@ -450,26 +450,28 @@
               <label class="block text-body font-medium text-fg mb-1">
                 {{ t("moderation.ruleModal.warningsBeforeBanLabel") }}
               </label>
-              <UiAppInput
-                :model-value="String(form.warnings_before_ban)"
-                type="number"
-                min="1"
-                max="20"
-                @update:model-value="
-                  form.warnings_before_ban = Math.min(
-                    20,
-                    Math.max(1, Number($event) || 3)
-                  )
-                "
-              />
+              <div class="lg:w-28">
+                <UiAppInput
+                  :model-value="String(form.warnings_before_ban)"
+                  type="number"
+                  min="1"
+                  max="20"
+                  @update:model-value="
+                    form.warnings_before_ban = Math.min(
+                      20,
+                      Math.max(1, Number($event) || 3)
+                    )
+                  "
+                />
+              </div>
             </div>
           </div>
 
-          <div class="flex gap-2 pt-4">
+          <div class="flex gap-2 pt-4 lg:justify-end">
             <UiAppButton
               type="submit"
               variant="primary"
-              class="flex-1"
+              class="flex-1 lg:flex-none"
               :disabled="saving"
             >
               {{
