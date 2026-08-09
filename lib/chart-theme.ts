@@ -34,3 +34,13 @@ export function chartColorAlpha(token: ChartToken, alpha: number): string {
   }
   return color;
 }
+
+/** Axis labels, legend text — follows --tm-fg-muted. */
+export function chartMutedColor(): string {
+  return chartColor("fg-muted");
+}
+
+/** Grid lines — follows --tm-line. */
+export function chartGridColor(alpha = 1): string {
+  return chartColorAlpha("line", alpha);
+}

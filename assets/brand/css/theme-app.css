@@ -1,6 +1,14 @@
 @import "./tokens-app.css";
 
+/* Admin app shape — softer radii than core brand defaults (see DESIGN.md Appendix B). */
+@theme {
+  --radius-control: 10px;
+  --radius-card: 12px;
+  --spacing-card: 16px;
+}
+
 @theme inline {
+  --color-accent-on: var(--tm-accent-on);
   --color-action-warning: var(--tm-action-warning);
   --color-action-delete: var(--tm-action-delete);
   --color-action-ban: var(--tm-action-ban);

@@ -18,23 +18,23 @@
           >
             <NuxtLink
               to="/"
-              class="whitespace-nowrap px-3 py-2 text-fg hover:bg-surface-3"
-              active-class="border-b border-line-strong font-medium"
+              class="tm-nav-link"
+              active-class="tm-nav-link--active"
             >
               {{ t("nav.dashboard") }}
             </NuxtLink>
             <NuxtLink
               to="/bots"
-              class="whitespace-nowrap px-3 py-2 text-fg hover:bg-surface-3"
-              active-class="border-b border-line-strong font-medium"
+              class="tm-nav-link"
+              active-class="tm-nav-link--active"
             >
               {{ t("nav.bots") }}
             </NuxtLink>
             <NuxtLink
               v-if="isSelfHosted"
               to="/settings/llm"
-              class="whitespace-nowrap px-3 py-2 text-fg hover:bg-surface-3"
-              active-class="border-b border-line-strong font-medium"
+              class="tm-nav-link"
+              active-class="tm-nav-link--active"
             >
               {{ t("nav.settings") }}
             </NuxtLink>

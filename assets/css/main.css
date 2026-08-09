@@ -26,3 +26,29 @@
     @apply outline-2 outline-offset-2 outline-accent;
   }
 }
+
+@layer components {
+  .tm-field {
+    @apply w-full rounded-control border border-line bg-surface-4 px-4 py-3 text-body text-fg placeholder:text-fg-subtle focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50;
+  }
+
+  .tm-nav-link {
+    @apply whitespace-nowrap rounded-control px-3 py-2 text-fg transition-colors hover:bg-surface-3;
+  }
+
+  .tm-nav-link--active {
+    @apply bg-surface-3 font-medium text-fg;
+  }
+
+  .tm-tab {
+    @apply px-4 py-2.5 text-body border-b-2 -mb-px border-transparent text-fg-muted transition-colors hover:text-fg;
+  }
+
+  .tm-tab--active {
+    @apply border-accent text-accent font-medium;
+  }
+
+  .tm-empty-state {
+    @apply rounded-card border border-dashed border-line bg-surface-3/50 px-4 py-10 text-center text-body text-fg-muted;
+  }
+}

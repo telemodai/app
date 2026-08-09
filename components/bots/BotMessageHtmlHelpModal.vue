@@ -1,10 +1,11 @@
 <template>
   <UiAppModal
     :open="open"
+    size="md"
     title-id="bot-message-html-help-title"
     @close="emit('close')"
   >
-    <div class="max-w-lg">
+    <div>
       <div class="flex items-start justify-between gap-4 mb-4">
         <h3 id="bot-message-html-help-title" class="font-display text-heading-sm text-fg">
           {{ t("botTemplate.htmlHelp.title") }}

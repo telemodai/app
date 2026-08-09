@@ -21,7 +21,7 @@ defineEmits<{
     :placeholder="placeholder"
     :disabled="disabled"
     :autocomplete="autocomplete"
-    class="w-full rounded-control border border-surface-4 bg-surface-2 p-3 text-body text-fg placeholder:text-fg-subtle focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
+    class="tm-field"
     @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
   >
 </template>

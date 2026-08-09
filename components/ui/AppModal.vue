@@ -1,12 +1,32 @@
 <script setup lang="ts">
-defineProps<{
-  open: boolean;
-  titleId?: string;
-}>();
+import { computed } from "vue";
+
+const props = withDefaults(
+  defineProps<{
+    open: boolean;
+    titleId?: string;
+    /** Panel max width — must be set on the shell, not inner content. */
+    size?: "sm" | "md" | "lg";
+  }>(),
+  {
+    size: "md",
+  }
+);
 
 defineEmits<{
   close: [];
 }>();
+
+const panelSizeClass = computed(() => {
+  switch (props.size) {
+    case "sm":
+      return "max-w-md";
+    case "lg":
+      return "max-w-2xl";
+    default:
+      return "max-w-lg";
+  }
+});
 
 function onBackdropClick(event: MouseEvent) {
   if (event.target === event.currentTarget) {
@@ -24,7 +44,8 @@ function onBackdropClick(event: MouseEvent) {
       @keydown.escape="$emit('close')"
     >
       <div
-        class="w-full max-h-[85vh] overflow-y-auto rounded-card border border-line bg-surface-2 p-6 shadow-overlay"
+        class="w-full max-h-[85vh] overflow-y-auto rounded-surface border border-line bg-surface-2 p-6 shadow-overlay"
+        :class="panelSizeClass"
         role="dialog"
         :aria-labelledby="titleId"
         @click.stop

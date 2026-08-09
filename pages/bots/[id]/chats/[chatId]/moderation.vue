@@ -74,7 +74,7 @@
       </UiAppCard>
     </div>
 
-    <div v-if="!loading && rules.length === 0" class="text-fg-muted">
+    <div v-if="!loading && rules.length === 0" class="tm-empty-state">
       {{ t("moderation.emptyRules") }}
     </div>
 
@@ -128,7 +128,7 @@
               </td>
               <td class="py-2 pr-4 align-top text-fg">{{ row.warnings_count }}</td>
               <td class="py-2 pr-4 align-top">
-                <UiAppBadge v-if="row.is_banned" class="text-danger">
+                <UiAppBadge v-if="row.is_banned" variant="danger">
                   {{ t("moderation.chatUsers.banned") }}
                 </UiAppBadge>
                 <span v-else class="text-fg-muted">{{ t("common.dash") }}</span>
@@ -207,10 +207,11 @@
 
     <UiAppModal
       :open="showTemplateLibrary"
+      size="lg"
       title-id="template-library-title"
       @close="closeTemplateLibrary"
     >
-      <div class="w-full max-w-2xl">
+      <div>
         <div class="flex items-start justify-between gap-4 mb-4">
           <div>
             <h3
@@ -265,8 +266,8 @@
       </div>
     </UiAppModal>
 
-    <UiAppModal :open="showModal" title-id="rule-modal-title" @close="closeModal">
-      <div class="w-full max-w-lg">
+    <UiAppModal :open="showModal" size="md" title-id="rule-modal-title" @close="closeModal">
+      <div>
         <h3
           id="rule-modal-title"
           class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-4"
@@ -313,16 +314,22 @@
             <div class="mt-2">
               <UiAppButton
                 type="button"
-                variant="ghost"
-                class="!rounded-control !text-body normal-case tracking-normal"
+                variant="ai"
+                :aria-expanded="showAiAssist"
                 :class="
                   showAiAssist
-                    ? 'border-accent text-accent'
+                    ? 'ring-2 ring-accent ring-offset-2 ring-offset-surface-2'
                     : ''
                 "
                 @click="showAiAssist = !showAiAssist"
               >
-                <span aria-hidden="true">🪄</span>
+                <Wand2
+                  :size="16"
+                  :stroke-width="1.5"
+                  :absolute-stroke-width="true"
+                  class="text-accent"
+                  aria-hidden="true"
+                />
                 {{ t("moderation.ruleModal.aiAssistToggle") }}
               </UiAppButton>
 
@@ -485,6 +492,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+import { Wand2 } from "lucide-vue-next";
 import { readFetchError } from "@/lib/fetch-error";
 
 const { t } = useI18n();

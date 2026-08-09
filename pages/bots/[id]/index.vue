@@ -41,12 +41,8 @@
             v-for="tab in botTabs"
             :key="tab.id"
             type="button"
-            class="px-4 py-2 text-body border-b-2 -mb-px"
-            :class="
-              activeTab === tab.id
-                ? 'border-accent text-accent font-medium'
-                : 'border-transparent text-fg-muted hover:text-fg'
-            "
+            class="tm-tab"
+            :class="{ 'tm-tab--active': activeTab === tab.id }"
             @click="activeTab = tab.id"
           >
             {{ tab.label }}
@@ -55,17 +51,17 @@
 
         <template v-if="activeTab === 'overview'">
           <div class="flex flex-wrap items-center gap-2">
-            <UiAppBadge :class="overviewStatusBadgeClass">
+            <UiAppBadge :variant="overviewStatusBadgeVariant">
               {{ aggregatedStatusText }}
             </UiAppBadge>
             <UiAppBadge v-if="bot.my_role">
               {{ roleLabel(bot.my_role) }}
             </UiAppBadge>
-            <UiAppBadge class="normal-case tracking-normal text-fg-muted">
+            <UiAppBadge variant="muted" class="normal-case tracking-normal">
               {{ t("bot.created", { date: formatDate(bot.created_at) }) }}
             </UiAppBadge>
             <template v-if="isSaas">
-              <UiAppBadge class="text-accent">
+              <UiAppBadge variant="accent">
                 {{ t("billing.balance") }}: {{ (bot.credit_balance ?? 0).toLocaleString() }}
               </UiAppBadge>
               <UiAppButton
@@ -134,7 +130,7 @@
                         </span>
                       </div>
                       <div class="mt-1">
-                        <UiAppBadge :class="chatHealthBadgeClass(chat)">
+                        <UiAppBadge :variant="chatHealthBadgeVariant(chat)">
                           {{ chatHealthLabel(chat) }}
                         </UiAppBadge>
                         <p
@@ -163,7 +159,7 @@
                 </div>
               </div>
             </div>
-            <div v-else class="text-fg-muted">{{ t("bot.chats.noChats") }}</div>
+            <div v-else class="tm-empty-state">{{ t("bot.chats.noChats") }}</div>
           </UiAppCard>
 
           <!-- Statistics -->
@@ -176,21 +172,21 @@
                 {{ t("common.refresh") }}
               </UiAppButton>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div class="text-center">
-                <div class="text-2xl font-semibold text-accent">
+                <div class="mb-1 font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-accent">
                   {{ statistics?.today?.messages_processed || 0 }}
                 </div>
                 <div class="text-body text-fg-muted">{{ t("bot.statistics.messagesToday") }}</div>
               </div>
               <div class="text-center">
-                <div class="text-2xl font-semibold text-action-warning">
+                <div class="mb-1 font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-action-warning">
                   {{ statistics?.today?.warnings_issued || 0 }}
                 </div>
                 <div class="text-body text-fg-muted">{{ t("bot.statistics.warningsToday") }}</div>
               </div>
               <div class="text-center">
-                <div class="text-2xl font-semibold text-danger">
+                <div class="mb-1 font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-danger">
                   {{ statistics?.users?.banned_count || 0 }}
                 </div>
                 <div class="text-body text-fg-muted">{{ t("bot.statistics.bannedTotal") }}</div>
@@ -200,7 +196,7 @@
                 class="text-center md:col-span-3"
               >
                 <UiAppAlert class="!p-4">
-                  <div class="text-2xl font-semibold text-action-warning">
+                  <div class="font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-action-warning">
                     {{ statistics?.today?.not_moderated || 0 }}
                   </div>
                   <div class="text-body font-medium text-fg">
@@ -366,24 +362,16 @@
           <div class="flex gap-2 mb-4 border-b border-line">
             <button
               type="button"
-              class="px-3 py-2 text-body border-b-2 -mb-px"
-              :class="
-                messageTemplateTab === 'warning'
-                  ? 'border-accent text-accent font-medium'
-                  : 'border-transparent text-fg-muted hover:text-fg'
-              "
+              class="tm-tab"
+              :class="{ 'tm-tab--active': messageTemplateTab === 'warning' }"
               @click="messageTemplateTab = 'warning'"
             >
               {{ t("bot.messageTemplates.warningTab") }}
             </button>
             <button
               type="button"
-              class="px-3 py-2 text-body border-b-2 -mb-px"
-              :class="
-                messageTemplateTab === 'ban'
-                  ? 'border-accent text-accent font-medium'
-                  : 'border-transparent text-fg-muted hover:text-fg'
-              "
+              class="tm-tab"
+              :class="{ 'tm-tab--active': messageTemplateTab === 'ban' }"
               @click="messageTemplateTab = 'ban'"
             >
               {{ t("bot.messageTemplates.banTab") }}
@@ -502,10 +490,11 @@
     <!-- Add Chat activation -->
     <UiAppModal
       :open="showAddChatActivationModal"
+      size="sm"
       title-id="add-chat-activation-title"
       @close="closeAddChatActivationModal"
     >
-      <div class="w-full max-w-md">
+      <div>
         <h3
           id="add-chat-activation-title"
           class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-2"
@@ -558,10 +547,11 @@
     <!-- Modal for chat silent mode -->
     <UiAppModal
       :open="showAddChatModal && editingChat"
+      size="sm"
       title-id="edit-chat-modal-title"
       @close="closeChatModal"
     >
-      <div class="w-full max-w-md">
+      <div>
         <h3
           id="edit-chat-modal-title"
           class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-4"
@@ -794,15 +784,15 @@ const aggregatedStatusText = computed(() => {
   return t("bot.deliveryStatus.unknown");
 });
 
-const overviewStatusBadgeClass = computed(() => {
+const overviewStatusBadgeVariant = computed(() => {
   const status = bot.value?.delivery_status;
   if (status === "healthy") {
-    return "text-fg";
+    return "success" as const;
   }
   if (status === "disabled") {
-    return "text-fg-muted";
+    return "muted" as const;
   }
-  return "text-danger";
+  return "danger" as const;
 });
 
 const canManageBot = computed(
@@ -1011,11 +1001,11 @@ function chatHealthLabel(chat: any) {
   return t("bot.chats.health.unknown");
 }
 
-function chatHealthBadgeClass(chat: any) {
-  if (chat.health_status === "ok") return "text-fg";
-  if (chat.health_status === "degraded") return "text-action-warning";
-  if (chat.health_status === "unhealthy") return "text-danger";
-  return "text-fg-muted";
+function chatHealthBadgeVariant(chat: any) {
+  if (chat.health_status === "ok") return "success" as const;
+  if (chat.health_status === "degraded") return "warning" as const;
+  if (chat.health_status === "unhealthy") return "danger" as const;
+  return "muted" as const;
 }
 
 async function toggleBotStatus() {

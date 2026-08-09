@@ -550,3 +550,17 @@ Chart.js reads `--tm-action-*` via `lib/chart-theme.ts`.
 
 **Don't:** use action tokens for generic success/warning elsewhere; don't add more hues without updating this appendix.
 
+---
+
+## Appendix B — App-only: cabinet UI shape and emphasis
+
+Applies **only** to the admin app. Overrides core shape tokens via `theme-app.css` (not upstream `site/brand`).
+
+| Override | Core | App cabinet |
+|----------|------|-------------|
+| `radius-control` | 4px | 10px — buttons, inputs, chips |
+| `radius-card` | 8px | 12px — cards, nested panels |
+| `spacing-card` | 12px | 16px — default card padding |
+
+**Primary CTA** in the app uses filled `accent` with `accent-on` label (not marketing inverse `fg` fill). Ghost buttons use `line` borders. Status badges are pill-shaped (`rounded-full`) with semantic `action-*` / `danger` tints where needed. Modals use `radius-surface` (16px).
+

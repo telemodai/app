@@ -41,34 +41,35 @@
             v-if="bot.photo_file_id"
             :src="botPhotoUrl(bot.id)"
             :alt="bot.name"
-            class="h-10 w-10 rounded-control object-cover bg-surface-3 shrink-0"
+            class="h-12 w-12 rounded-control object-cover bg-surface-3 shrink-0"
           />
           <div
             v-else
-            class="h-10 w-10 rounded-control bg-surface-3 flex items-center justify-center text-caption font-medium text-fg-muted shrink-0 normal-case tracking-normal"
+            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-control bg-surface-3 text-caption font-medium text-fg-muted normal-case tracking-normal"
           >
             {{ botInitials(bot.name) }}
           </div>
-          <div class="min-w-0">
-            <div class="flex items-center gap-2 flex-wrap mb-1">
-              <div class="font-display text-heading-sm tracking-[-0.035em] text-fg">
-                {{ bot.name }}
-              </div>
-              <UiAppBadge :class="roleBadgeClass(bot.my_role)">
-                {{ roleLabel(bot.my_role) }}
-              </UiAppBadge>
-            </div>
-            <div class="text-caption text-fg-muted normal-case tracking-normal">
+
+          <div class="min-w-0 flex-1">
+            <h3 class="truncate font-display text-heading-sm tracking-[-0.035em] text-fg">
+              {{ bot.name }}
+            </h3>
+            <p class="truncate text-caption text-fg-muted normal-case tracking-normal">
               @{{ bot.id }}
-            </div>
-            <div class="text-caption text-fg-muted normal-case tracking-normal">
-              {{ t("bot.statusLabel") }}
-              <span :class="bot.is_active ? 'text-fg' : 'text-danger'">
-                {{ bot.is_active ? t("bot.active") : t("bot.inactive") }}
+            </p>
+
+            <div class="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <UiAppBadge :variant="roleBadgeVariant(bot.my_role)">
+                  {{ roleLabel(bot.my_role) }}
+                </UiAppBadge>
+                <UiAppBadge :variant="bot.is_active ? 'success' : 'danger'">
+                  {{ bot.is_active ? t("bot.active") : t("bot.inactive") }}
+                </UiAppBadge>
+              </div>
+              <span class="shrink-0 text-caption text-fg-muted normal-case tracking-normal">
+                {{ t("bot.chatsCount", { count: bot.chats?.length || 0 }) }}
               </span>
-            </div>
-            <div class="text-caption text-fg-muted normal-case tracking-normal">
-              {{ t("bot.chatsCount", { count: bot.chats?.length || 0 }) }}
             </div>
           </div>
         </div>
@@ -87,8 +88,8 @@
       </UiAppButton>
     </UiAppCard>
 
-    <UiAppModal :open="showAddModal" title-id="add-bot-modal-title" @close="closeAddModal">
-      <div class="w-full max-w-md">
+    <UiAppModal :open="showAddModal" size="sm" title-id="add-bot-modal-title" @close="closeAddModal">
+      <div>
         <h3
           id="add-bot-modal-title"
           class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-4"
@@ -99,24 +100,16 @@
         <div class="flex gap-2 mb-4 border-b border-line">
           <button
             type="button"
-            class="px-3 py-2 text-body border-b-2 -mb-px"
-            :class="
-              addModalTab === 'create'
-                ? 'border-accent text-accent font-medium'
-                : 'border-transparent text-fg-muted hover:text-fg'
-            "
+            class="tm-tab"
+            :class="{ 'tm-tab--active': addModalTab === 'create' }"
             @click="addModalTab = 'create'"
           >
             {{ t("bot.modal.createTab") }}
           </button>
           <button
             type="button"
-            class="px-3 py-2 text-body border-b-2 -mb-px"
-            :class="
-              addModalTab === 'join'
-                ? 'border-accent text-accent font-medium'
-                : 'border-transparent text-fg-muted hover:text-fg'
-            "
+            class="tm-tab"
+            :class="{ 'tm-tab--active': addModalTab === 'join' }"
             @click="addModalTab = 'join'"
           >
             {{ t("bot.modal.joinTab") }}
@@ -263,11 +256,11 @@ function roleLabel(role: BotMemberRole | undefined) {
   return t("common.roles.manager");
 }
 
-function roleBadgeClass(role: BotMemberRole | undefined) {
+function roleBadgeVariant(role: BotMemberRole | undefined) {
   if (role === "owner") {
-    return "text-accent";
+    return "accent" as const;
   }
-  return "text-fg-muted";
+  return "muted" as const;
 }
 
 function botPhotoUrl(id: string) {

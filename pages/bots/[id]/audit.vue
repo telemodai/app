@@ -56,7 +56,7 @@
                 <span v-else class="text-fg">{{ item.message_text }}</span>
               </td>
               <td class="px-4 py-3">
-                <UiAppBadge :class="resultBadgeClass(item.violation_detected)">
+                <UiAppBadge :variant="item.violation_detected ? 'danger' : 'success'">
                   {{ item.violation_detected ? t("audit.violation") : t("audit.pass") }}
                 </UiAppBadge>
               </td>
@@ -85,7 +85,7 @@
       <div v-if="decisions.length > 0" class="md:hidden divide-y divide-line">
         <div v-for="item in decisions" :key="`card-${item._id}`" class="p-4 space-y-2">
           <div class="flex items-center justify-between gap-2">
-            <UiAppBadge :class="resultBadgeClass(item.violation_detected)">
+            <UiAppBadge :variant="item.violation_detected ? 'danger' : 'success'">
               {{ item.violation_detected ? t("audit.violation") : t("audit.pass") }}
             </UiAppBadge>
             <span class="text-caption text-fg-muted normal-case tracking-normal">
@@ -212,10 +212,6 @@ function displayText(text: string, key: string) {
 
 function toggleExpanded(key: string) {
   expanded.value[key] = !expanded.value[key];
-}
-
-function resultBadgeClass(violation: boolean) {
-  return violation ? "text-danger" : "text-fg";
 }
 
 function chatName(chatId: number) {

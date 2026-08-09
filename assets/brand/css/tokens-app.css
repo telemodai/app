@@ -1,4 +1,4 @@
-/* App-only moderation action colors — not part of upstream site/brand tokens. */
+/* App-only tokens — not part of upstream site/brand. */
 
 :root {
   --tm-action-warning: oklch(0.78 0.14 85);
@@ -12,6 +12,8 @@
   --tm-action-reset-surface: oklch(0.28 0.04 255);
   --tm-action-unban-surface: oklch(0.27 0.04 155);
   --tm-action-pardon-surface: oklch(0.27 0.04 220);
+  /* Readable label on filled accent buttons (cabinet CTA). */
+  --tm-accent-on: var(--tm-ink);
 }
 
 [data-theme="light"] {
@@ -26,6 +28,7 @@
   --tm-action-reset-surface: oklch(0.93 0.03 255);
   --tm-action-unban-surface: oklch(0.93 0.03 155);
   --tm-action-pardon-surface: oklch(0.93 0.03 220);
+  --tm-accent-on: var(--tm-white);
 }
 
 @media (prefers-color-scheme: light) {
@@ -41,5 +44,6 @@
     --tm-action-reset-surface: oklch(0.93 0.03 255);
     --tm-action-unban-surface: oklch(0.93 0.03 155);
     --tm-action-pardon-surface: oklch(0.93 0.03 220);
+    --tm-accent-on: var(--tm-white);
   }
 }

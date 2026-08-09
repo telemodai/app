@@ -56,7 +56,7 @@ import {
   ArcElement,
 } from "chart.js";
 import { Line, Doughnut } from "vue-chartjs";
-import { chartColor, chartColorAlpha } from "@/lib/chart-theme";
+import { chartColor, chartColorAlpha, chartGridColor, chartMutedColor } from "@/lib/chart-theme";
 import type {
   DashboardActionBreakdown,
   DashboardTrendDay,
@@ -135,14 +135,28 @@ const trendChartData = computed(() => {
 const trendChartOptions = computed(() => {
   void themeVersion.value;
 
+  const muted = chartMutedColor();
+  const grid = chartGridColor(0.65);
+
   return {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { position: "bottom" as const },
+      legend: {
+        position: "bottom" as const,
+        labels: { color: muted },
+      },
     },
     scales: {
-      y: { beginAtZero: true, ticks: { precision: 0 } },
+      x: {
+        ticks: { color: muted },
+        grid: { color: grid },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: { precision: 0, color: muted },
+        grid: { color: grid },
+      },
     },
   };
 });
@@ -173,11 +187,18 @@ const breakdownChartData = computed(() => {
   };
 });
 
-const breakdownChartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { position: "bottom" as const },
-  },
-};
+const breakdownChartOptions = computed(() => {
+  void themeVersion.value;
+
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom" as const,
+        labels: { color: chartMutedColor() },
+      },
+    },
+  };
+});
 </script>

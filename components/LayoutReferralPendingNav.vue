@@ -14,7 +14,7 @@
       @click.self="open = false"
     >
       <div
-        class="w-full max-w-md rounded-card border border-line bg-surface-2 p-5 shadow-overlay"
+        class="w-full max-w-md rounded-surface border border-line bg-surface-2 p-5 shadow-overlay"
       >
         <h2 class="font-display text-heading-sm text-fg mb-2">{{ t("referral.claimTitle") }}</h2>
         <p class="text-body text-fg-muted mb-4">
