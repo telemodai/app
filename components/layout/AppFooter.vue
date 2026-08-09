@@ -1,59 +1,63 @@
 <template>
-  <footer class="border-t bg-white py-4 px-4 text-center text-sm text-gray-500">
+  <footer
+    class="border-t border-line bg-surface-0 px-4 py-4 text-center text-[13px] text-fg-muted"
+  >
     <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-      <NuxtLink to="/release-notes" class="hover:text-gray-800 hover:underline">
+      <NuxtLink to="/release-notes" class="hover:text-fg hover:underline">
         {{ t("footer.releaseNotes") }}
       </NuxtLink>
       <template v-if="isSaas">
-        <span class="text-gray-300">·</span>
+        <span class="text-fg-subtle">·</span>
         <a
           :href="APP_LINKS.productSite"
           target="_blank"
           rel="noopener noreferrer"
-          class="hover:text-gray-800 hover:underline"
+          class="hover:text-fg hover:underline"
         >
           {{ t("footer.productSite") }}
         </a>
       </template>
-      <span class="text-gray-300">·</span>
+      <span class="text-fg-subtle">·</span>
       <a
         :href="APP_LINKS.authorSite"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:text-gray-800 hover:underline"
+        class="hover:text-fg hover:underline"
       >
         {{ t("footer.author") }}
       </a>
-      <span class="text-gray-300">·</span>
-      <NuxtLink to="/docs" class="hover:text-gray-800 hover:underline">
+      <span class="text-fg-subtle">·</span>
+      <NuxtLink to="/docs" class="hover:text-fg hover:underline">
         {{ t("footer.docs") }}
       </NuxtLink>
-      <span class="text-gray-300">·</span>
-      <NuxtLink to="/terms" class="hover:text-gray-800 hover:underline">
+      <span class="text-fg-subtle">·</span>
+      <NuxtLink to="/terms" class="hover:text-fg hover:underline">
         {{ t("footer.terms") }}
       </NuxtLink>
       <template v-if="isSelfHosted">
-        <span class="text-gray-300">·</span>
+        <span class="text-fg-subtle">·</span>
         <a
           :href="APP_LINKS.githubRepo"
           target="_blank"
           rel="noopener noreferrer"
-          class="hover:text-gray-800 hover:underline"
+          class="hover:text-fg hover:underline"
         >
           {{ t("footer.github") }}
         </a>
       </template>
     </div>
-    <div class="mt-2 flex flex-wrap items-center justify-center gap-x-2 text-sm text-gray-500">
+    <div
+      class="mt-2 flex flex-wrap items-center justify-center gap-x-2 text-[13px] text-fg-muted"
+    >
       <span>
         {{ appName }}
-        <NuxtLink to="/release-notes" class="hover:text-gray-800 hover:underline">
+        <NuxtLink to="/release-notes" class="hover:text-fg hover:underline">
           v{{ appVersion }}
         </NuxtLink>
-        <span class="text-gray-400"> — </span>
+        <span class="text-fg-subtle"> — </span>
         {{ t("footer.tagline") }}
       </span>
-      <span class="text-gray-300">|</span>
+      <span class="text-fg-subtle">|</span>
       <LayoutLocaleSwitcher />
     </div>
   </footer>

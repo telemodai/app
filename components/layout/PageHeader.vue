@@ -1,20 +1,20 @@
 <template>
   <div class="mb-6">
     <div class="flex flex-wrap items-start justify-between gap-4">
-      <div
-        v-if="showBreadcrumbs"
-        class="flex items-center gap-2 min-w-0"
-      >
-        <button
+      <div v-if="showBreadcrumbs" class="flex min-w-0 items-center gap-2">
+        <UiAppButton
           v-if="backTo"
-          type="button"
-          class="shrink-0 rounded border px-2 py-1 text-sm text-gray-700 hover:bg-gray-50"
+          variant="ghost"
+          class="!min-w-0 !px-2 !py-1"
           :aria-label="t('common.back')"
           @click="navigateTo(backTo)"
         >
           ←
-        </button>
-        <nav class="text-sm text-gray-600 min-w-0" :aria-label="t('common.breadcrumb')">
+        </UiAppButton>
+        <nav
+          class="min-w-0 text-body text-fg-muted"
+          :aria-label="t('common.breadcrumb')"
+        >
           <ol class="flex flex-wrap items-center gap-1">
             <li
               v-for="(item, index) in breadcrumbs"
@@ -24,31 +24,39 @@
               <NuxtLink
                 v-if="item.to"
                 :to="item.to"
-                class="hover:text-gray-900 hover:underline truncate max-w-[12rem] sm:max-w-none"
+                class="max-w-[12rem] truncate hover:text-fg hover:underline sm:max-w-none"
               >
                 {{ item.label }}
               </NuxtLink>
-              <span v-else class="text-gray-900 font-medium truncate max-w-[12rem] sm:max-w-none">
+              <span
+                v-else
+                class="max-w-[12rem] truncate font-medium text-fg sm:max-w-none"
+              >
                 {{ item.label }}
               </span>
-              <span v-if="index < breadcrumbs.length - 1" class="text-gray-400">›</span>
+              <span v-if="index < breadcrumbs.length - 1" class="text-fg-subtle"
+                >›</span
+              >
             </li>
           </ol>
         </nav>
       </div>
-      <div v-if="$slots.actions" class="flex flex-wrap gap-2 shrink-0 ml-auto">
+      <div v-if="$slots.actions" class="ml-auto flex shrink-0 flex-wrap gap-2">
         <slot name="actions" />
       </div>
     </div>
-    <h1 v-if="title" class="text-xl font-semibold" :class="showBreadcrumbs ? 'mt-3' : ''">
+    <h1
+      v-if="title"
+      class="font-display text-heading-sm tracking-[-0.035em] text-fg"
+      :class="showBreadcrumbs ? 'mt-3' : ''"
+    >
       {{ title }}
     </h1>
-    <p v-if="subtitle" class="text-sm text-gray-500 mt-1">{{ subtitle }}</p>
+    <p v-if="subtitle" class="mt-1 text-body text-fg-muted">{{ subtitle }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import type { BreadcrumbItem } from "~/composables/usePageBreadcrumbs";
 
 const { t } = useI18n();
@@ -60,6 +68,5 @@ const props = defineProps<{
   subtitle?: string;
 }>();
 
-// Top-level pages (Dashboard, Bots, …) only pass one crumb — same as h1, so hide the trail.
 const showBreadcrumbs = computed(() => props.breadcrumbs.length > 1);
 </script>
