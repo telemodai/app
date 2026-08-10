@@ -1,5 +1,5 @@
-﻿<template>
-  <div class="inline-flex items-center gap-2 text-sm">
+<template>
+  <div class="inline-flex items-center gap-2">
     <button
       type="button"
       class="uppercase hover:text-fg hover:underline"

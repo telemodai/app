@@ -125,78 +125,90 @@
               <div
                 v-for="chat in bot.chats"
                 :key="chat.chat_id"
-                class="border border-line rounded-card p-3"
+                class="rounded-card border border-line p-4"
               >
-                <div class="flex items-center justify-between gap-3">
-                  <div class="flex items-start gap-3 flex-1 min-w-0">
+                <!--
+                  Mobile: stack identity → meta → actions.
+                  Desktop: identity+meta left, actions right on one row.
+                -->
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                  <div class="flex min-w-0 flex-1 gap-3">
                     <img
                       v-if="chat.id && chat.photo_file_id"
                       :src="chatPhotoUrl(chat.id)"
                       :alt="chat.name"
-                      class="h-10 w-10 rounded-full object-cover bg-surface-3"
+                      class="size-10 shrink-0 rounded-full object-cover bg-surface-3"
                     />
                     <div
                       v-else
-                      class="h-10 w-10 rounded-full bg-surface-3 flex items-center justify-center text-sm text-fg-muted"
+                      class="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface-3 text-sm text-fg-muted"
                     >
                       {{ t("bot.chats.placeholderInitials") }}
                     </div>
-                    <div class="min-w-0">
-                      <div class="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0">
-                        <span class="text-base font-medium text-fg min-w-0 break-words">
-                          {{ chat.name }}
+
+                    <div class="min-w-0 flex-1 space-y-1.5">
+                      <div class="min-w-0 text-base font-medium leading-snug text-fg break-words">
+                        {{ chat.name }}
+                      </div>
+                      <BotsChatTelegramIdLink
+                        class="max-w-full"
+                        :chat-id="chat.chat_id"
+                      />
+                      <p class="text-xs leading-relaxed text-fg-muted">
+                        <span class="whitespace-nowrap">
+                          {{ t("bot.chats.rules", { count: chat.rules_count || 0 }) }}
                         </span>
-                        <BotsChatTelegramIdLink
-                          class="shrink-0"
-                          :chat-id="chat.chat_id"
-                        />
-                      </div>
-                      <div class="text-xs text-fg-muted">
-                        {{ t("bot.chats.rules", { count: chat.rules_count || 0 }) }}
-                      </div>
-                      <div class="text-xs text-fg-muted">
-                        {{ t("bot.chats.silentMode") }}
-                        <span :class="getSilentModeClass(chat)">
-                          {{ getSilentModeText(chat) }}
+                        <span class="text-fg-subtle"> · </span>
+                        <span>
+                          {{ t("bot.chats.silentMode") }}
+                          <span :class="getSilentModeClass(chat)">
+                            {{ getSilentModeText(chat) }}
+                          </span>
                         </span>
-                      </div>
-                      <div class="mt-1">
+                      </p>
+                      <div class="flex flex-wrap items-center gap-2">
                         <UiAppBadge :variant="chatHealthBadgeVariant(chat)">
                           {{ chatHealthLabel(chat) }}
                         </UiAppBadge>
                         <p
                           v-if="chat.health_message && chat.health_status !== 'ok'"
-                          class="text-sm text-danger mt-1 normal-case tracking-normal"
+                          class="text-sm normal-case tracking-normal text-danger"
                         >
                           {{ chat.health_message }}
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div class="flex shrink-0 items-center gap-0.5">
+
+                  <div
+                    class="flex shrink-0 items-center justify-between gap-2 border-t border-line pt-3 sm:justify-start sm:gap-0.5 sm:border-0 sm:pt-0"
+                  >
                     <UiAppButton
                       variant="link"
+                      class="min-w-0"
                       :to="`/bots/${botId}/chats/${chat.chat_id}/moderation`"
                     >
                       <Shield :size="16" :stroke-width="2" aria-hidden="true" />
                       {{ t("bot.chats.moderation") }}
                     </UiAppButton>
-                    <UiAppButton
-                      variant="link"
-                      class="!px-2"
-                      :aria-label="t('common.edit')"
-                      @click="editChat(chat)"
-                    >
-                      <Pencil :size="16" :stroke-width="2" aria-hidden="true" />
-                    </UiAppButton>
-                    <UiAppButton
-                      variant="link"
-                      class="!px-2 !text-danger hover:!text-fg"
-                      :aria-label="t('common.remove')"
-                      @click="removeChat(chat.chat_id)"
-                    >
-                      <Trash2 :size="16" :stroke-width="2" aria-hidden="true" />
-                    </UiAppButton>
+                    <div class="flex items-center gap-0.5">
+                      <UiAppButton
+                        variant="link"
+                        class="!px-2"
+                        :aria-label="t('common.edit')"
+                        @click="editChat(chat)"
+                      >
+                        <Pencil :size="16" :stroke-width="2" aria-hidden="true" />
+                      </UiAppButton>
+                      <UiAppButton
+                        variant="link"
+                        class="!px-2 !text-danger hover:!text-fg"
+                        :aria-label="t('common.remove')"
+                        @click="removeChat(chat.chat_id)"
+                      >
+                        <Trash2 :size="16" :stroke-width="2" aria-hidden="true" />
+                      </UiAppButton>
+                    </div>
                   </div>
                 </div>
               </div>

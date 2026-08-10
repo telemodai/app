@@ -1,6 +1,6 @@
 ﻿<template>
   <footer
-    class="border-t border-line bg-surface-0 px-4 py-4 text-center text-sm text-fg-muted"
+    class="border-t border-line bg-surface-0 px-4 pt-4 pb-8 text-center text-sm text-fg-muted"
   >
     <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
       <NuxtLink to="/release-notes" class="hover:text-fg hover:underline">
@@ -47,18 +47,20 @@
       </template>
     </div>
     <div
-      class="mt-2 flex flex-wrap items-center justify-center gap-x-2 text-sm text-fg-muted"
+      class="mt-5 flex flex-wrap items-center justify-center gap-x-2 text-xs text-fg-muted"
     >
       <span>
         {{ appName }}
         <NuxtLink to="/release-notes" class="hover:text-fg hover:underline">
           v{{ appVersion }}
         </NuxtLink>
-        <span class="text-fg-subtle"> — </span>
-        {{ t("footer.tagline") }}
+        <span class="hidden sm:inline">
+          <span class="text-fg-subtle"> — </span>
+          {{ t("footer.tagline") }}
+        </span>
       </span>
       <span class="text-fg-subtle">|</span>
-      <LayoutLocaleSwitcher />
+      <LayoutLocaleSwitcher class="text-xs" />
     </div>
   </footer>
 </template>

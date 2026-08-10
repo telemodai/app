@@ -4,7 +4,9 @@
     "dashboard": "Dashboard",
     "bots": "Bots",
     "settings": "Settings",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "footer": {
     "releaseNotes": "What's new",

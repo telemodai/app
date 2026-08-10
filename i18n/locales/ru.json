@@ -4,7 +4,9 @@
     "dashboard": "Дашборд",
     "bots": "Боты",
     "settings": "Настройки",
-    "signOut": "Выйти"
+    "signOut": "Выйти",
+    "openMenu": "Открыть меню",
+    "closeMenu": "Закрыть меню"
   },
   "footer": {
     "releaseNotes": "Что нового",
