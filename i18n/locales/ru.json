@@ -278,6 +278,7 @@
       "addChat": "Добавить чат",
       "noChats": "Чаты не настроены",
       "id": "ID: {id}",
+      "openInTelegram": "Открыть чат {id} в Telegram",
       "rules": "Правила: {count}",
       "silentMode": "Тихий режим:",
       "moderation": "Модерация",

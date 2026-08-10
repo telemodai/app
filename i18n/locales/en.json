@@ -278,6 +278,7 @@
       "addChat": "Add Chat",
       "noChats": "No chats configured",
       "id": "ID: {id}",
+      "openInTelegram": "Open chat {id} in Telegram",
       "rules": "Rules: {count}",
       "silentMode": "Silent Mode:",
       "moderation": "Moderation",

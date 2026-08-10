@@ -117,8 +117,11 @@
                     </div>
                     <div class="min-w-0">
                       <div class="text-base font-medium text-fg truncate">{{ chat.name }}</div>
-                      <div class="text-xs text-fg-muted">
-                        {{ t("bot.chats.id", { id: chat.chat_id }) }}
+                      <div class="mt-1">
+                        <BotsChatTelegramIdLink
+                          :chat-id="chat.chat_id"
+                          :telegram-username="chat.telegram_username"
+                        />
                       </div>
                       <div class="text-xs text-fg-muted">
                         {{ t("bot.chats.rules", { count: chat.rules_count || 0 }) }}
@@ -562,7 +565,13 @@
         <form @submit.prevent="saveChat" class="space-y-4">
           <div class="text-sm text-fg-muted">
             <div class="font-medium text-fg">{{ editingChat?.name }}</div>
-            <div>{{ t("bot.chats.id", { id: editingChat?.chat_id }) }}</div>
+            <div class="mt-1">
+              <BotsChatTelegramIdLink
+                v-if="editingChat"
+                :chat-id="editingChat.chat_id"
+                :telegram-username="editingChat.telegram_username"
+              />
+            </div>
           </div>
 
           <div class="border-t border-line pt-4">
