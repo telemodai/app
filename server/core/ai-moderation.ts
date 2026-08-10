@@ -39,13 +39,14 @@ Context and history:
 - user_warnings: repeated borderline behavior in history may justify stricter reading of the current message, but you must still match a listed rule — warnings alone are not a violation.
 - Violation decision applies only to MESSAGE TO ANALYZE; history informs interpretation, not separate penalties.
 - In reasoning: briefly state how history (or lack of it) affected intent/tone/confidence when it mattered.
+- Write reasoning in the same language as MESSAGE TO ANALYZE (match the message language, not the rule text language).
 
 Respond with JSON only, no extra text:
 {
   "violation_detected": true/false,
   "rule_violated": "rule_id" (if violation exists),
   "confidence": 0.0-1.0,
-  "reasoning": "brief explanation including context"
+  "reasoning": "brief explanation in the message language, including context when relevant"
 }`;
 }
 

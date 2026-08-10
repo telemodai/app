@@ -50,6 +50,13 @@ describe("buildModerationSystemPrompt", () => {
       expect(prompt.toLowerCase()).toContain(phrase.toLowerCase());
     }
   });
+
+  test("instructs model to write reasoning in the message language", () => {
+    const prompt = buildModerationSystemPrompt();
+
+    expect(prompt.toLowerCase()).toContain("same language as message to analyze");
+    expect(prompt.toLowerCase()).toContain("message language");
+  });
 });
 
 describe("buildModerationUserPrompt", () => {
