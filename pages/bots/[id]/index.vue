@@ -116,7 +116,7 @@
                       {{ t("bot.chats.placeholderInitials") }}
                     </div>
                     <div class="min-w-0">
-                      <div class="font-medium text-fg truncate">{{ chat.name }}</div>
+                      <div class="text-base font-medium text-fg truncate">{{ chat.name }}</div>
                       <div class="text-xs text-fg-muted">
                         {{ t("bot.chats.id", { id: chat.chat_id }) }}
                       </div>
