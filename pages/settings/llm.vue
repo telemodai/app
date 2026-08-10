@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="max-w-xl">
     <LayoutPageHeader
       :breadcrumbs="breadcrumbs"
@@ -7,14 +7,14 @@
       :subtitle="t('page.settingsLlm.subtitle')"
     />
 
-    <p class="text-body text-fg-muted mb-4">{{ t("billing.envOverrideHint") }}</p>
+    <p class="text-sm text-fg-muted mb-4">{{ t("billing.envOverrideHint") }}</p>
 
     <div v-if="loading" class="text-fg-muted">{{ t("common.loading") }}</div>
 
     <UiAppCard v-else>
       <form class="space-y-4" @submit.prevent="save">
         <div>
-          <label class="block text-body font-medium text-fg mb-1">
+          <label class="block text-sm font-medium text-fg mb-1">
             {{ t("billing.settings.apiKey") }}
           </label>
           <UiAppInput
@@ -29,7 +29,7 @@
         </div>
 
         <div>
-          <label class="block text-body font-medium text-fg mb-1">
+          <label class="block text-sm font-medium text-fg mb-1">
             {{ t("billing.settings.baseUrl") }}
           </label>
           <UiAppInput
@@ -40,7 +40,7 @@
         </div>
 
         <div>
-          <label class="block text-body font-medium text-fg mb-1">
+          <label class="block text-sm font-medium text-fg mb-1">
             {{ t("billing.settings.model") }}
           </label>
           <UiAppInput

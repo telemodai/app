@@ -4,8 +4,18 @@
       :breadcrumbs="breadcrumbs"
       :back-to="backTo"
       :title="bot?.name ?? t('page.botDetail.titleFallback')"
-      :subtitle="bot ? `@${bot.id}` : undefined"
     >
+      <template v-if="bot" #subtitle>
+        <a
+          :href="telegramBotWebUrl(bot.id)"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-accent hover:underline"
+          :aria-label="t('bot.openInTelegram', { id: bot.id })"
+        >
+          @{{ bot.id }}
+        </a>
+      </template>
       <template #actions>
         <UiAppButton
           :variant="bot?.is_active ? 'destructive' : 'primary'"
@@ -66,7 +76,7 @@
               </UiAppBadge>
               <UiAppButton
                 variant="link"
-                class="!px-2.5 !py-1.5 !text-[11px] uppercase tracking-wide"
+                class="!px-2.5 !py-1.5 !text-xs uppercase tracking-wide"
                 :to="`/bots/${botId}/credits`"
               >
                 {{ t("billing.manageCredits") }}
@@ -74,7 +84,7 @@
             </template>
             <p
               v-if="deliveryProblemMessage"
-              class="w-full text-body text-danger"
+              class="w-full text-sm text-danger"
             >
               {{ deliveryProblemMessage }}
             </p>
@@ -83,8 +93,8 @@
           <!-- Chats -->
           <UiAppCard class="!p-6">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
-                {{ t("bot.chats.title", { count: bot.chats?.length || 0 }) }}
+              <h3 class="tm-section-title text-fg">
+                {{ t("bot.chats.title") }}
               </h3>
               <UiAppButton
                 v-if="canManageBot"
@@ -107,23 +117,28 @@
                       v-if="chat.id && chat.photo_file_id"
                       :src="chatPhotoUrl(chat.id)"
                       :alt="chat.name"
-                      class="h-10 w-10 rounded-control object-cover bg-surface-3"
+                      class="h-10 w-10 rounded-full object-cover bg-surface-3"
                     />
                     <div
                       v-else
-                      class="h-10 w-10 rounded-control bg-surface-3 flex items-center justify-center text-caption text-fg-muted normal-case tracking-normal"
+                      class="h-10 w-10 rounded-full bg-surface-3 flex items-center justify-center text-sm text-fg-muted"
                     >
                       {{ t("bot.chats.placeholderInitials") }}
                     </div>
                     <div class="min-w-0">
-                      <div class="font-medium text-fg truncate">{{ chat.name }}</div>
-                      <div class="text-body text-fg-muted">
-                        {{ t("bot.chats.id", { id: chat.chat_id }) }}
+                      <div class="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0">
+                        <span class="text-base font-medium text-fg min-w-0 break-words">
+                          {{ chat.name }}
+                        </span>
+                        <BotsChatTelegramIdLink
+                          class="shrink-0"
+                          :chat-id="chat.chat_id"
+                        />
                       </div>
-                      <div class="text-body text-fg-muted">
+                      <div class="text-xs text-fg-muted">
                         {{ t("bot.chats.rules", { count: chat.rules_count || 0 }) }}
                       </div>
-                      <div class="text-body text-fg-muted">
+                      <div class="text-xs text-fg-muted">
                         {{ t("bot.chats.silentMode") }}
                         <span :class="getSilentModeClass(chat)">
                           {{ getSilentModeText(chat) }}
@@ -135,25 +150,36 @@
                         </UiAppBadge>
                         <p
                           v-if="chat.health_message && chat.health_status !== 'ok'"
-                          class="text-caption text-danger mt-1 normal-case tracking-normal"
+                          class="text-sm text-danger mt-1 normal-case tracking-normal"
                         >
                           {{ chat.health_message }}
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div class="flex gap-2 shrink-0">
+                  <div class="flex shrink-0 items-center gap-0.5">
                     <UiAppButton
                       variant="link"
                       :to="`/bots/${botId}/chats/${chat.chat_id}/moderation`"
                     >
+                      <Shield :size="16" :stroke-width="2" aria-hidden="true" />
                       {{ t("bot.chats.moderation") }}
                     </UiAppButton>
-                    <UiAppButton variant="link" @click="editChat(chat)">
-                      {{ t("common.edit") }}
+                    <UiAppButton
+                      variant="link"
+                      class="!px-2"
+                      :aria-label="t('common.edit')"
+                      @click="editChat(chat)"
+                    >
+                      <Pencil :size="16" :stroke-width="2" aria-hidden="true" />
                     </UiAppButton>
-                    <UiAppButton variant="destructive" @click="removeChat(chat.chat_id)">
-                      {{ t("common.remove") }}
+                    <UiAppButton
+                      variant="link"
+                      class="!px-2 !text-danger hover:!text-fg"
+                      :aria-label="t('common.remove')"
+                      @click="removeChat(chat.chat_id)"
+                    >
+                      <Trash2 :size="16" :stroke-width="2" aria-hidden="true" />
                     </UiAppButton>
                   </div>
                 </div>
@@ -165,44 +191,44 @@
           <!-- Statistics -->
           <UiAppCard class="!p-6">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+              <h3 class="tm-section-title text-fg">
                 {{ t("bot.statistics.title") }}
               </h3>
               <UiAppButton variant="ghost" @click="loadStatistics">
                 {{ t("common.refresh") }}
               </UiAppButton>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 gap-6 py-5 md:grid-cols-3">
               <div class="text-center">
-                <div class="mb-1 font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-accent">
+                <div class="mb-1 tm-stat text-accent">
                   {{ statistics?.today?.messages_processed || 0 }}
                 </div>
-                <div class="text-body text-fg-muted">{{ t("bot.statistics.messagesToday") }}</div>
+                <div class="text-xs text-fg-muted">{{ t("bot.statistics.messagesToday") }}</div>
               </div>
               <div class="text-center">
-                <div class="mb-1 font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-action-warning">
+                <div class="mb-1 tm-stat text-action-warning">
                   {{ statistics?.today?.warnings_issued || 0 }}
                 </div>
-                <div class="text-body text-fg-muted">{{ t("bot.statistics.warningsToday") }}</div>
+                <div class="text-xs text-fg-muted">{{ t("bot.statistics.warningsToday") }}</div>
               </div>
               <div class="text-center">
-                <div class="mb-1 font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-danger">
+                <div class="mb-1 tm-stat text-danger">
                   {{ statistics?.users?.banned_count || 0 }}
                 </div>
-                <div class="text-body text-fg-muted">{{ t("bot.statistics.bannedTotal") }}</div>
+                <div class="text-xs text-fg-muted">{{ t("bot.statistics.bannedTotal") }}</div>
               </div>
               <div
                 v-if="isSaas && (statistics?.today?.not_moderated || 0) > 0"
                 class="text-center md:col-span-3"
               >
                 <UiAppAlert class="!p-4">
-                  <div class="font-display text-heading-lg font-semibold tabular-nums leading-none tracking-tight text-action-warning">
+                  <div class="tm-stat text-action-warning">
                     {{ statistics?.today?.not_moderated || 0 }}
                   </div>
-                  <div class="text-body font-medium text-fg">
+                  <div class="text-sm font-medium text-fg">
                     {{ t("bot.statistics.notModeratedToday") }}
                   </div>
-                  <p class="text-caption text-fg-muted mt-1 normal-case tracking-normal">
+                  <p class="text-xs text-fg-muted mt-1">
                     {{ t("bot.statistics.notModeratedHint") }}
                   </p>
                 </UiAppAlert>
@@ -211,8 +237,8 @@
 
             <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="bg-surface-3 rounded-card p-4">
-                <h4 class="font-medium text-fg mb-2">{{ t("bot.statistics.thisWeek") }}</h4>
-                <div class="space-y-1 text-body">
+                <h4 class="text-sm font-medium text-fg mb-2">{{ t("bot.statistics.thisWeek") }}</h4>
+                <div class="tm-detail-rows">
                   <div class="flex justify-between">
                     <span class="text-fg-muted">{{ t("bot.statistics.totalMessages") }}</span>
                     <span class="font-medium text-fg">
@@ -234,8 +260,8 @@
                 </div>
               </div>
               <div class="bg-surface-3 rounded-card p-4">
-                <h4 class="font-medium text-fg mb-2">{{ t("bot.statistics.usersSection") }}</h4>
-                <div class="space-y-1 text-body">
+                <h4 class="text-sm font-medium text-fg mb-2">{{ t("bot.statistics.usersSection") }}</h4>
+                <div class="tm-detail-rows">
                   <div class="flex justify-between">
                     <span class="text-fg-muted">{{ t("bot.statistics.active24h") }}</span>
                     <span class="font-medium text-fg">
@@ -262,7 +288,7 @@
           <!-- Recent Logs -->
           <UiAppCard class="!p-6">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+              <h3 class="tm-section-title text-fg">
                 {{ t("bot.recentActivity.title") }}
               </h3>
               <div class="flex gap-2">
@@ -278,7 +304,7 @@
               <div
                 v-for="log in logs"
                 :key="log.id"
-                class="border border-line rounded-card p-2 text-body"
+                class="border border-line rounded-card p-2 text-sm"
               >
                 <div class="flex items-center justify-between gap-2">
                   <div>
@@ -287,13 +313,13 @@
                     </span>
                     <span class="text-fg-muted"> - {{ log.message }}</span>
                   </div>
-                  <div class="text-caption text-fg-muted normal-case tracking-normal shrink-0">
+                  <div class="text-sm text-fg-muted shrink-0">
                     {{ formatDate(log.timestamp) }}
                   </div>
                 </div>
               </div>
             </div>
-            <div v-else class="text-fg-muted text-center py-4">
+            <div v-else class="tm-empty-state">
               {{ t("bot.recentActivity.empty") }}
             </div>
           </UiAppCard>
@@ -302,10 +328,10 @@
             v-if="isOwner"
             class="!p-6 border-danger"
           >
-            <h3 class="font-display text-heading-sm tracking-[-0.035em] text-danger mb-2">
+            <h3 class="tm-section-title text-danger mb-2">
               {{ t("bot.dangerZone.title") }}
             </h3>
-            <p class="text-body text-fg-muted mb-4">
+            <p class="text-sm text-fg-muted mb-4">
               {{ t("bot.dangerZone.description") }}
             </p>
 
@@ -316,7 +342,7 @@
             </div>
 
             <div v-else class="space-y-3 max-w-md">
-              <p class="text-body text-fg">
+              <p class="text-sm text-fg">
                 {{ t("bot.dangerZone.confirmHint", { botId: bot.id }) }}
               </p>
               <UiAppInput
@@ -348,14 +374,14 @@
 
         <UiAppCard v-if="activeTab === 'moderation'" class="!p-6">
           <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
-            <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+            <h3 class="tm-section-title text-fg">
               {{ t("bot.messageTemplates.title") }}
             </h3>
             <UiAppButton variant="link" @click="showHtmlHelpModal = true">
               {{ t("bot.messageTemplates.helpLink") }}
             </UiAppButton>
           </div>
-          <p class="text-body text-fg-muted mb-4">
+          <p class="text-sm text-fg-muted mb-4">
             {{ t("bot.messageTemplates.description") }}
           </p>
 
@@ -378,17 +404,17 @@
             </button>
           </div>
 
-          <div class="flex flex-wrap gap-2 mb-3">
-            <UiAppButton
+          <div class="mb-3 flex flex-wrap gap-1.5">
+            <button
               v-for="chip in activeTemplateChips"
               :key="chip.key"
-              variant="ghost"
-              class="!px-2 !py-1 !text-caption uppercase tracking-wide"
+              type="button"
+              class="tm-chip"
               :title="t(chip.hintKey)"
               @click="insertTemplatePlaceholder(chip.key)"
             >
               {{ t(chip.labelKey) }}
-            </UiAppButton>
+            </button>
           </div>
 
           <UiAppTextarea
@@ -400,7 +426,7 @@
           <UiAppAlert v-if="templateSaveError" variant="danger" class="mt-2">
             {{ templateSaveError }}
           </UiAppAlert>
-          <p v-if="templateSaveSuccess" class="text-body text-fg mt-2">
+          <p v-if="templateSaveSuccess" class="text-sm text-fg mt-2">
             {{ t("bot.messageTemplates.saved") }}
           </p>
 
@@ -423,40 +449,61 @@
         </UiAppCard>
 
         <UiAppCard v-if="activeTab === 'team'" class="!p-6">
-          <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-4">
+          <h3 class="tm-section-title text-fg mb-4">
             {{ t("bot.team.title") }}
           </h3>
-          <div v-if="teamLoading" class="text-fg-muted text-body">
+          <div v-if="teamLoading" class="text-fg-muted text-sm">
             {{ t("bot.team.loading") }}
           </div>
           <div v-else class="space-y-4">
-            <div v-if="isOwner && accessCode" class="flex flex-wrap items-center gap-3">
-              <div class="text-body text-fg">
-                {{ t("bot.team.accessCode") }}
-                <code class="bg-surface-3 px-2 py-1 rounded-control font-mono text-body">
-                  {{ accessCode }}
-                </code>
+            <div v-if="isOwner && accessCode" class="space-y-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="text-sm text-fg">
+                  {{ t("bot.team.accessCode") }}
+                  <code class="rounded-control bg-surface-3 px-2 py-1 font-mono text-sm">
+                    {{ accessCode }}
+                  </code>
+                </div>
+                <div class="flex shrink-0 items-center gap-0.5">
+                  <UiAppButton
+                    variant="link"
+                    class="!px-2"
+                    :aria-label="t('common.copy')"
+                    @click="copyAccessCode"
+                  >
+                    <Copy :size="16" :stroke-width="2" aria-hidden="true" />
+                  </UiAppButton>
+                  <UiAppButton
+                    variant="link"
+                    class="!px-2 !text-danger hover:!text-fg"
+                    :aria-label="t('common.revoke')"
+                    @click="revokeAccessCode"
+                  >
+                    <RefreshCw :size="16" :stroke-width="2" aria-hidden="true" />
+                  </UiAppButton>
+                </div>
               </div>
-              <UiAppButton variant="link" @click="copyAccessCode">
-                {{ t("common.copy") }}
-              </UiAppButton>
-              <UiAppButton variant="destructive" @click="revokeAccessCode">
-                {{ t("common.revoke") }}
-              </UiAppButton>
+              <p
+                v-if="accessCodeCopied"
+                class="text-xs text-action-unban"
+                role="status"
+              >
+                {{ t("bot.team.accessCodeCopied") }}
+              </p>
             </div>
-            <p v-else-if="isOwner" class="text-body text-fg-muted">
+            <p v-else-if="isOwner" class="text-sm text-fg-muted">
               {{ t("bot.team.accessCodeForOperators") }}
             </p>
-            <p v-else class="text-body text-fg-muted">
+            <p v-else class="text-sm text-fg-muted">
               {{ t("bot.team.ownerManagesTeam") }}
             </p>
 
             <div v-if="teamMembers.length" class="space-y-2">
-              <h4 class="text-body font-medium text-fg">{{ t("bot.team.members") }}</h4>
+              <h4 class="text-sm font-medium text-fg">{{ t("bot.team.members") }}</h4>
               <div
                 v-for="member in teamMembers"
                 :key="member.user_id"
-                class="flex items-center justify-between text-body border border-line rounded-card px-3 py-2"
+                class="flex items-center justify-between text-sm border border-line rounded-card px-3 py-2"
               >
                 <div>
                   <span class="font-medium text-fg">
@@ -497,15 +544,15 @@
       <div>
         <h3
           id="add-chat-activation-title"
-          class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-2"
+          class="tm-section-title text-fg mb-2"
         >
           {{ t("chatActivation.modal.title") }}
         </h3>
-        <p class="text-body text-fg-muted mb-4">
+        <p class="text-sm text-fg-muted mb-4">
           {{ t("chatActivation.modal.intro") }}
         </p>
 
-        <ul class="text-body text-fg-muted list-disc pl-5 mb-4 space-y-1">
+        <ul class="text-sm text-fg-muted list-disc pl-5 mb-4 space-y-1">
           <li v-for="(item, index) in activationPrerequisites" :key="index">
             {{ item }}
           </li>
@@ -518,7 +565,7 @@
             @click="startChatActivation('new_group')"
           >
             <span class="font-medium">{{ t("chatActivation.modal.newGroupTitle") }}</span>
-            <span class="block text-fg-muted text-caption mt-1 normal-case tracking-normal">
+            <span class="block text-fg-muted text-xs mt-1 normal-case tracking-normal">
               {{ t("chatActivation.modal.newGroupHint") }}
             </span>
           </UiAppButton>
@@ -528,7 +575,7 @@
             @click="startChatActivation('existing_group')"
           >
             <span class="font-medium">{{ t("chatActivation.modal.existingGroupTitle") }}</span>
-            <span class="block text-fg-muted text-caption mt-1 normal-case tracking-normal">
+            <span class="block text-fg-muted text-xs mt-1 normal-case tracking-normal">
               {{ t("chatActivation.modal.existingGroupHint") }}
             </span>
           </UiAppButton>
@@ -554,15 +601,20 @@
       <div>
         <h3
           id="edit-chat-modal-title"
-          class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-4"
+          class="tm-section-title text-fg mb-4"
         >
           {{ t("bot.chats.editModal.title") }}
         </h3>
 
         <form @submit.prevent="saveChat" class="space-y-4">
-          <div class="text-body text-fg-muted">
+          <div class="text-sm text-fg-muted">
             <div class="font-medium text-fg">{{ editingChat?.name }}</div>
-            <div>{{ t("bot.chats.id", { id: editingChat?.chat_id }) }}</div>
+            <div class="mt-1">
+              <BotsChatTelegramIdLink
+                v-if="editingChat"
+                :chat-id="editingChat.chat_id"
+              />
+            </div>
           </div>
 
           <div class="border-t border-line pt-4">
@@ -577,16 +629,16 @@
                   type="checkbox"
                   class="mr-2"
                 />
-                <span class="text-body font-medium text-fg">
+                <span class="text-sm font-medium text-fg">
                   {{ t("bot.chats.editModal.enableSilentMode") }}
                 </span>
               </label>
             </div>
 
-            <div class="mt-3 text-caption text-fg-muted bg-surface-3 p-2 rounded-card normal-case tracking-normal">
-              <p class="font-medium mb-1 text-fg">{{ t("bot.chats.editModal.silentModeHelpTitle") }}</p>
-              <p>• {{ t("bot.chats.editModal.silentModeEnabled") }}</p>
-              <p>• {{ t("bot.chats.editModal.silentModeDisabled") }}</p>
+            <div class="tm-hint-block">
+              <p class="tm-hint-block__title">{{ t("bot.chats.editModal.silentModeHelpTitle") }}</p>
+              <p class="tm-hint-block__body">• {{ t("bot.chats.editModal.silentModeEnabled") }}</p>
+              <p class="tm-hint-block__body">• {{ t("bot.chats.editModal.silentModeDisabled") }}</p>
             </div>
           </div>
 
@@ -603,7 +655,7 @@
                   class="mr-2"
                   @change="onServiceCleanupEnabledChange"
                 />
-                <span class="text-body font-medium text-fg">
+                <span class="text-sm font-medium text-fg">
                   {{ t("bot.chats.editModal.enableServiceMessageCleanup") }}
                 </span>
               </label>
@@ -619,7 +671,7 @@
                     :checked="newChat.service_message_cleanup.types.includes('member_joined')"
                     @change="setServiceMessageType('member_joined', ($event.target as HTMLInputElement).checked)"
                   />
-                  <span class="text-body text-fg">
+                  <span class="text-sm text-fg">
                     {{ t("bot.chats.editModal.serviceMessageMemberJoined") }}
                   </span>
                 </label>
@@ -630,16 +682,16 @@
                     :checked="newChat.service_message_cleanup.types.includes('member_left')"
                     @change="setServiceMessageType('member_left', ($event.target as HTMLInputElement).checked)"
                   />
-                  <span class="text-body text-fg">
+                  <span class="text-sm text-fg">
                     {{ t("bot.chats.editModal.serviceMessageMemberLeft") }}
                   </span>
                 </label>
               </div>
             </div>
 
-            <div class="mt-3 text-caption text-fg-muted bg-surface-3 p-2 rounded-card normal-case tracking-normal">
-              <p class="font-medium mb-1 text-fg">{{ t("bot.chats.editModal.serviceMessagesHelpTitle") }}</p>
-              <p>{{ t("bot.chats.editModal.serviceMessagesHelp") }}</p>
+            <div class="tm-hint-block">
+              <p class="tm-hint-block__title">{{ t("bot.chats.editModal.serviceMessagesHelpTitle") }}</p>
+              <p class="tm-hint-block__body">{{ t("bot.chats.editModal.serviceMessagesHelp") }}</p>
             </div>
           </div>
 
@@ -669,12 +721,14 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { Copy, Pencil, RefreshCw, Shield, Trash2 } from "lucide-vue-next";
 import {
   BAN_TEMPLATE_PLACEHOLDERS,
   DEFAULT_BAN_TEMPLATE_PREVIEW,
   DEFAULT_WARNING_TEMPLATE_PREVIEW,
   WARNING_TEMPLATE_PLACEHOLDERS,
 } from "@/lib/bot-message-template-ui";
+import { telegramBotWebUrl } from "@/lib/telegram-bot-url";
 import type { ChatActivationStartMode } from "@/composables/useChatActivationWait";
 import type { BotMemberRole } from "@/types/bot";
 import {
@@ -727,6 +781,7 @@ const lastChatActivationMode = ref<ChatActivationStartMode>("new_group");
 const editingChat = ref<any>(null);
 const saving = ref(false);
 const accessCode = ref<string | null>(null);
+const accessCodeCopied = ref(false);
 const teamMembers = ref<any[]>([]);
 const teamLoading = ref(false);
 const statusError = ref("");
@@ -1185,7 +1240,15 @@ async function loadTeam() {
 
 async function copyAccessCode() {
   if (!accessCode.value) return;
-  await navigator.clipboard.writeText(accessCode.value);
+  try {
+    await navigator.clipboard.writeText(accessCode.value);
+    accessCodeCopied.value = true;
+    setTimeout(() => {
+      accessCodeCopied.value = false;
+    }, 2000);
+  } catch {
+    accessCodeCopied.value = false;
+  }
 }
 
 async function revokeAccessCode() {

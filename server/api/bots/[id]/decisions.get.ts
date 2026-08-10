@@ -9,6 +9,11 @@ import {
   enrichWithRuleName,
   loadRuleNameMap,
 } from "@/server/core/rule-name-lookup";
+import {
+  enrichDecisionDisplay,
+  loadChatNameMap,
+  loadUserContextDisplayMap,
+} from "@/server/core/decision-display-lookup";
 import { requireBotAccess } from "@/server/utils/bot-access";
 import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
 
@@ -35,7 +40,18 @@ export default defineEventHandler(async (event) => {
     const ruleNames = await loadRuleNameMap(
       items.map((item) => ({ botId, ruleId: item.rule_violated }))
     );
-    const enrichedItems = items.map((item) => enrichWithRuleName(item, ruleNames));
+    const chatNames = await loadChatNameMap(
+      botId,
+      items.map((item) => item.chat_id)
+    );
+    const userContexts = await loadUserContextDisplayMap(botId, items);
+    const enrichedItems = items.map((item) =>
+      enrichDecisionDisplay(
+        enrichWithRuleName(item, ruleNames),
+        chatNames,
+        userContexts
+      )
+    );
 
     return {
       success: true,

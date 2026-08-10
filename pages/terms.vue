@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="max-w-2xl">
     <LayoutPageHeader
       :breadcrumbs="breadcrumbs"
@@ -6,7 +6,7 @@
       :title="t('page.terms.title')"
       :subtitle="t('page.terms.subtitle')"
     />
-    <p class="text-body text-fg-muted">
+    <p class="text-sm text-fg-muted">
       {{ t("page.terms.body") }}
     </p>
   </div>

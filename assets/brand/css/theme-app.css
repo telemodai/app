@@ -5,6 +5,30 @@
   --radius-control: 10px;
   --radius-card: 12px;
   --spacing-card: 16px;
+
+  /*
+   * App typography — standard Tailwind type scale.
+   * Vendored brand theme.css clears --text-* and defines legacy semantic names (text-body, …).
+   * The cabinet uses text-2xs … text-4xl; see DESIGN.md §4.
+   */
+  --text-2xs: 0.625rem;
+  --text-2xs--line-height: 1.25;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: calc(1 / 0.75);
+  --text-sm: 0.875rem;
+  --text-sm--line-height: calc(1.25 / 0.875);
+  --text-base: 1rem;
+  --text-base--line-height: calc(1.5 / 1);
+  --text-lg: 1.125rem;
+  --text-lg--line-height: calc(1.75 / 1.125);
+  --text-xl: 1.25rem;
+  --text-xl--line-height: calc(1.75 / 1.25);
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: calc(2 / 1.5);
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: calc(2.25 / 1.875);
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: calc(2.5 / 2.25);
 }
 
 @theme inline {

@@ -1,19 +1,16 @@
-<template>
+﻿<template>
   <UiAppCard :padding="false">
     <div class="p-6">
-      <h3 class="font-display text-heading-sm text-fg mb-4">
+      <h3 class="tm-section-title text-fg mb-4">
         {{ t("dashboard.recentActivity.title") }}
       </h3>
 
-      <div
-        v-if="activities.length === 0"
-        class="text-fg-muted text-body py-8 text-center"
-      >
+      <div v-if="activities.length === 0" class="tm-empty-state">
         {{ t("dashboard.recentActivity.empty") }}
       </div>
 
       <div v-else class="overflow-x-auto">
-        <table class="w-full text-body">
+        <table class="w-full text-sm">
           <thead>
             <tr class="text-left text-fg-muted border-b border-line">
               <th class="pb-2 pr-4 font-medium">{{ t("dashboard.recentActivity.time") }}</th>

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="mb-6">
     <div class="flex flex-wrap items-start justify-between gap-4">
       <div v-if="showBreadcrumbs" class="flex min-w-0 items-center gap-2">
@@ -12,7 +12,7 @@
           ←
         </UiAppButton>
         <nav
-          class="min-w-0 text-body text-fg-muted"
+          class="min-w-0 text-sm text-fg-muted"
           :aria-label="t('common.breadcrumb')"
         >
           <ol class="flex flex-wrap items-center gap-1">
@@ -47,12 +47,17 @@
     </div>
     <h1
       v-if="title"
-      class="font-display text-heading-sm tracking-[-0.035em] text-fg"
+      class="tm-page-title"
       :class="showBreadcrumbs ? 'mt-3' : ''"
     >
       {{ title }}
     </h1>
-    <p v-if="subtitle" class="mt-1 text-body text-fg-muted">{{ subtitle }}</p>
+    <p v-if="subtitle && !$slots.subtitle" class="mt-1 text-sm text-fg-muted">
+      {{ subtitle }}
+    </p>
+    <div v-else-if="$slots.subtitle" class="mt-1 text-sm">
+      <slot name="subtitle" />
+    </div>
   </div>
 </template>
 

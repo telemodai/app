@@ -36,23 +36,33 @@
         :key="rule.id"
         class="!p-4"
       >
-        <div class="flex items-start justify-between mb-2 gap-2">
-          <div>
-            <h3 class="font-medium text-fg">{{ rule.name }}</h3>
-          </div>
-          <div class="flex gap-2 shrink-0">
-            <UiAppButton variant="link" @click="openEditModal(rule)">
-              {{ t("common.edit") }}
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <h3 class="tm-section-title min-w-0 text-fg">
+            {{ rule.name }}
+          </h3>
+          <div class="flex shrink-0 items-center gap-0.5">
+            <UiAppButton
+              variant="link"
+              class="!px-2"
+              :aria-label="t('common.edit')"
+              @click="openEditModal(rule)"
+            >
+              <Pencil :size="16" :stroke-width="2" aria-hidden="true" />
             </UiAppButton>
-            <UiAppButton variant="destructive" @click="deleteRule(rule)">
-              {{ t("common.delete") }}
+            <UiAppButton
+              variant="link"
+              class="!px-2 !text-danger hover:!text-fg"
+              :aria-label="t('common.delete')"
+              @click="deleteRule(rule)"
+            >
+              <Trash2 :size="16" :stroke-width="2" aria-hidden="true" />
             </UiAppButton>
           </div>
         </div>
 
-        <p v-if="rule.comment" class="text-body text-fg-muted mb-2">{{ rule.comment }}</p>
+        <p v-if="rule.comment" class="mb-2 text-xs text-fg-muted">{{ rule.comment }}</p>
 
-        <div class="text-caption text-fg-muted space-y-1 normal-case tracking-normal">
+        <div class="tm-detail-rows text-fg-muted normal-case tracking-normal">
           <div>
             {{ t("moderation.deleteOnViolation") }}
             <span class="font-medium text-fg">
@@ -80,7 +90,7 @@
 
     <UiAppCard class="!p-4">
       <div class="flex items-center justify-between gap-3 mb-3">
-        <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+        <h3 class="tm-section-title text-fg">
           {{ t("moderation.chatUsers.title") }}
         </h3>
         <UiAppButton
@@ -92,18 +102,18 @@
         </UiAppButton>
       </div>
 
-      <p class="text-body text-fg-muted mb-3">
+      <p class="text-sm text-fg-muted mb-3">
         {{ t("moderation.chatUsers.description") }}
       </p>
 
-      <div v-if="usersLoading && !chatUsers.length" class="text-fg-muted text-body">
+      <div v-if="usersLoading && !chatUsers.length" class="text-fg-muted text-sm">
         {{ t("moderation.chatUsers.loading") }}
       </div>
-      <div v-else-if="!chatUsers.length" class="text-fg-muted text-body">
+      <div v-else-if="!chatUsers.length" class="tm-empty-state">
         {{ t("moderation.chatUsers.empty") }}
       </div>
       <div v-else class="overflow-x-auto">
-        <table class="min-w-full text-body">
+        <table class="min-w-full text-sm">
           <thead class="text-left text-fg-muted border-b border-line">
             <tr>
               <th class="py-2 pr-4 font-medium">{{ t("moderation.chatUsers.user") }}</th>
@@ -122,7 +132,7 @@
                       : row.first_name || t("moderation.chatUsers.userFallback", { userId: row.user_id })
                   }}
                 </div>
-                <div class="text-caption text-fg-muted normal-case tracking-normal">
+                <div class="text-sm text-fg-muted">
                   {{ row.user_id }}
                 </div>
               </td>
@@ -137,7 +147,7 @@
                 <div class="flex flex-wrap gap-2">
                   <UiAppButton
                     variant="ghost"
-                    class="!px-2 !py-1 !text-caption uppercase tracking-wide"
+                    class="!px-2 !py-1 !text-xs uppercase tracking-wide"
                     :disabled="userActionBusy === row.user_id || row.warnings_count === 0"
                     @click="runUserAction(row.user_id, 'reset-warnings')"
                   >
@@ -145,7 +155,7 @@
                   </UiAppButton>
                   <UiAppButton
                     variant="ghost"
-                    class="!px-2 !py-1 !text-caption uppercase tracking-wide"
+                    class="!px-2 !py-1 !text-xs uppercase tracking-wide"
                     :disabled="userActionBusy === row.user_id || !row.is_banned"
                     @click="runUserAction(row.user_id, 'unban')"
                   >
@@ -153,7 +163,7 @@
                   </UiAppButton>
                   <UiAppButton
                     variant="primary"
-                    class="!px-2 !py-1 !text-caption uppercase tracking-wide"
+                    class="!px-2 !py-1 !text-xs uppercase tracking-wide"
                     :disabled="
                       userActionBusy === row.user_id ||
                       (row.warnings_count === 0 && !row.is_banned)
@@ -170,7 +180,7 @@
 
         <div
           v-if="usersPagination.total_pages > 1"
-          class="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-line text-body"
+          class="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-line text-sm"
         >
           <span class="text-fg-muted">
             {{
@@ -216,11 +226,11 @@
           <div>
             <h3
               id="template-library-title"
-              class="font-display text-heading-sm tracking-[-0.035em] text-fg"
+              class="tm-section-title text-fg"
             >
               {{ t("moderation.templateLibrary.title") }}
             </h3>
-            <p class="text-body text-fg-muted mt-1">
+            <p class="text-sm text-fg-muted mt-1">
               {{ t("moderation.templateLibrary.description") }}
             </p>
           </div>
@@ -229,7 +239,7 @@
           </UiAppButton>
         </div>
 
-        <div v-if="templatesLoading" class="text-fg-muted text-body">
+        <div v-if="templatesLoading" class="text-fg-muted text-sm">
           {{ t("moderation.templateLibrary.loading") }}
         </div>
 
@@ -242,7 +252,7 @@
             <div class="flex items-start justify-between gap-3">
               <div class="min-w-0">
                 <h4 class="font-medium text-fg">{{ template.name }}</h4>
-                <p class="text-body text-fg-muted mt-1">
+                <p class="text-sm text-fg-muted mt-1">
                   {{ template.comment }}
                 </p>
               </div>
@@ -270,7 +280,7 @@
       <div>
         <h3
           id="rule-modal-title"
-          class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-4"
+          class="tm-section-title text-fg mb-4"
         >
           {{ editingRule ? t("moderation.ruleModal.editTitle") : t("moderation.ruleModal.addTitle") }}
         </h3>
@@ -281,32 +291,32 @@
           </UiAppAlert>
 
           <div>
-            <label class="block text-body font-medium text-fg mb-1">
+            <label class="block text-sm font-medium text-fg mb-1">
               {{ t("moderation.ruleModal.nameLabel") }}
             </label>
             <UiAppInput v-model="form.name" required />
           </div>
 
           <div>
-            <label class="block text-body font-medium text-fg mb-1">
+            <label class="block text-sm font-medium text-fg mb-1">
               {{ t("moderation.ruleModal.commentLabel") }}
             </label>
-            <p class="text-caption text-fg-muted mb-1 normal-case tracking-normal">
+            <p class="text-xs text-fg-muted mb-1">
               {{ t("moderation.ruleModal.commentHint") }}
             </p>
             <UiAppInput v-model="form.comment" />
           </div>
 
           <div>
-            <label class="block text-body font-medium text-fg mb-1">
+            <label class="block text-sm font-medium text-fg mb-1">
               {{ t("moderation.ruleModal.ruleTextLabel") }}
             </label>
-            <p class="text-caption text-fg-muted mb-1 normal-case tracking-normal">
+            <p class="text-xs text-fg-muted mb-1">
               {{ t("moderation.ruleModal.ruleTextHint") }}
             </p>
             <UiAppTextarea
               v-model="form.ai_prompt"
-              :rows="4"
+              :rows="8"
               required
               :placeholder="t('moderation.ruleModal.ruleTextPlaceholder')"
             />
@@ -334,7 +344,7 @@
               </UiAppButton>
 
               <div v-if="showAiAssist" class="mt-2 space-y-2">
-                <p class="text-caption text-fg-muted normal-case tracking-normal">
+                <p class="text-sm text-fg-muted">
                   {{
                     aiAssistIsDraftMode
                       ? t("moderation.ruleModal.aiAssistHintCreate")
@@ -387,12 +397,12 @@
                     <span v-else class="text-lg leading-none" aria-hidden="true">✨</span>
                   </UiAppButton>
                 </div>
-                <p v-if="aiAssistError" class="text-caption text-danger normal-case tracking-normal">
+                <p v-if="aiAssistError" class="text-sm text-danger">
                   {{ aiAssistError }}
                 </p>
                 <div
                   v-if="ruleVersions.length > 0"
-                  class="flex items-center gap-2 text-caption text-fg-muted normal-case tracking-normal"
+                  class="flex items-center gap-2 text-sm text-fg-muted"
                 >
                   <UiAppButton
                     type="button"
@@ -434,7 +444,7 @@
                 type="checkbox"
                 class="mr-2"
               />
-              <span class="text-body text-fg">{{ t("moderation.ruleModal.deleteOnViolation") }}</span>
+              <span class="text-sm text-fg">{{ t("moderation.ruleModal.deleteOnViolation") }}</span>
             </label>
 
             <label class="flex items-center">
@@ -443,33 +453,35 @@
                 type="checkbox"
                 class="mr-2"
               />
-              <span class="text-body text-fg">{{ t("moderation.ruleModal.banAfterWarnings") }}</span>
+              <span class="text-sm text-fg">{{ t("moderation.ruleModal.banAfterWarnings") }}</span>
             </label>
 
             <div v-if="form.ban_on_violation">
-              <label class="block text-body font-medium text-fg mb-1">
+              <label class="block text-sm font-medium text-fg mb-1">
                 {{ t("moderation.ruleModal.warningsBeforeBanLabel") }}
               </label>
-              <UiAppInput
-                :model-value="String(form.warnings_before_ban)"
-                type="number"
-                min="1"
-                max="20"
-                @update:model-value="
-                  form.warnings_before_ban = Math.min(
-                    20,
-                    Math.max(1, Number($event) || 3)
-                  )
-                "
-              />
+              <div class="lg:w-28">
+                <UiAppInput
+                  :model-value="String(form.warnings_before_ban)"
+                  type="number"
+                  min="1"
+                  max="20"
+                  @update:model-value="
+                    form.warnings_before_ban = Math.min(
+                      20,
+                      Math.max(1, Number($event) || 3)
+                    )
+                  "
+                />
+              </div>
             </div>
           </div>
 
-          <div class="flex gap-2 pt-4">
+          <div class="flex gap-2 pt-4 lg:justify-end">
             <UiAppButton
               type="submit"
               variant="primary"
-              class="flex-1"
+              class="flex-1 lg:flex-none"
               :disabled="saving"
             >
               {{
@@ -492,7 +504,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import { Wand2 } from "lucide-vue-next";
+import { Pencil, Trash2, Wand2 } from "lucide-vue-next";
 import { readFetchError } from "@/lib/fetch-error";
 
 const { t } = useI18n();

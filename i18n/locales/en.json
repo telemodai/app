@@ -48,6 +48,8 @@
     "dash": "—",
     "breadcrumb": "Breadcrumb",
     "pageOf": "Page {page} of {totalPages}",
+    "showMore": "Show more",
+    "showLess": "Show less",
     "pageOfWithTotal": "Page {page} of {totalPages} ({total} users)",
     "loadingCharts": "Loading charts...",
     "confirm": {
@@ -242,6 +244,7 @@
   },
   "bot": {
     "addBot": "Add bot",
+    "openInTelegram": "Open bot {'@'}{id} in Telegram",
     "status": "Status",
     "statusLabel": "Status:",
     "active": "Active",
@@ -274,7 +277,7 @@
     },
     "created": "Created {date}",
     "chats": {
-      "title": "Chats ({count})",
+      "title": "Chats",
       "addChat": "Add Chat",
       "noChats": "No chats configured",
       "id": "ID: {id}",
@@ -351,6 +354,7 @@
       "title": "Team Access",
       "loading": "Loading team...",
       "accessCode": "Access code:",
+      "accessCodeCopied": "Code copied",
       "accessCodeForOperators": "Access code is available to bot operators.",
       "ownerManagesTeam": "Team management is available to the bot owner.",
       "members": "Members"
@@ -421,7 +425,10 @@
     "result": "Result",
     "rule": "Rule",
     "confidence": "Confidence",
+    "confidenceValue": "Confidence {percent}%",
     "reasoning": "Reasoning",
+    "showReasoning": "Show reasoning",
+    "hideReasoning": "Hide reasoning",
     "violation": "Violation",
     "pass": "Pass",
     "unknownRule": "Unknown rule",
@@ -429,7 +436,8 @@
     "mobileMeta": "{chatName} · user {userId}",
     "mobileRule": "Rule:",
     "empty": "No decisions yet. Send messages to the bot to see audit entries here.",
-    "breadcrumb": "Audit"
+    "breadcrumb": "Audit",
+    "paginationNav": "Audit pagination"
   },
   "releaseNotes": {
     "loading": "Loading...",

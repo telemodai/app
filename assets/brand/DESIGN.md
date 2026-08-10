@@ -219,39 +219,53 @@ bounds; a heading that needs more presence gets a larger size, not a heavier wei
 Tailwind layer clears the `--font-weight-*` namespace and re-declares only `normal`, `medium` and
 `semibold`, so `font-bold` does not exist to be typed.
 
-### Scale
+### Scale (admin app)
 
-Line height, tracking **and weight** belong to each size rather than being chosen per use, so
-`text-heading` on its own produces a correct heading. Small uppercase labels take positive tracking to
-compensate for their size; display type takes negative tracking to keep long phrases compact.
+The **cabinet** uses the **standard Tailwind type scale** (`text-xs` … `text-4xl`), restored in
+`assets/brand/css/theme-app.css`. Vendored `theme.css` still defines legacy semantic names
+(`text-body`, `text-heading-sm`, …) for the marketing site — **do not use them in app Vue/CSS**.
 
-| Token | Size | Line height | Tracking | Weight | Family | Use |
-|-------|------|-------------|----------|--------|--------|-----|
-| `caption` | 10px | 1.5 | +0.05em | 600 | Inter, uppercase | In-component labels and badges |
-| `kicker` | 10px | 1.5 | +0.3em | 600 | Inter, uppercase | **Documentation only** — section eyebrow under a title |
-| `body` | 14px | 1.5 | — | 400 | Inter | Default text and every control |
-| `reading` | 16px | 1.65 | — | 400 | Inter | Long-form prose |
-| `lead` | 18px | 1.5 | — | 400 | Inter | Introductory paragraph |
-| `heading-sm` | 18px | 1.43 | −0.035em | 500 | Geologica | Card titles, subsections |
-| `heading` | 28px | 1.38 | −0.035em | 500 | Geologica | Section heading |
-| `heading-lg` | 36px | 1.15 | −0.035em | 500 | Geologica | Section opener |
-| `display` | 72px | 1.1 | −0.035em | 500 | Geologica | Hero line, one per page at most |
+Source of truth for sizes: `theme-app.css` `@theme` block + the role table below.
 
-**`body` and `reading` are not interchangeable.** 14px is right for dense interface — tables, controls,
-labels — where the constraint is fitting information into a viewport. 16px with a looser line height is
-right for anything meant to be read as a page: documentation, and every marketing surface. Choosing by
-context rather than by preference is what keeps the admin UI compact and the landing readable without
-two systems.
+| Tailwind class | Approx. | Role in admin UI |
+|----------------|---------|------------------|
+| `text-2xs` | 10px | Badges (`AppBadge`) only — compact uppercase labels |
+| `text-xs` | 12px | **Below default** — field hints, stat row labels, dense meta (`tm-meta`, `tm-detail-rows`) |
+| `text-sm` | 14px | **Default UI** — body, nav, buttons, inputs, tables, forms (`body` in `main.css`) |
+| `text-base` | 16px | Section titles (`tm-section-title`), rare emphasis |
+| `text-lg` | 18px | Rare emphasis in running text |
+| `text-xl` | 20px | Page titles (`tm-page-title`) |
+| `text-2xl` | 24px | Secondary stat numbers (`tm-stat-sm`) |
+| `text-3xl` | 30px | — |
+| `text-4xl` | 36px | Primary KPI / hero stat numbers (`tm-stat`) |
 
-Note that `lead` and `heading-sm` are both 18px. They are told apart entirely by face, weight and
-tracking — which is the two-sans problem in its sharpest form. If a subsection title and the paragraph
-under it ever stop reading as different things, that pair is where to look first.
+**Hierarchy rules**
 
-**`caption` and `kicker` share a size but not a job.** Both are 10px Inter semibold uppercase, and the
-wide tracking on `kicker` (+0.3em) is what separates a documentation eyebrow from a compact in-component
-label (+0.05em on `caption`). `text-kicker` is scoped to documentation and specification pages —
-[`system.html`](pages/system.html), [`logo.html`](pages/logo.html) — and must not appear in the product admin UI.
-Section headers there use `heading-lg` alone; see §8.
+1. **Default text** — `text-sm` + `text-fg`. Secondary at the same level — `text-sm text-fg-muted`.
+2. **One step down** — `text-xs` / `tm-meta` for hints, footnotes, side-panel rows (not smaller body everywhere).
+3. **Page `h1`** — `tm-page-title` (`text-xl font-display …`).
+4. **Section / card / modal `h2`–`h3`** — `tm-section-title` (`text-base font-display …`).
+5. **Stats** — `tm-stat` (`text-4xl`) or `tm-stat-sm` (`text-2xl`) + semantic colour.
+6. **Badges** — `AppBadge` (`text-2xs`, `px-2.5 py-0.5`).
+7. **Dense summaries** — `tm-detail-rows` (`text-xs`) under a `text-sm` heading.
+8. **Code** — `font-mono`; sample blocks may use `text-xs` or `text-sm`.
+
+**Do not** use arbitrary font sizes (`text-[12px]`, `text-[13px]`, …) or legacy classes (`text-body`,
+`text-caption`, `text-heading-*`) in app code.
+
+Utility classes live in `assets/css/main.css` (`tm-page-title`, `tm-section-title`, `tm-stat`, `tm-stat-sm`, `tm-meta`, `tm-detail-rows`).
+
+### Scale (marketing / documentation — legacy reference)
+
+The vendored brand token file still defines a semantic scale for the landing site. The admin app does
+not use it. For reference only:
+
+| Legacy token | Size | Notes |
+|--------------|------|-------|
+| `caption` / `kicker` | 10px uppercase | Site/docs only |
+| `body` | 14px | Site dense UI |
+| `reading` | 16px | Long-form prose |
+| `heading-sm` … `display` | 18–72px | Site headings |
 
 ### Wordmark
 

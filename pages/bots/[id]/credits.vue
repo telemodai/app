@@ -16,8 +16,8 @@
     </UiAppAlert>
 
     <UiAppCard class="!p-6 mb-6">
-      <div class="text-body text-fg-muted">{{ t("billing.balance") }}</div>
-      <div class="font-display text-heading tracking-[-0.035em] text-accent mt-1">
+      <div class="text-sm text-fg-muted">{{ t("billing.balance") }}</div>
+      <div class="tm-page-title text-accent mt-1">
         {{ balance.toLocaleString() }}
       </div>
       <UiAppButton
@@ -31,7 +31,7 @@
     </UiAppCard>
 
     <UiAppCard class="!p-4 mb-6">
-      <label class="block text-body font-medium text-fg mb-2" for="promo-code">
+      <label class="block text-sm font-medium text-fg mb-2" for="promo-code">
         {{ t("billing.promo.label") }}
       </label>
       <div class="flex flex-wrap gap-2">
@@ -51,7 +51,7 @@
           {{ applyingPromo ? t("common.loading") : t("billing.promo.apply") }}
         </UiAppButton>
       </div>
-      <p v-if="appliedPromo?.valid" class="mt-2 text-body text-fg">
+      <p v-if="appliedPromo?.valid" class="mt-2 text-sm text-fg">
         {{
           t("billing.promo.applied", {
             code: appliedPromo.code,
@@ -59,7 +59,7 @@
           })
         }}
       </p>
-      <p v-if="promoError" class="mt-2 text-body text-danger">{{ promoError }}</p>
+      <p v-if="promoError" class="mt-2 text-sm text-danger">{{ promoError }}</p>
     </UiAppCard>
 
     <div class="space-y-3">
@@ -70,7 +70,7 @@
       >
         <div>
           <div class="font-medium text-fg">{{ t(pkg.labelKey) }}</div>
-          <div class="text-body text-fg-muted">
+          <div class="text-sm text-fg-muted">
             <template v-if="discountedPrice(pkg.id) !== pkg.amountRub">
               <span class="line-through text-fg-subtle mr-2">
                 {{ pkg.amountRub.toLocaleString() }} ₽
