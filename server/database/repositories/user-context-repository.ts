@@ -44,6 +44,40 @@ export class UserContextRepository {
     return row ? toUserContext(row) : null;
   }
 
+  async findByUserPairs(
+    botId: string,
+    pairs: Array<{ chatId: number; userId: number }>
+  ): Promise<UserContext[]> {
+    const unique = new Map<string, { chatId: number; userId: number }>();
+    for (const pair of pairs) {
+      unique.set(`${pair.chatId}:${pair.userId}`, pair);
+    }
+
+    const entries = [...unique.values()];
+    if (entries.length === 0) {
+      return [];
+    }
+
+    const rows = await this.db
+      .select()
+      .from(userContexts)
+      .where(
+        and(
+          eq(userContexts.botId, botId),
+          or(
+            ...entries.map((entry) =>
+              and(
+                eq(userContexts.chatId, entry.chatId),
+                eq(userContexts.userId, entry.userId)
+              )
+            )
+          )
+        )
+      );
+
+    return rows.map(toUserContext);
+  }
+
   async create(contextData: CreateUserContextRequest): Promise<UserContext> {
     const now = new Date();
     const [row] = await this.db

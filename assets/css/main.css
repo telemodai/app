@@ -82,4 +82,22 @@
   .tm-kpi-heading {
     @apply mb-5 text-sm text-fg-muted;
   }
+
+  /* Muted help panel under form controls (title + smaller body copy). */
+  .tm-hint-block {
+    @apply mt-3 rounded-card bg-surface-3 p-2 normal-case tracking-normal;
+  }
+
+  .tm-hint-block__title {
+    @apply mb-1 text-sm font-medium text-fg;
+  }
+
+  .tm-hint-block__body {
+    @apply text-xs text-fg-muted;
+  }
+
+  /* Clickable placeholder chips (message templates) — same scale as AppBadge. */
+  .tm-chip {
+    @apply inline-flex cursor-pointer items-center rounded-full border border-line bg-surface-3 px-2 py-0.5 text-2xs font-medium uppercase tracking-wide leading-tight text-fg transition-colors hover:border-line-strong hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+  }
 }

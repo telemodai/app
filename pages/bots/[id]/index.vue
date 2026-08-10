@@ -4,8 +4,18 @@
       :breadcrumbs="breadcrumbs"
       :back-to="backTo"
       :title="bot?.name ?? t('page.botDetail.titleFallback')"
-      :subtitle="bot ? `@${bot.id}` : undefined"
     >
+      <template v-if="bot" #subtitle>
+        <a
+          :href="telegramBotWebUrl(bot.id)"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-accent hover:underline"
+          :aria-label="t('bot.openInTelegram', { id: bot.id })"
+        >
+          @{{ bot.id }}
+        </a>
+      </template>
       <template #actions>
         <UiAppButton
           :variant="bot?.is_active ? 'destructive' : 'primary'"
@@ -84,7 +94,7 @@
           <UiAppCard class="!p-6">
             <div class="flex items-center justify-between mb-4">
               <h3 class="tm-section-title text-fg">
-                {{ t("bot.chats.title", { count: bot.chats?.length || 0 }) }}
+                {{ t("bot.chats.title") }}
               </h3>
               <UiAppButton
                 v-if="canManageBot"
@@ -123,7 +133,6 @@
                         <BotsChatTelegramIdLink
                           class="shrink-0"
                           :chat-id="chat.chat_id"
-                          :telegram-username="chat.telegram_username"
                         />
                       </div>
                       <div class="text-xs text-fg-muted">
@@ -148,18 +157,29 @@
                       </div>
                     </div>
                   </div>
-                  <div class="flex gap-2 shrink-0">
+                  <div class="flex shrink-0 items-center gap-0.5">
                     <UiAppButton
                       variant="link"
                       :to="`/bots/${botId}/chats/${chat.chat_id}/moderation`"
                     >
+                      <Shield :size="16" :stroke-width="2" aria-hidden="true" />
                       {{ t("bot.chats.moderation") }}
                     </UiAppButton>
-                    <UiAppButton variant="link" @click="editChat(chat)">
-                      {{ t("common.edit") }}
+                    <UiAppButton
+                      variant="link"
+                      class="!px-2"
+                      :aria-label="t('common.edit')"
+                      @click="editChat(chat)"
+                    >
+                      <Pencil :size="16" :stroke-width="2" aria-hidden="true" />
                     </UiAppButton>
-                    <UiAppButton variant="destructive" @click="removeChat(chat.chat_id)">
-                      {{ t("common.remove") }}
+                    <UiAppButton
+                      variant="link"
+                      class="!px-2 !text-danger hover:!text-fg"
+                      :aria-label="t('common.remove')"
+                      @click="removeChat(chat.chat_id)"
+                    >
+                      <Trash2 :size="16" :stroke-width="2" aria-hidden="true" />
                     </UiAppButton>
                   </div>
                 </div>
@@ -178,7 +198,7 @@
                 {{ t("common.refresh") }}
               </UiAppButton>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 gap-6 py-5 md:grid-cols-3">
               <div class="text-center">
                 <div class="mb-1 tm-stat text-accent">
                   {{ statistics?.today?.messages_processed || 0 }}
@@ -299,7 +319,7 @@
                 </div>
               </div>
             </div>
-            <div v-else class="text-fg-muted text-center py-4">
+            <div v-else class="tm-empty-state">
               {{ t("bot.recentActivity.empty") }}
             </div>
           </UiAppCard>
@@ -384,17 +404,17 @@
             </button>
           </div>
 
-          <div class="flex flex-wrap gap-2 mb-3">
-            <UiAppButton
+          <div class="mb-3 flex flex-wrap gap-1.5">
+            <button
               v-for="chip in activeTemplateChips"
               :key="chip.key"
-              variant="ghost"
-              class="!px-2 !py-1 !text-xs uppercase tracking-wide"
+              type="button"
+              class="tm-chip"
               :title="t(chip.hintKey)"
               @click="insertTemplatePlaceholder(chip.key)"
             >
               {{ t(chip.labelKey) }}
-            </UiAppButton>
+            </button>
           </div>
 
           <UiAppTextarea
@@ -436,19 +456,40 @@
             {{ t("bot.team.loading") }}
           </div>
           <div v-else class="space-y-4">
-            <div v-if="isOwner && accessCode" class="flex flex-wrap items-center gap-3">
-              <div class="text-sm text-fg">
-                {{ t("bot.team.accessCode") }}
-                <code class="bg-surface-3 px-2 py-1 rounded-control font-mono text-sm">
-                  {{ accessCode }}
-                </code>
+            <div v-if="isOwner && accessCode" class="space-y-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="text-sm text-fg">
+                  {{ t("bot.team.accessCode") }}
+                  <code class="rounded-control bg-surface-3 px-2 py-1 font-mono text-sm">
+                    {{ accessCode }}
+                  </code>
+                </div>
+                <div class="flex shrink-0 items-center gap-0.5">
+                  <UiAppButton
+                    variant="link"
+                    class="!px-2"
+                    :aria-label="t('common.copy')"
+                    @click="copyAccessCode"
+                  >
+                    <Copy :size="16" :stroke-width="2" aria-hidden="true" />
+                  </UiAppButton>
+                  <UiAppButton
+                    variant="link"
+                    class="!px-2 !text-danger hover:!text-fg"
+                    :aria-label="t('common.revoke')"
+                    @click="revokeAccessCode"
+                  >
+                    <RefreshCw :size="16" :stroke-width="2" aria-hidden="true" />
+                  </UiAppButton>
+                </div>
               </div>
-              <UiAppButton variant="link" @click="copyAccessCode">
-                {{ t("common.copy") }}
-              </UiAppButton>
-              <UiAppButton variant="destructive" @click="revokeAccessCode">
-                {{ t("common.revoke") }}
-              </UiAppButton>
+              <p
+                v-if="accessCodeCopied"
+                class="text-xs text-action-unban"
+                role="status"
+              >
+                {{ t("bot.team.accessCodeCopied") }}
+              </p>
             </div>
             <p v-else-if="isOwner" class="text-sm text-fg-muted">
               {{ t("bot.team.accessCodeForOperators") }}
@@ -572,7 +613,6 @@
               <BotsChatTelegramIdLink
                 v-if="editingChat"
                 :chat-id="editingChat.chat_id"
-                :telegram-username="editingChat.telegram_username"
               />
             </div>
           </div>
@@ -595,10 +635,10 @@
               </label>
             </div>
 
-            <div class="mt-3 text-sm text-fg-muted bg-surface-3 p-2 rounded-card normal-case tracking-normal">
-              <p class="font-medium mb-1 text-fg">{{ t("bot.chats.editModal.silentModeHelpTitle") }}</p>
-              <p>• {{ t("bot.chats.editModal.silentModeEnabled") }}</p>
-              <p>• {{ t("bot.chats.editModal.silentModeDisabled") }}</p>
+            <div class="tm-hint-block">
+              <p class="tm-hint-block__title">{{ t("bot.chats.editModal.silentModeHelpTitle") }}</p>
+              <p class="tm-hint-block__body">• {{ t("bot.chats.editModal.silentModeEnabled") }}</p>
+              <p class="tm-hint-block__body">• {{ t("bot.chats.editModal.silentModeDisabled") }}</p>
             </div>
           </div>
 
@@ -649,9 +689,9 @@
               </div>
             </div>
 
-            <div class="mt-3 text-sm text-fg-muted bg-surface-3 p-2 rounded-card normal-case tracking-normal">
-              <p class="font-medium mb-1 text-fg">{{ t("bot.chats.editModal.serviceMessagesHelpTitle") }}</p>
-              <p>{{ t("bot.chats.editModal.serviceMessagesHelp") }}</p>
+            <div class="tm-hint-block">
+              <p class="tm-hint-block__title">{{ t("bot.chats.editModal.serviceMessagesHelpTitle") }}</p>
+              <p class="tm-hint-block__body">{{ t("bot.chats.editModal.serviceMessagesHelp") }}</p>
             </div>
           </div>
 
@@ -681,12 +721,14 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { Copy, Pencil, RefreshCw, Shield, Trash2 } from "lucide-vue-next";
 import {
   BAN_TEMPLATE_PLACEHOLDERS,
   DEFAULT_BAN_TEMPLATE_PREVIEW,
   DEFAULT_WARNING_TEMPLATE_PREVIEW,
   WARNING_TEMPLATE_PLACEHOLDERS,
 } from "@/lib/bot-message-template-ui";
+import { telegramBotWebUrl } from "@/lib/telegram-bot-url";
 import type { ChatActivationStartMode } from "@/composables/useChatActivationWait";
 import type { BotMemberRole } from "@/types/bot";
 import {
@@ -739,6 +781,7 @@ const lastChatActivationMode = ref<ChatActivationStartMode>("new_group");
 const editingChat = ref<any>(null);
 const saving = ref(false);
 const accessCode = ref<string | null>(null);
+const accessCodeCopied = ref(false);
 const teamMembers = ref<any[]>([]);
 const teamLoading = ref(false);
 const statusError = ref("");
@@ -1197,7 +1240,15 @@ async function loadTeam() {
 
 async function copyAccessCode() {
   if (!accessCode.value) return;
-  await navigator.clipboard.writeText(accessCode.value);
+  try {
+    await navigator.clipboard.writeText(accessCode.value);
+    accessCodeCopied.value = true;
+    setTimeout(() => {
+      accessCodeCopied.value = false;
+    }, 2000);
+  } catch {
+    accessCodeCopied.value = false;
+  }
 }
 
 async function revokeAccessCode() {

@@ -13,7 +13,7 @@
       {{ error }}
     </UiAppAlert>
 
-    <div v-else-if="releases.length === 0" class="text-fg-muted text-center py-12">
+    <div v-else-if="releases.length === 0" class="tm-empty-state">
       {{ t("releaseNotes.empty") }}
     </div>
 

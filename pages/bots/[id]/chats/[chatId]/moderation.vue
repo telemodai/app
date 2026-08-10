@@ -36,23 +36,33 @@
         :key="rule.id"
         class="!p-4"
       >
-        <div class="flex items-start justify-between mb-2 gap-2">
-          <div>
-            <h3 class="font-medium text-fg">{{ rule.name }}</h3>
-          </div>
-          <div class="flex gap-2 shrink-0">
-            <UiAppButton variant="link" @click="openEditModal(rule)">
-              {{ t("common.edit") }}
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <h3 class="tm-section-title min-w-0 text-fg">
+            {{ rule.name }}
+          </h3>
+          <div class="flex shrink-0 items-center gap-0.5">
+            <UiAppButton
+              variant="link"
+              class="!px-2"
+              :aria-label="t('common.edit')"
+              @click="openEditModal(rule)"
+            >
+              <Pencil :size="16" :stroke-width="2" aria-hidden="true" />
             </UiAppButton>
-            <UiAppButton variant="destructive" @click="deleteRule(rule)">
-              {{ t("common.delete") }}
+            <UiAppButton
+              variant="link"
+              class="!px-2 !text-danger hover:!text-fg"
+              :aria-label="t('common.delete')"
+              @click="deleteRule(rule)"
+            >
+              <Trash2 :size="16" :stroke-width="2" aria-hidden="true" />
             </UiAppButton>
           </div>
         </div>
 
-        <p v-if="rule.comment" class="text-sm text-fg-muted mb-2">{{ rule.comment }}</p>
+        <p v-if="rule.comment" class="mb-2 text-xs text-fg-muted">{{ rule.comment }}</p>
 
-        <div class="text-sm text-fg-muted space-y-1 normal-case tracking-normal">
+        <div class="tm-detail-rows text-fg-muted normal-case tracking-normal">
           <div>
             {{ t("moderation.deleteOnViolation") }}
             <span class="font-medium text-fg">
@@ -99,7 +109,7 @@
       <div v-if="usersLoading && !chatUsers.length" class="text-fg-muted text-sm">
         {{ t("moderation.chatUsers.loading") }}
       </div>
-      <div v-else-if="!chatUsers.length" class="text-fg-muted text-sm">
+      <div v-else-if="!chatUsers.length" class="tm-empty-state">
         {{ t("moderation.chatUsers.empty") }}
       </div>
       <div v-else class="overflow-x-auto">
@@ -494,7 +504,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import { Wand2 } from "lucide-vue-next";
+import { Pencil, Trash2, Wand2 } from "lucide-vue-next";
 import { readFetchError } from "@/lib/fetch-error";
 
 const { t } = useI18n();

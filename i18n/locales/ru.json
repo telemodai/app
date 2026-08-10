@@ -48,6 +48,8 @@
     "dash": "—",
     "breadcrumb": "Навигационная цепочка",
     "pageOf": "Страница {page} из {totalPages}",
+    "showMore": "Показать полностью",
+    "showLess": "Свернуть",
     "pageOfWithTotal": "Страница {page} из {totalPages} ({total} пользователей)",
     "loadingCharts": "Загрузка графиков...",
     "confirm": {
@@ -242,6 +244,7 @@
   },
   "bot": {
     "addBot": "Добавить бота",
+    "openInTelegram": "Открыть бота {'@'}{id} в Telegram",
     "status": "Статус",
     "statusLabel": "Статус:",
     "active": "Активен",
@@ -274,11 +277,10 @@
     },
     "created": "Создан {date}",
     "chats": {
-      "title": "Чаты ({count})",
+      "title": "Чаты",
       "addChat": "Добавить чат",
       "noChats": "Чаты не настроены",
       "id": "ID: {id}",
-      "openInTelegram": "Открыть чат {id} в Telegram",
       "rules": "Правила: {count}",
       "silentMode": "Тихий режим:",
       "moderation": "Модерация",
@@ -352,6 +354,7 @@
       "title": "Доступ команды",
       "loading": "Загрузка команды...",
       "accessCode": "Код доступа:",
+      "accessCodeCopied": "Текст скопирован",
       "accessCodeForOperators": "Код доступа доступен операторам бота.",
       "ownerManagesTeam": "Управление командой доступно владельцу бота.",
       "members": "Участники"
@@ -422,7 +425,10 @@
     "result": "Результат",
     "rule": "Правило",
     "confidence": "Уверенность",
+    "confidenceValue": "Уверенность {percent}%",
     "reasoning": "Обоснование",
+    "showReasoning": "Показать обоснование",
+    "hideReasoning": "Скрыть обоснование",
     "violation": "Нарушение",
     "pass": "Ок",
     "unknownRule": "Неизвестное правило",
@@ -430,7 +436,8 @@
     "mobileMeta": "{chatName} · пользователь {userId}",
     "mobileRule": "Правило:",
     "empty": "Решений пока нет. Отправьте сообщения боту, чтобы увидеть записи аудита здесь.",
-    "breadcrumb": "Аудит"
+    "breadcrumb": "Аудит",
+    "paginationNav": "Навигация по аудиту"
   },
   "releaseNotes": {
     "loading": "Загрузка...",

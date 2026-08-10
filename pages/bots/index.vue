@@ -76,17 +76,14 @@
       </NuxtLink>
     </div>
 
-    <UiAppCard
-      v-if="!loading && bots.length === 0"
-      class="!p-8 text-center"
-    >
-      <p class="mb-4 text-fg-muted">
+    <div v-if="!loading && bots.length === 0" class="tm-empty-state">
+      <p class="mb-4">
         {{ t("bot.emptyState") }}
       </p>
       <UiAppButton variant="primary" @click="openAddModal('create')">
         {{ t("bot.addBot") }}
       </UiAppButton>
-    </UiAppCard>
+    </div>
 
     <UiAppModal :open="showAddModal" size="sm" title-id="add-bot-modal-title" @close="closeAddModal">
       <div>

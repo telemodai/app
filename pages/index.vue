@@ -23,17 +23,14 @@
       {{ error }}
     </UiAppAlert>
 
-    <UiAppCard
-      v-else-if="dashboard && !dashboard.has_bots"
-      class="!p-8 text-center"
-    >
-      <p class="text-fg-muted mb-4">
+    <div v-else-if="dashboard && !dashboard.has_bots" class="tm-empty-state">
+      <p class="mb-4">
         {{ t("page.dashboard.emptyState") }}
       </p>
       <UiAppButton variant="primary" to="/bots">
         {{ t("page.dashboard.manageBots") }}
       </UiAppButton>
-    </UiAppCard>
+    </div>
 
     <div v-else-if="dashboard" class="space-y-6">
       <DashboardKpiCards :kpi="dashboard.kpi" />

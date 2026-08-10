@@ -33,7 +33,7 @@ const variants: Record<ButtonVariant, string> = {
     "border-0 bg-accent px-4 py-2 text-accent-on hover:brightness-110",
   destructive:
     "border border-danger bg-transparent px-4 py-2 text-danger hover:bg-danger-surface",
-  link: "border-0 bg-transparent px-2 py-2 text-accent hover:text-fg min-w-0",
+  link: "cursor-pointer border-0 bg-transparent px-2 py-2 text-accent hover:text-fg min-w-0",
   ai: "!rounded-full border-0 bg-accent-surface px-4 py-2 text-fg normal-case tracking-normal hover:brightness-110",
 };
 

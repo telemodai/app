@@ -52,7 +52,12 @@
     >
       {{ title }}
     </h1>
-    <p v-if="subtitle" class="mt-1 text-sm text-fg-muted">{{ subtitle }}</p>
+    <p v-if="subtitle && !$slots.subtitle" class="mt-1 text-sm text-fg-muted">
+      {{ subtitle }}
+    </p>
+    <div v-else-if="$slots.subtitle" class="mt-1 text-sm">
+      <slot name="subtitle" />
+    </div>
   </div>
 </template>
 

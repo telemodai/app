@@ -5,10 +5,7 @@
         {{ t("dashboard.recentActivity.title") }}
       </h3>
 
-      <div
-        v-if="activities.length === 0"
-        class="text-fg-muted text-sm py-8 text-center"
-      >
+      <div v-if="activities.length === 0" class="tm-empty-state">
         {{ t("dashboard.recentActivity.empty") }}
       </div>
 
