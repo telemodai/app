@@ -1,5 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { telegramChatWebUrl } from "@/lib/telegram-chat-url";
+import {
+  telegramChatWebUrl,
+  telegramPrivatePostUrl,
+} from "@/lib/telegram-chat-url";
 
 describe("telegramChatWebUrl", () => {
   test("prefers public username", () => {
@@ -20,20 +23,20 @@ describe("telegramChatWebUrl", () => {
     ).toBe("https://t.me/channel");
   });
 
-  test("builds supergroup link from -100 id", () => {
+  test("opens private supergroup in Telegram Web", () => {
     expect(
       telegramChatWebUrl({
         chat_id: -1002740965103,
       })
-    ).toBe("https://t.me/c/2740965103");
+    ).toBe("https://web.telegram.org/a/#-1002740965103");
   });
 
-  test("builds legacy group link from negative id", () => {
+  test("opens legacy group in Telegram Web", () => {
     expect(
       telegramChatWebUrl({
         chat_id: -12345,
       })
-    ).toBe("https://t.me/c/12345");
+    ).toBe("https://web.telegram.org/a/#-12345");
   });
 
   test("returns null for non-group positive id", () => {
@@ -42,5 +45,13 @@ describe("telegramChatWebUrl", () => {
         chat_id: 42,
       })
     ).toBeNull();
+  });
+});
+
+describe("telegramPrivatePostUrl", () => {
+  test("includes message id for t.me private post links", () => {
+    expect(telegramPrivatePostUrl(-1002740965103)).toBe(
+      "https://t.me/c/2740965103/1"
+    );
   });
 });
