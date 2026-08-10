@@ -17,7 +17,7 @@
 
     <UiAppCard v-else :padding="false" class="overflow-hidden">
       <div v-if="decisions.length > 0" class="hidden md:block overflow-x-auto">
-        <table class="min-w-full text-body">
+        <table class="min-w-full text-base">
           <thead class="bg-surface-3 text-left text-fg-muted">
             <tr>
               <th class="px-4 py-3 font-medium">{{ t("audit.time") }}</th>
@@ -37,7 +37,7 @@
               </td>
               <td class="px-4 py-3">
                 <div class="text-fg">{{ chatName(item.chat_id) }}</div>
-                <div class="text-caption text-fg-muted normal-case tracking-normal">
+                <div class="text-sm text-fg-muted">
                   {{ item.chat_id }}
                 </div>
               </td>
@@ -88,11 +88,11 @@
             <UiAppBadge :variant="item.violation_detected ? 'danger' : 'success'">
               {{ item.violation_detected ? t("audit.violation") : t("audit.pass") }}
             </UiAppBadge>
-            <span class="text-caption text-fg-muted normal-case tracking-normal">
+            <span class="text-sm text-fg-muted">
               {{ formatDate(item.timestamp) }}
             </span>
           </div>
-          <div class="text-body text-fg-muted">
+          <div class="text-base text-fg-muted">
             {{
               t("audit.mobileMeta", {
                 chatName: chatName(item.chat_id),
@@ -100,15 +100,15 @@
               })
             }}
           </div>
-          <div class="text-body text-fg">
+          <div class="text-base text-fg">
             {{ displayText(item.message_text, `msg-${item._id}`) }}
           </div>
-          <div v-if="item.rule_violated || item.rule_name" class="text-body text-fg">
+          <div v-if="item.rule_violated || item.rule_name" class="text-base text-fg">
             {{ t("audit.mobileRule") }}
             <span class="font-medium">{{ formatRuleLabel(item) }}</span>
             · {{ Math.round(item.ai_confidence * 100) }}%
           </div>
-          <div class="text-body text-fg-muted">
+          <div class="text-base text-fg-muted">
             {{ displayText(item.ai_reasoning, `reason-${item._id}`) }}
           </div>
         </div>
@@ -120,7 +120,7 @@
 
       <div
         v-if="pagination.total_pages > 1"
-        class="flex items-center justify-between border-t border-line px-4 py-3 text-body"
+        class="flex items-center justify-between border-t border-line px-4 py-3 text-base"
       >
         <UiAppButton
           variant="ghost"

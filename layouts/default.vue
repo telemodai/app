@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="min-h-screen flex flex-col bg-surface-1">
     <header class="border-b border-line bg-surface-1">
       <div
@@ -7,13 +7,13 @@
         <div class="flex min-w-0 items-center gap-4">
           <NuxtLink
             to="/"
-            class="inline-flex shrink-0 items-center gap-2 font-display text-heading-sm tracking-[-0.035em] text-fg hover:text-fg-strong"
+            class="inline-flex shrink-0 items-center gap-2 tm-section-title text-fg hover:text-fg-strong"
           >
             <BrandMark class="h-[1.1em]" />
             <span class="lowercase">{{ appName }}</span>
           </NuxtLink>
           <nav
-            class="flex items-center gap-1 overflow-x-auto text-body"
+            class="flex items-center gap-1 overflow-x-auto text-base"
             :aria-label="t('nav.main')"
           >
             <NuxtLink
@@ -40,7 +40,7 @@
             </NuxtLink>
           </nav>
         </div>
-        <div class="flex shrink-0 items-center gap-3 text-body">
+        <div class="flex shrink-0 items-center gap-3 text-base">
           <LayoutReferralPendingNav v-if="isSaas" />
           <LayoutThemeToggle />
           <span v-if="session?.user" class="hidden text-fg-muted sm:inline">

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <UiAppModal
     :open="open"
     size="md"
@@ -7,7 +7,7 @@
   >
     <div>
       <div class="flex items-start justify-between gap-4 mb-4">
-        <h3 id="bot-message-html-help-title" class="font-display text-heading-sm text-fg">
+        <h3 id="bot-message-html-help-title" class="tm-section-title text-fg">
           {{ t("botTemplate.htmlHelp.title") }}
         </h3>
         <UiAppButton
@@ -20,7 +20,7 @@
         </UiAppButton>
       </div>
 
-      <div class="space-y-4 text-body text-fg-muted">
+      <div class="space-y-4 text-base text-fg-muted">
         <section v-for="sectionKey in htmlHelpSectionKeys" :key="sectionKey">
           <h4 class="font-medium text-fg mb-1">
             {{ t(`botTemplate.htmlHelp.sections.${sectionKey}.title`) }}
@@ -28,7 +28,7 @@
           <p>{{ t(`botTemplate.htmlHelp.sections.${sectionKey}.body`) }}</p>
           <p
             v-if="sectionKey === 'supportedTags'"
-            class="mt-2 font-mono text-[12px] bg-surface-3 border border-line rounded-control px-2 py-1 whitespace-pre-wrap text-fg"
+            class="mt-2 font-mono text-sm bg-surface-3 border border-line rounded-control px-2 py-1 whitespace-pre-wrap text-fg"
           >
             {{ t("botTemplate.htmlHelp.sections.supportedTags.example") }}
           </p>

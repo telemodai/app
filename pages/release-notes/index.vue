@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="max-w-3xl mx-auto">
     <LayoutPageHeader
       :breadcrumbs="breadcrumbs"
@@ -24,13 +24,13 @@
         class="border-b border-line pb-10 last:border-b-0"
       >
         <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
-          <h3 class="font-display text-heading-sm tracking-[-0.035em] text-fg">
+          <h3 class="tm-section-title text-fg">
             {{ release.tag }}
           </h3>
-          <time class="text-body text-fg-muted">{{ formatDate(release.date) }}</time>
+          <time class="text-base text-fg-muted">{{ formatDate(release.date) }}</time>
         </div>
 
-        <p v-if="isSelfHosted" class="mb-5 text-body">
+        <p v-if="isSelfHosted" class="mb-5 text-base">
           <a
             :href="release.githubReleaseUrl"
             target="_blank"
@@ -46,14 +46,14 @@
           :key="`${release.tag}-${section.title}`"
           class="mb-5"
         >
-          <h4 class="text-body font-semibold uppercase tracking-wide text-fg-muted mb-2">
+          <h4 class="text-base font-semibold uppercase tracking-wide text-fg-muted mb-2">
             {{ section.title }}
           </h4>
           <ul class="space-y-2">
             <li
               v-for="(item, index) in section.items"
               :key="`${release.tag}-${section.title}-${index}`"
-              class="text-fg text-body leading-relaxed pl-4 border-l-2 border-line"
+              class="text-fg text-base leading-relaxed pl-4 border-l-2 border-line"
             >
               {{ item }}
             </li>
@@ -75,7 +75,7 @@
       >
         {{ t("releaseNotes.back") }}
       </UiAppButton>
-      <span class="text-body text-fg-muted">
+      <span class="text-base text-fg-muted">
         {{ t("common.pageOf", { page: pagination.page, totalPages: pagination.total_pages }) }}
       </span>
       <UiAppButton

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <LayoutPageHeader
       :breadcrumbs="breadcrumbs"
@@ -44,7 +44,7 @@
           :action-breakdown="dashboard.action_breakdown"
         />
         <template #fallback>
-          <UiAppCard class="text-fg-muted text-body">
+          <UiAppCard class="text-fg-muted text-base">
             {{ t("common.loadingCharts") }}
           </UiAppCard>
         </template>

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <LayoutPageHeader
       :breadcrumbs="breadcrumbs"
@@ -17,8 +17,8 @@
       class="mb-6 !p-4 flex flex-wrap items-center justify-between gap-3"
     >
       <div class="min-w-0">
-        <div class="text-body font-medium text-fg">{{ t("referral.shareTitle") }}</div>
-        <div class="text-caption text-fg-muted truncate normal-case tracking-normal">
+        <div class="text-base font-medium text-fg">{{ t("referral.shareTitle") }}</div>
+        <div class="text-sm text-fg-muted truncate">
           {{ referralLink }}
         </div>
       </div>
@@ -41,20 +41,20 @@
             v-if="bot.photo_file_id"
             :src="botPhotoUrl(bot.id)"
             :alt="bot.name"
-            class="h-12 w-12 rounded-control object-cover bg-surface-3 shrink-0"
+            class="h-12 w-12 rounded-full object-cover bg-surface-3 shrink-0"
           />
           <div
             v-else
-            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-control bg-surface-3 text-caption font-medium text-fg-muted normal-case tracking-normal"
+            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-surface-3 text-sm font-medium text-fg-muted"
           >
             {{ botInitials(bot.name) }}
           </div>
 
           <div class="min-w-0 flex-1">
-            <h3 class="truncate font-display text-heading-sm tracking-[-0.035em] text-fg">
+            <h3 class="truncate tm-section-title text-fg">
               {{ bot.name }}
             </h3>
-            <p class="truncate text-caption text-fg-muted normal-case tracking-normal">
+            <p class="truncate text-sm text-fg-muted">
               @{{ bot.id }}
             </p>
 
@@ -67,7 +67,7 @@
                   {{ bot.is_active ? t("bot.active") : t("bot.inactive") }}
                 </UiAppBadge>
               </div>
-              <span class="shrink-0 text-caption text-fg-muted normal-case tracking-normal">
+              <span class="shrink-0 text-sm text-fg-muted">
                 {{ t("bot.chatsCount", { count: bot.chats?.length || 0 }) }}
               </span>
             </div>
@@ -92,7 +92,7 @@
       <div>
         <h3
           id="add-bot-modal-title"
-          class="font-display text-heading-sm tracking-[-0.035em] text-fg mb-4"
+          class="tm-section-title text-fg mb-4"
         >
           {{ t("bot.modal.title") }}
         </h3>
@@ -122,7 +122,7 @@
           @submit.prevent="createBot"
         >
           <div>
-            <label class="block text-body font-medium text-fg mb-1">
+            <label class="block text-base font-medium text-fg mb-1">
               {{ t("bot.modal.tokenLabel") }}
             </label>
             <UiAppInput
@@ -131,7 +131,7 @@
               :placeholder="t('bot.modal.tokenPlaceholder')"
               required
             />
-            <p class="text-caption text-fg-muted mt-1 normal-case tracking-normal">
+            <p class="text-sm text-fg-muted mt-1 normal-case tracking-normal">
               {{ t("bot.modal.tokenHint") }}
             </p>
           </div>
@@ -156,11 +156,11 @@
         </form>
 
         <form v-else class="space-y-4" @submit.prevent="joinTeam">
-          <p class="text-body text-fg-muted">
+          <p class="text-base text-fg-muted">
             {{ t("bot.modal.joinDescription") }}
           </p>
           <div>
-            <label class="block text-body font-medium text-fg mb-1">
+            <label class="block text-base font-medium text-fg mb-1">
               {{ t("bot.modal.accessCodeLabel") }}
             </label>
             <UiAppInput

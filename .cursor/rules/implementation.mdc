@@ -72,7 +72,7 @@ When changing **user-facing UI** (`pages/`, `components/`, `layouts/`, client co
 - **Source of truth:** [`assets/brand/DESIGN.md`](assets/brand/DESIGN.md) (vendored from `site/brand` + Appendix A for moderation action colors).
 - **CSS:** `assets/css/main.css` imports `assets/brand/css/theme.css` + `theme-app.css`. Docker/CI use committed files — no `brand/` symlink.
 - **Local dev:** optional junction `brand/` → `../site/brand` (gitignored). Sync upstream CSS: `bun scripts/sync-brand-css.mjs`; favicons: `bun scripts/sync-brand-public.mjs`.
-- **Tokens:** use `bg-surface-*`, `text-fg*`, `border-line`, `text-heading-*`, `rounded-control` / `rounded-card` — **not** stock Tailwind `gray-*`, `blue-*`, `bg-white`.
+- **Tokens:** use `bg-surface-*`, `text-fg*`, `border-line`, Tailwind `text-xs`–`text-4xl` (see `DESIGN.md` §4), `tm-page-title` / `tm-section-title` for headings, `rounded-control` / `rounded-card` — **not** stock Tailwind `gray-*`, `blue-*`, `bg-white`, legacy `text-body` / `text-heading-*`, or arbitrary `text-[Npx]`.
 - **Components:** prefer `components/ui/*` (`UiAppButton`, `UiAppCard`, …) over inline utility soup.
 - **Theme:** `data-theme` on `<html>`, storage key `tm-theme`, toggle in header. Anti-flash script in `nuxt.config.ts` head.
 
