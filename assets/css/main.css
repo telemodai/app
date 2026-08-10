@@ -41,7 +41,7 @@
   }
 
   .tm-tab {
-    @apply px-4 py-2.5 text-sm border-b-2 -mb-px border-transparent text-fg-muted transition-colors hover:text-fg;
+    @apply cursor-pointer px-4 py-2.5 text-sm border-b-2 -mb-px border-transparent text-fg-muted transition-colors hover:text-fg;
   }
 
   .tm-tab--active {
