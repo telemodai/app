@@ -229,7 +229,8 @@ Source of truth for sizes: `theme-app.css` `@theme` block + the role table below
 
 | Tailwind class | Approx. | Role in admin UI |
 |----------------|---------|------------------|
-| `text-xs` | 12px | **Below default** — badges, field hints, stat row labels, dense meta (`tm-meta`, `tm-detail-rows`) |
+| `text-2xs` | 10px | Badges (`AppBadge`) only — compact uppercase labels |
+| `text-xs` | 12px | **Below default** — field hints, stat row labels, dense meta (`tm-meta`, `tm-detail-rows`) |
 | `text-sm` | 14px | **Default UI** — body, nav, buttons, inputs, tables, forms (`body` in `main.css`) |
 | `text-base` | 16px | Section titles (`tm-section-title`), rare emphasis |
 | `text-lg` | 18px | Rare emphasis in running text |
@@ -245,7 +246,7 @@ Source of truth for sizes: `theme-app.css` `@theme` block + the role table below
 3. **Page `h1`** — `tm-page-title` (`text-xl font-display …`).
 4. **Section / card / modal `h2`–`h3`** — `tm-section-title` (`text-base font-display …`).
 5. **Stats** — `tm-stat` (`text-4xl`) or `tm-stat-sm` (`text-2xl`) + semantic colour.
-6. **Badges** — compact `AppBadge` (`text-xs`, tight padding).
+6. **Badges** — `AppBadge` (`text-2xs`, `px-2.5 py-0.5`).
 7. **Dense summaries** — `tm-detail-rows` (`text-xs`) under a `text-sm` heading.
 8. **Code** — `font-mono`; sample blocks may use `text-xs` or `text-sm`.
 
