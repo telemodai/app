@@ -51,22 +51,30 @@
           </div>
 
           <div class="min-w-0 flex-1">
-            <h3 class="truncate tm-section-title text-fg">
-              {{ bot.name }}
-            </h3>
-            <p class="truncate text-xs text-fg-muted">
+            <div class="flex min-w-0 items-center gap-2.5">
+              <h3 class="tm-section-title min-w-0 truncate leading-none text-fg">
+                {{ bot.name }}
+              </h3>
+              <!-- Same live LED as bot detail: pulse green when on, dim grey when off -->
+              <span
+                class="size-2 shrink-0 self-center rounded-full"
+                :class="
+                  bot.is_active
+                    ? 'bg-action-unban shadow-[0_0_0_3px] shadow-action-unban/25 animate-pulse'
+                    : 'bg-fg-subtle/40'
+                "
+                :aria-label="bot.is_active ? t('bot.active') : t('bot.inactive')"
+                role="status"
+              />
+            </div>
+            <p class="mt-1 truncate text-xs text-fg-muted">
               @{{ bot.id }}
             </p>
 
             <div class="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
-              <div class="flex flex-wrap items-center gap-1.5">
-                <UiAppBadge :variant="roleBadgeVariant(bot.my_role)">
-                  {{ roleLabel(bot.my_role) }}
-                </UiAppBadge>
-                <UiAppBadge :variant="bot.is_active ? 'success' : 'danger'">
-                  {{ bot.is_active ? t("bot.active") : t("bot.inactive") }}
-                </UiAppBadge>
-              </div>
+              <UiAppBadge :variant="roleBadgeVariant(bot.my_role)">
+                {{ roleLabel(bot.my_role) }}
+              </UiAppBadge>
               <span class="shrink-0 text-xs text-fg-muted">
                 {{ t("bot.chatsCount", { count: bot.chats?.length || 0 }) }}
               </span>
