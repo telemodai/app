@@ -11,7 +11,7 @@
           </div>
           <div
             v-else
-            class="h-64 flex items-center justify-center text-fg-muted text-base"
+            class="h-64 flex items-center justify-center text-fg-muted text-sm"
           >
             {{ t("dashboard.chart.noActivity") }}
           </div>
@@ -33,7 +33,7 @@
         </div>
         <div
           v-else
-          class="h-64 flex items-center justify-center text-fg-muted text-base"
+          class="h-64 flex items-center justify-center text-fg-muted text-sm"
         >
           {{ t("dashboard.chart.noActions") }}
         </div>

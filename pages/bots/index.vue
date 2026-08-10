@@ -17,7 +17,7 @@
       class="mb-6 !p-4 flex flex-wrap items-center justify-between gap-3"
     >
       <div class="min-w-0">
-        <div class="text-base font-medium text-fg">{{ t("referral.shareTitle") }}</div>
+        <div class="text-sm font-medium text-fg">{{ t("referral.shareTitle") }}</div>
         <div class="text-sm text-fg-muted truncate">
           {{ referralLink }}
         </div>
@@ -54,7 +54,7 @@
             <h3 class="truncate tm-section-title text-fg">
               {{ bot.name }}
             </h3>
-            <p class="truncate text-sm text-fg-muted">
+            <p class="truncate text-xs text-fg-muted">
               @{{ bot.id }}
             </p>
 
@@ -67,7 +67,7 @@
                   {{ bot.is_active ? t("bot.active") : t("bot.inactive") }}
                 </UiAppBadge>
               </div>
-              <span class="shrink-0 text-sm text-fg-muted">
+              <span class="shrink-0 text-xs text-fg-muted">
                 {{ t("bot.chatsCount", { count: bot.chats?.length || 0 }) }}
               </span>
             </div>
@@ -122,7 +122,7 @@
           @submit.prevent="createBot"
         >
           <div>
-            <label class="block text-base font-medium text-fg mb-1">
+            <label class="block text-sm font-medium text-fg mb-1">
               {{ t("bot.modal.tokenLabel") }}
             </label>
             <UiAppInput
@@ -156,11 +156,11 @@
         </form>
 
         <form v-else class="space-y-4" @submit.prevent="joinTeam">
-          <p class="text-base text-fg-muted">
+          <p class="text-sm text-fg-muted">
             {{ t("bot.modal.joinDescription") }}
           </p>
           <div>
-            <label class="block text-base font-medium text-fg mb-1">
+            <label class="block text-sm font-medium text-fg mb-1">
               {{ t("bot.modal.accessCodeLabel") }}
             </label>
             <UiAppInput

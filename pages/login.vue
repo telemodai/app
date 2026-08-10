@@ -4,7 +4,7 @@
       <h1 class="tm-page-title">
         {{ appName }}
       </h1>
-      <p class="text-base text-fg-muted">
+      <p class="text-sm text-fg-muted">
         {{ t("login.subtitle") }}
       </p>
       <UiAppButton
@@ -14,7 +14,7 @@
       >
         {{ t("login.signInButton") }}
       </UiAppButton>
-      <p v-if="botLoginDeepLink" class="text-base text-fg-muted">
+      <p v-if="botLoginDeepLink" class="text-sm text-fg-muted">
         {{ t("login.trouble") }}
         <a
           :href="botLoginDeepLink"
@@ -25,7 +25,7 @@
           {{ t("login.getLinkFromBot") }}
         </a>
       </p>
-      <div class="pt-2 flex flex-wrap items-center justify-center gap-x-2 text-base text-fg-muted">
+      <div class="pt-2 flex flex-wrap items-center justify-center gap-x-2 text-sm text-fg-muted">
         <span>
           {{ appName }}
           <NuxtLink to="/release-notes" class="hover:text-fg hover:underline">

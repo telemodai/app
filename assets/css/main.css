@@ -15,7 +15,7 @@
   }
 
   body {
-    @apply min-h-dvh bg-surface-1 font-sans text-base text-fg;
+    @apply min-h-dvh bg-surface-1 font-sans text-sm text-fg;
   }
 
   ::selection {
@@ -29,11 +29,11 @@
 
 @layer components {
   .tm-field {
-    @apply w-full rounded-control border border-line bg-surface-4 px-4 py-3 text-base text-fg placeholder:text-fg-subtle focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50;
+    @apply w-full rounded-control border border-line bg-surface-4 px-4 py-3 text-sm text-fg placeholder:text-fg-subtle focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50;
   }
 
   .tm-nav-link {
-    @apply whitespace-nowrap rounded-control px-3 py-2 text-base text-fg transition-colors hover:bg-surface-3;
+    @apply whitespace-nowrap rounded-control px-3 py-2 text-sm text-fg transition-colors hover:bg-surface-3;
   }
 
   .tm-nav-link--active {
@@ -41,7 +41,7 @@
   }
 
   .tm-tab {
-    @apply px-4 py-2.5 text-base border-b-2 -mb-px border-transparent text-fg-muted transition-colors hover:text-fg;
+    @apply px-4 py-2.5 text-sm border-b-2 -mb-px border-transparent text-fg-muted transition-colors hover:text-fg;
   }
 
   .tm-tab--active {
@@ -49,23 +49,33 @@
   }
 
   .tm-empty-state {
-    @apply rounded-card border border-dashed border-line bg-surface-3/50 px-4 py-10 text-center text-base text-fg-muted;
+    @apply rounded-card border border-dashed border-line bg-surface-3/50 px-4 py-10 text-center text-sm text-fg-muted;
+  }
+
+  /* One step below UI default — hints, table meta, stat row labels. */
+  .tm-meta {
+    @apply text-xs text-fg-muted;
+  }
+
+  /* Compact key-value rows (stat side panels, dense summaries). */
+  .tm-detail-rows {
+    @apply space-y-1 text-xs;
   }
 
   /* Display headings — Geologica + tight tracking (DESIGN.md §4). */
   .tm-page-title {
-    @apply font-display text-2xl font-medium tracking-tight text-fg;
+    @apply font-display text-xl font-medium tracking-tight text-fg;
   }
 
   .tm-section-title {
-    @apply font-display text-lg font-medium tracking-tight text-fg;
+    @apply font-display text-base font-medium tracking-tight text-fg;
   }
 
   .tm-stat {
-    @apply font-display text-3xl font-medium tabular-nums tracking-tight leading-none;
+    @apply font-display text-4xl font-medium tabular-nums tracking-tight leading-none;
   }
 
   .tm-stat-sm {
-    @apply font-display text-xl font-medium tabular-nums tracking-tight leading-none;
+    @apply font-display text-2xl font-medium tabular-nums tracking-tight leading-none;
   }
 }

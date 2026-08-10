@@ -27,10 +27,10 @@
           <h3 class="tm-section-title text-fg">
             {{ release.tag }}
           </h3>
-          <time class="text-base text-fg-muted">{{ formatDate(release.date) }}</time>
+          <time class="text-sm text-fg-muted">{{ formatDate(release.date) }}</time>
         </div>
 
-        <p v-if="isSelfHosted" class="mb-5 text-base">
+        <p v-if="isSelfHosted" class="mb-5 text-sm">
           <a
             :href="release.githubReleaseUrl"
             target="_blank"
@@ -46,14 +46,14 @@
           :key="`${release.tag}-${section.title}`"
           class="mb-5"
         >
-          <h4 class="text-base font-semibold uppercase tracking-wide text-fg-muted mb-2">
+          <h4 class="text-sm font-semibold uppercase tracking-wide text-fg-muted mb-2">
             {{ section.title }}
           </h4>
           <ul class="space-y-2">
             <li
               v-for="(item, index) in section.items"
               :key="`${release.tag}-${section.title}-${index}`"
-              class="text-fg text-base leading-relaxed pl-4 border-l-2 border-line"
+              class="text-fg text-sm leading-relaxed pl-4 border-l-2 border-line"
             >
               {{ item }}
             </li>
@@ -75,7 +75,7 @@
       >
         {{ t("releaseNotes.back") }}
       </UiAppButton>
-      <span class="text-base text-fg-muted">
+      <span class="text-sm text-fg-muted">
         {{ t("common.pageOf", { page: pagination.page, totalPages: pagination.total_pages }) }}
       </span>
       <UiAppButton

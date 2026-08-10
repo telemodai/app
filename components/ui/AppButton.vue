@@ -24,7 +24,7 @@ defineEmits<{
 }>();
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-control text-base font-medium transition-[color,background-color,border-color,filter] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50 disabled:cursor-not-allowed";
+  "inline-flex items-center justify-center gap-2 rounded-control text-sm font-medium transition-[color,background-color,border-color,filter] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50 disabled:cursor-not-allowed";
 
 const variants: Record<ButtonVariant, string> = {
   ghost:

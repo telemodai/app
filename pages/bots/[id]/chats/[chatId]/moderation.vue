@@ -50,7 +50,7 @@
           </div>
         </div>
 
-        <p v-if="rule.comment" class="text-base text-fg-muted mb-2">{{ rule.comment }}</p>
+        <p v-if="rule.comment" class="text-sm text-fg-muted mb-2">{{ rule.comment }}</p>
 
         <div class="text-sm text-fg-muted space-y-1 normal-case tracking-normal">
           <div>
@@ -92,18 +92,18 @@
         </UiAppButton>
       </div>
 
-      <p class="text-base text-fg-muted mb-3">
+      <p class="text-sm text-fg-muted mb-3">
         {{ t("moderation.chatUsers.description") }}
       </p>
 
-      <div v-if="usersLoading && !chatUsers.length" class="text-fg-muted text-base">
+      <div v-if="usersLoading && !chatUsers.length" class="text-fg-muted text-sm">
         {{ t("moderation.chatUsers.loading") }}
       </div>
-      <div v-else-if="!chatUsers.length" class="text-fg-muted text-base">
+      <div v-else-if="!chatUsers.length" class="text-fg-muted text-sm">
         {{ t("moderation.chatUsers.empty") }}
       </div>
       <div v-else class="overflow-x-auto">
-        <table class="min-w-full text-base">
+        <table class="min-w-full text-sm">
           <thead class="text-left text-fg-muted border-b border-line">
             <tr>
               <th class="py-2 pr-4 font-medium">{{ t("moderation.chatUsers.user") }}</th>
@@ -170,7 +170,7 @@
 
         <div
           v-if="usersPagination.total_pages > 1"
-          class="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-line text-base"
+          class="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-line text-sm"
         >
           <span class="text-fg-muted">
             {{
@@ -220,7 +220,7 @@
             >
               {{ t("moderation.templateLibrary.title") }}
             </h3>
-            <p class="text-base text-fg-muted mt-1">
+            <p class="text-sm text-fg-muted mt-1">
               {{ t("moderation.templateLibrary.description") }}
             </p>
           </div>
@@ -229,7 +229,7 @@
           </UiAppButton>
         </div>
 
-        <div v-if="templatesLoading" class="text-fg-muted text-base">
+        <div v-if="templatesLoading" class="text-fg-muted text-sm">
           {{ t("moderation.templateLibrary.loading") }}
         </div>
 
@@ -242,7 +242,7 @@
             <div class="flex items-start justify-between gap-3">
               <div class="min-w-0">
                 <h4 class="font-medium text-fg">{{ template.name }}</h4>
-                <p class="text-base text-fg-muted mt-1">
+                <p class="text-sm text-fg-muted mt-1">
                   {{ template.comment }}
                 </p>
               </div>
@@ -281,27 +281,27 @@
           </UiAppAlert>
 
           <div>
-            <label class="block text-base font-medium text-fg mb-1">
+            <label class="block text-sm font-medium text-fg mb-1">
               {{ t("moderation.ruleModal.nameLabel") }}
             </label>
             <UiAppInput v-model="form.name" required />
           </div>
 
           <div>
-            <label class="block text-base font-medium text-fg mb-1">
+            <label class="block text-sm font-medium text-fg mb-1">
               {{ t("moderation.ruleModal.commentLabel") }}
             </label>
-            <p class="text-sm text-fg-muted mb-1 normal-case tracking-normal">
+            <p class="text-xs text-fg-muted mb-1">
               {{ t("moderation.ruleModal.commentHint") }}
             </p>
             <UiAppInput v-model="form.comment" />
           </div>
 
           <div>
-            <label class="block text-base font-medium text-fg mb-1">
+            <label class="block text-sm font-medium text-fg mb-1">
               {{ t("moderation.ruleModal.ruleTextLabel") }}
             </label>
-            <p class="text-sm text-fg-muted mb-1 normal-case tracking-normal">
+            <p class="text-xs text-fg-muted mb-1">
               {{ t("moderation.ruleModal.ruleTextHint") }}
             </p>
             <UiAppTextarea
@@ -434,7 +434,7 @@
                 type="checkbox"
                 class="mr-2"
               />
-              <span class="text-base text-fg">{{ t("moderation.ruleModal.deleteOnViolation") }}</span>
+              <span class="text-sm text-fg">{{ t("moderation.ruleModal.deleteOnViolation") }}</span>
             </label>
 
             <label class="flex items-center">
@@ -443,11 +443,11 @@
                 type="checkbox"
                 class="mr-2"
               />
-              <span class="text-base text-fg">{{ t("moderation.ruleModal.banAfterWarnings") }}</span>
+              <span class="text-sm text-fg">{{ t("moderation.ruleModal.banAfterWarnings") }}</span>
             </label>
 
             <div v-if="form.ban_on_violation">
-              <label class="block text-base font-medium text-fg mb-1">
+              <label class="block text-sm font-medium text-fg mb-1">
                 {{ t("moderation.ruleModal.warningsBeforeBanLabel") }}
               </label>
               <div class="lg:w-28">

@@ -13,7 +13,7 @@
             <span class="lowercase">{{ appName }}</span>
           </NuxtLink>
           <nav
-            class="flex items-center gap-1 overflow-x-auto text-base"
+            class="flex items-center gap-1 overflow-x-auto text-sm"
             :aria-label="t('nav.main')"
           >
             <NuxtLink
@@ -40,7 +40,7 @@
             </NuxtLink>
           </nav>
         </div>
-        <div class="flex shrink-0 items-center gap-3 text-base">
+        <div class="flex shrink-0 items-center gap-3 text-sm">
           <LayoutReferralPendingNav v-if="isSaas" />
           <LayoutThemeToggle />
           <span v-if="session?.user" class="hidden text-fg-muted sm:inline">

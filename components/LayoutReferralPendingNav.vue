@@ -2,7 +2,7 @@
   <div v-if="isSaas && pending.count > 0" class="relative">
     <button
       type="button"
-      class="px-3 py-2 rounded-control text-base bg-action-warning-surface text-action-warning hover:opacity-90 whitespace-nowrap"
+      class="px-3 py-2 rounded-control text-sm bg-action-warning-surface text-action-warning hover:opacity-90 whitespace-nowrap"
       @click="open = true"
     >
       {{ t("referral.navPending", { credits: pending.credits.toLocaleString() }) }}
@@ -17,7 +17,7 @@
         class="w-full max-w-md rounded-surface border border-line bg-surface-2 p-5 shadow-overlay"
       >
         <h2 class="tm-section-title text-fg mb-2">{{ t("referral.claimTitle") }}</h2>
-        <p class="text-base text-fg-muted mb-4">
+        <p class="text-sm text-fg-muted mb-4">
           {{
             t("referral.claimSubtitle", {
               credits: pending.credits.toLocaleString(),
@@ -26,7 +26,7 @@
           }}
         </p>
 
-        <div v-if="ownedBots.length === 0" class="text-base text-action-warning mb-4">
+        <div v-if="ownedBots.length === 0" class="text-sm text-action-warning mb-4">
           {{ t("referral.noOwnedBots") }}
         </div>
 
@@ -44,12 +44,12 @@
           </button>
         </div>
 
-        <p v-if="error" class="text-base text-danger mb-3">{{ error }}</p>
-        <p v-if="success" class="text-base text-action-unban mb-3">{{ success }}</p>
+        <p v-if="error" class="text-sm text-danger mb-3">{{ error }}</p>
+        <p v-if="success" class="text-sm text-action-unban mb-3">{{ success }}</p>
 
         <button
           type="button"
-          class="text-base text-fg-muted hover:text-fg hover:underline"
+          class="text-sm text-fg-muted hover:text-fg hover:underline"
           @click="open = false"
         >
           {{ t("common.close") }}

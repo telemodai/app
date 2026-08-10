@@ -229,28 +229,30 @@ Source of truth for sizes: `theme-app.css` `@theme` block + the role table below
 
 | Tailwind class | Approx. | Role in admin UI |
 |----------------|---------|------------------|
-| `text-xs` | 12px | Badges (`AppBadge`), compact uppercase labels on buttons |
-| `text-sm` | 14px | Hints under fields, table meta, KPI footnotes |
-| `text-base` | 16px | **Default UI** — body, nav, buttons, inputs, tables, forms |
+| `text-xs` | 12px | **Below default** — badges, field hints, stat row labels, dense meta (`tm-meta`, `tm-detail-rows`) |
+| `text-sm` | 14px | **Default UI** — body, nav, buttons, inputs, tables, forms (`body` in `main.css`) |
+| `text-base` | 16px | Section titles (`tm-section-title`), rare emphasis |
 | `text-lg` | 18px | Rare emphasis in running text |
-| `text-xl` | 20px | Secondary stat numbers (see `tm-stat-sm`) |
-| `text-2xl` | 24px | Page titles (see `tm-page-title`) |
-| `text-3xl` | 30px | Primary KPI / stat numbers (see `tm-stat`) |
-| `text-4xl` | 36px | Reserved — hero/marketing inside app only if needed |
+| `text-xl` | 20px | Page titles (`tm-page-title`) |
+| `text-2xl` | 24px | Secondary stat numbers (`tm-stat-sm`) |
+| `text-3xl` | 30px | — |
+| `text-4xl` | 36px | Primary KPI / hero stat numbers (`tm-stat`) |
 
 **Hierarchy rules**
 
-1. **Default text** — `text-base` + `text-fg`. Secondary copy — same size, `text-fg-muted` (not a smaller font).
-2. **Page `h1`** — `tm-page-title` (`text-2xl font-display font-medium tracking-tight`).
-3. **Section / card / modal `h2`–`h3`** — `tm-section-title` (`text-lg font-display …`).
-4. **Stats** — `tm-stat` or `tm-stat-sm` + semantic colour (`text-accent`, `text-action-*`).
-5. **Badges** — `text-xs font-medium uppercase tracking-wide` via `AppBadge`.
-6. **Code** — `font-mono`; sample blocks may use `text-xs` or `text-sm`.
+1. **Default text** — `text-sm` + `text-fg`. Secondary at the same level — `text-sm text-fg-muted`.
+2. **One step down** — `text-xs` / `tm-meta` for hints, footnotes, side-panel rows (not smaller body everywhere).
+3. **Page `h1`** — `tm-page-title` (`text-xl font-display …`).
+4. **Section / card / modal `h2`–`h3`** — `tm-section-title` (`text-base font-display …`).
+5. **Stats** — `tm-stat` (`text-4xl`) or `tm-stat-sm` (`text-2xl`) + semantic colour.
+6. **Badges** — compact `AppBadge` (`text-xs`, tight padding).
+7. **Dense summaries** — `tm-detail-rows` (`text-xs`) under a `text-sm` heading.
+8. **Code** — `font-mono`; sample blocks may use `text-xs` or `text-sm`.
 
 **Do not** use arbitrary font sizes (`text-[12px]`, `text-[13px]`, …) or legacy classes (`text-body`,
 `text-caption`, `text-heading-*`) in app code.
 
-Utility classes live in `assets/css/main.css` (`tm-page-title`, `tm-section-title`, `tm-stat`, `tm-stat-sm`).
+Utility classes live in `assets/css/main.css` (`tm-page-title`, `tm-section-title`, `tm-stat`, `tm-stat-sm`, `tm-meta`, `tm-detail-rows`).
 
 ### Scale (marketing / documentation — legacy reference)
 

@@ -44,7 +44,7 @@
           :action-breakdown="dashboard.action_breakdown"
         />
         <template #fallback>
-          <UiAppCard class="text-fg-muted text-base">
+          <UiAppCard class="text-fg-muted text-sm">
             {{ t("common.loadingCharts") }}
           </UiAppCard>
         </template>

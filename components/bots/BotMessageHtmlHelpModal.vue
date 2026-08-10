@@ -20,7 +20,7 @@
         </UiAppButton>
       </div>
 
-      <div class="space-y-4 text-base text-fg-muted">
+      <div class="space-y-4 text-sm text-fg-muted">
         <section v-for="sectionKey in htmlHelpSectionKeys" :key="sectionKey">
           <h4 class="font-medium text-fg mb-1">
             {{ t(`botTemplate.htmlHelp.sections.${sectionKey}.title`) }}

@@ -7,13 +7,13 @@
 
       <div
         v-if="activities.length === 0"
-        class="text-fg-muted text-base py-8 text-center"
+        class="text-fg-muted text-sm py-8 text-center"
       >
         {{ t("dashboard.recentActivity.empty") }}
       </div>
 
       <div v-else class="overflow-x-auto">
-        <table class="w-full text-base">
+        <table class="w-full text-sm">
           <thead>
             <tr class="text-left text-fg-muted border-b border-line">
               <th class="pb-2 pr-4 font-medium">{{ t("dashboard.recentActivity.time") }}</th>

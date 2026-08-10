@@ -6,7 +6,7 @@
       :title="t('page.docs.title')"
       :subtitle="t('page.docs.subtitle')"
     />
-    <p class="text-base text-fg-muted">
+    <p class="text-sm text-fg-muted">
       {{ t("page.docs.body") }}
     </p>
   </div>

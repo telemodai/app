@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="overflow-x-auto">
-    <table class="w-full text-base">
+    <table class="w-full text-sm">
       <slot />
     </table>
   </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-surface-1 p-4">
-    <p class="text-base text-fg-muted">{{ t("referral.landing") }}</p>
+    <p class="text-sm text-fg-muted">{{ t("referral.landing") }}</p>
   </div>
 </template>
 

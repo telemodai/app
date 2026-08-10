@@ -30,7 +30,7 @@ const variantClass = computed(() => {
 
 <template>
   <span
-    class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium uppercase tracking-wide leading-tight"
+    class="inline-flex items-center rounded-full border px-1.5 py-0 text-xs font-medium uppercase tracking-wide leading-none"
     :class="variantClass"
   >
     <slot />

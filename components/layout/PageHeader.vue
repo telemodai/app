@@ -12,7 +12,7 @@
           ←
         </UiAppButton>
         <nav
-          class="min-w-0 text-base text-fg-muted"
+          class="min-w-0 text-sm text-fg-muted"
           :aria-label="t('common.breadcrumb')"
         >
           <ol class="flex flex-wrap items-center gap-1">
@@ -52,7 +52,7 @@
     >
       {{ title }}
     </h1>
-    <p v-if="subtitle" class="mt-1 text-base text-fg-muted">{{ subtitle }}</p>
+    <p v-if="subtitle" class="mt-1 text-sm text-fg-muted">{{ subtitle }}</p>
   </div>
 </template>
 
