@@ -454,7 +454,6 @@
   },
   "chatActivation": {
     "prerequisites": [
-      "Sign in to the platform with the same Telegram account that sends /activate.",
       "You are an owner or manager of the bot on the platform.",
       "The bot is a group admin with permission to delete messages and restrict members.",
       "The bot is enabled — otherwise the webhook will not process /activate."

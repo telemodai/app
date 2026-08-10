@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div v-if="isSaas && pending.count > 0" class="relative">
     <button
       type="button"
@@ -16,7 +16,7 @@
       <div
         class="w-full max-w-md rounded-surface border border-line bg-surface-2 p-5 shadow-overlay"
       >
-        <h2 class="tm-section-title text-fg mb-2">{{ t("referral.claimTitle") }}</h2>
+        <h2 class="tm-modal-title mb-2">{{ t("referral.claimTitle") }}</h2>
         <p class="text-sm text-fg-muted mb-4">
           {{
             t("referral.claimSubtitle", {

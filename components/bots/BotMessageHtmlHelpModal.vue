@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <UiAppModal
     :open="open"
     size="md"
@@ -7,7 +7,7 @@
   >
     <div>
       <div class="flex items-start justify-between gap-4 mb-4">
-        <h3 id="bot-message-html-help-title" class="tm-section-title text-fg">
+        <h3 id="bot-message-html-help-title" class="tm-modal-title">
           {{ t("botTemplate.htmlHelp.title") }}
         </h3>
         <UiAppButton

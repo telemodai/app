@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div>
     <LayoutPageHeader
       :breadcrumbs="breadcrumbs"
@@ -89,7 +89,7 @@
       <div>
         <h3
           id="add-bot-modal-title"
-          class="tm-section-title text-fg mb-4"
+          class="tm-modal-title mb-4"
         >
           {{ t("bot.modal.title") }}
         </h3>

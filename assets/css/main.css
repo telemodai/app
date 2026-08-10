@@ -71,6 +71,11 @@
     @apply font-display text-base font-medium tracking-tight text-fg;
   }
 
+  /* Modal dialog titles — one step above section titles (focused overlay context). */
+  .tm-modal-title {
+    @apply font-display text-xl font-medium tracking-tight text-fg;
+  }
+
   .tm-stat {
     @apply font-display text-4xl font-medium tabular-nums tracking-tight leading-none;
   }
@@ -99,5 +104,19 @@
   /* Clickable placeholder chips (message templates) — same scale as AppBadge. */
   .tm-chip {
     @apply inline-flex cursor-pointer items-center rounded-full border border-line bg-surface-3 px-2 py-0.5 text-2xs font-medium uppercase tracking-wide leading-tight text-fg transition-colors hover:border-line-strong hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+  }
+
+  /* Accent-dot bullet list (e.g. chat activation prerequisites). */
+  .tm-bullet-list {
+    @apply mb-8 list-none space-y-2.5 pl-0 text-sm text-fg-muted;
+  }
+
+  .tm-bullet-list > li {
+    @apply relative pl-4 leading-snug;
+  }
+
+  .tm-bullet-list > li::before {
+    content: "";
+    @apply absolute left-0 top-[0.55em] size-1.5 rounded-full bg-accent;
   }
 }

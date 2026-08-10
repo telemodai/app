@@ -234,7 +234,7 @@ Source of truth for sizes: `theme-app.css` `@theme` block + the role table below
 | `text-sm` | 14px | **Default UI** — body, nav, buttons, inputs, tables, forms (`body` in `main.css`) |
 | `text-base` | 16px | Section titles (`tm-section-title`), rare emphasis |
 | `text-lg` | 18px | Rare emphasis in running text |
-| `text-xl` | 20px | Page titles (`tm-page-title`) |
+| `text-xl` | 20px | Page titles (`tm-page-title`), modal titles (`tm-modal-title`) |
 | `text-2xl` | 24px | Secondary stat numbers (`tm-stat-sm`) |
 | `text-3xl` | 30px | — |
 | `text-4xl` | 36px | Primary KPI / hero stat numbers (`tm-stat`) |
@@ -244,16 +244,17 @@ Source of truth for sizes: `theme-app.css` `@theme` block + the role table below
 1. **Default text** — `text-sm` + `text-fg`. Secondary at the same level — `text-sm text-fg-muted`.
 2. **One step down** — `text-xs` / `tm-meta` for hints, footnotes, side-panel rows (not smaller body everywhere).
 3. **Page `h1`** — `tm-page-title` (`text-xl font-display …`).
-4. **Section / card / modal `h2`–`h3`** — `tm-section-title` (`text-base font-display …`).
-5. **Stats** — `tm-stat` (`text-4xl`) or `tm-stat-sm` (`text-2xl`) + semantic colour.
-6. **Badges** — `AppBadge` (`text-2xs`, `px-2.5 py-0.5`).
-7. **Dense summaries** — `tm-detail-rows` (`text-xs`) under a `text-sm` heading.
-8. **Code** — `font-mono`; sample blocks may use `text-xs` or `text-sm`.
+4. **Modal dialog titles** — `tm-modal-title` (`text-xl font-display …`); same size as page title, focused overlay context.
+5. **Section / card `h2`–`h3`** — `tm-section-title` (`text-base font-display …`).
+6. **Stats** — `tm-stat` (`text-4xl`) or `tm-stat-sm` (`text-2xl`) + semantic colour.
+7. **Badges** — `AppBadge` (`text-2xs`, `px-2.5 py-0.5`).
+8. **Dense summaries** — `tm-detail-rows` (`text-xs`) under a `text-sm` heading.
+9. **Code** — `font-mono`; sample blocks may use `text-xs` or `text-sm`.
 
 **Do not** use arbitrary font sizes (`text-[12px]`, `text-[13px]`, …) or legacy classes (`text-body`,
 `text-caption`, `text-heading-*`) in app code.
 
-Utility classes live in `assets/css/main.css` (`tm-page-title`, `tm-section-title`, `tm-stat`, `tm-stat-sm`, `tm-meta`, `tm-detail-rows`).
+Utility classes live in `assets/css/main.css` (`tm-page-title`, `tm-modal-title`, `tm-section-title`, `tm-stat`, `tm-stat-sm`, `tm-meta`, `tm-detail-rows`).
 
 ### Scale (marketing / documentation — legacy reference)
 

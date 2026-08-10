@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed } from "vue";
 
 /** ghost = default · primary = accent CTA · destructive = danger · link = text-only · ai = accent pill */
@@ -24,7 +24,7 @@ defineEmits<{
 }>();
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-control text-sm font-medium transition-[color,background-color,border-color,filter] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50 disabled:cursor-not-allowed";
+  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-control text-sm font-medium transition-[color,background-color,border-color,filter] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50 disabled:cursor-not-allowed";
 
 const variants: Record<ButtonVariant, string> = {
   ghost:
@@ -33,7 +33,7 @@ const variants: Record<ButtonVariant, string> = {
     "border-0 bg-accent px-4 py-2 text-accent-on hover:brightness-110",
   destructive:
     "border border-danger bg-transparent px-4 py-2 text-danger hover:bg-danger-surface",
-  link: "cursor-pointer border-0 bg-transparent px-2 py-2 text-accent hover:text-fg min-w-0",
+  link: "border-0 bg-transparent px-2 py-2 text-accent hover:text-fg min-w-0",
   ai: "!rounded-full border-0 bg-accent-surface px-4 py-2 text-fg normal-case tracking-normal hover:brightness-110",
 };
 

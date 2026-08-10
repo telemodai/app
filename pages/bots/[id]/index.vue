@@ -544,46 +544,58 @@
       <div>
         <h3
           id="add-chat-activation-title"
-          class="tm-section-title text-fg mb-2"
+          class="tm-modal-title mb-2"
         >
           {{ t("chatActivation.modal.title") }}
         </h3>
-        <p class="text-sm text-fg-muted mb-4">
+        <p class="mb-5 text-sm leading-snug text-fg-muted">
           {{ t("chatActivation.modal.intro") }}
         </p>
 
-        <ul class="text-sm text-fg-muted list-disc pl-5 mb-4 space-y-1">
+        <ul class="tm-bullet-list">
           <li v-for="(item, index) in activationPrerequisites" :key="index">
-            {{ item }}
+            {{ rt(item) }}
           </li>
         </ul>
 
-        <div class="space-y-3">
+        <div class="space-y-2.5">
           <UiAppButton
             variant="primary"
-            class="w-full !text-left"
+            class="w-full !h-auto !justify-start px-4 py-3.5"
             @click="startChatActivation('new_group')"
           >
-            <span class="font-medium">{{ t("chatActivation.modal.newGroupTitle") }}</span>
-            <span class="block text-fg-muted text-xs mt-1 normal-case tracking-normal">
-              {{ t("chatActivation.modal.newGroupHint") }}
+            <span class="min-w-0 flex-1 text-left">
+              <span class="block font-medium leading-snug">
+                {{ t("chatActivation.modal.newGroupTitle") }}
+              </span>
+              <span
+                class="mt-1 block text-xs font-normal leading-snug text-accent-on/75 normal-case tracking-normal"
+              >
+                {{ t("chatActivation.modal.newGroupHint") }}
+              </span>
             </span>
           </UiAppButton>
           <UiAppButton
             variant="ghost"
-            class="w-full !text-left"
+            class="w-full !h-auto !justify-start !border-0 !bg-surface-3 px-4 py-3.5 hover:!border-0 hover:!bg-surface-3/90"
             @click="startChatActivation('existing_group')"
           >
-            <span class="font-medium">{{ t("chatActivation.modal.existingGroupTitle") }}</span>
-            <span class="block text-fg-muted text-xs mt-1 normal-case tracking-normal">
-              {{ t("chatActivation.modal.existingGroupHint") }}
+            <span class="min-w-0 flex-1 text-left">
+              <span class="block font-medium leading-snug">
+                {{ t("chatActivation.modal.existingGroupTitle") }}
+              </span>
+              <span
+                class="mt-1 block text-xs font-normal leading-snug text-fg-muted normal-case tracking-normal"
+              >
+                {{ t("chatActivation.modal.existingGroupHint") }}
+              </span>
             </span>
           </UiAppButton>
         </div>
 
         <UiAppButton
-          variant="ghost"
-          class="mt-4 w-full"
+          variant="link"
+          class="mt-4 w-full justify-center !py-1 font-normal text-fg-muted"
           @click="closeAddChatActivationModal"
         >
           {{ t("common.cancel") }}
@@ -601,7 +613,7 @@
       <div>
         <h3
           id="edit-chat-modal-title"
-          class="tm-section-title text-fg mb-4"
+          class="tm-modal-title mb-4"
         >
           {{ t("bot.chats.editModal.title") }}
         </h3>
@@ -736,7 +748,7 @@ import {
   type ServiceMessageKindId,
 } from "@/lib/service-message-cleanup";
 
-const { t, tm, locale } = useI18n();
+const { t, tm, rt, locale } = useI18n();
 const { actionLabel: logActionLabel, actionClass: logActionClass } = useModerationActionDisplay();
 const config = useRuntimeConfig();
 const isSaas = computed(() => config.public.deploymentMode === "saas");

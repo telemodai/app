@@ -226,7 +226,7 @@
           <div>
             <h3
               id="template-library-title"
-              class="tm-section-title text-fg"
+              class="tm-modal-title"
             >
               {{ t("moderation.templateLibrary.title") }}
             </h3>
@@ -280,7 +280,7 @@
       <div>
         <h3
           id="rule-modal-title"
-          class="tm-section-title text-fg mb-4"
+          class="tm-modal-title mb-4"
         >
           {{ editingRule ? t("moderation.ruleModal.editTitle") : t("moderation.ruleModal.addTitle") }}
         </h3>

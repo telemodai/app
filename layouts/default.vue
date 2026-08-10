@@ -4,7 +4,7 @@
       <div
         class="mx-auto flex h-16 w-full max-w-page items-center justify-between gap-4 px-4"
       >
-        <div class="flex min-w-0 items-center gap-4">
+        <div class="flex min-w-0 items-center gap-8">
           <NuxtLink
             to="/"
             class="inline-flex shrink-0 items-center gap-2 tm-section-title text-fg hover:text-fg-strong"
@@ -40,7 +40,7 @@
             </NuxtLink>
           </nav>
         </div>
-        <div class="flex shrink-0 items-center gap-3 text-sm">
+        <div class="flex shrink-0 items-center gap-4 text-sm">
           <LayoutReferralPendingNav v-if="isSaas" />
           <LayoutThemeToggle />
           <span v-if="session?.user" class="hidden text-fg-muted sm:inline">
@@ -49,7 +49,7 @@
           <button
             v-if="session?.user"
             type="button"
-            class="text-danger hover:underline"
+            class="tm-nav-link cursor-pointer text-danger hover:bg-danger-surface hover:text-danger"
             @click="signOut"
           >
             {{ t("nav.signOut") }}
