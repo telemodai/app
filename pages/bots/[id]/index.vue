@@ -116,9 +116,12 @@
                       {{ t("bot.chats.placeholderInitials") }}
                     </div>
                     <div class="min-w-0">
-                      <div class="text-base font-medium text-fg truncate">{{ chat.name }}</div>
-                      <div class="mt-1">
+                      <div class="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0">
+                        <span class="text-base font-medium text-fg min-w-0 break-words">
+                          {{ chat.name }}
+                        </span>
                         <BotsChatTelegramIdLink
+                          class="shrink-0"
                           :chat-id="chat.chat_id"
                           :telegram-username="chat.telegram_username"
                         />
