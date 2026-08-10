@@ -64,7 +64,7 @@
 
   /* Display headings — Geologica + tight tracking (DESIGN.md §4). */
   .tm-page-title {
-    @apply font-display text-xl font-medium tracking-tight text-fg;
+    @apply font-display text-3xl font-medium tracking-tight text-fg;
   }
 
   .tm-section-title {

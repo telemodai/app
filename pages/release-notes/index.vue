@@ -23,23 +23,31 @@
         :key="release.tag"
         class="border-b border-line pb-10 last:border-b-0"
       >
-        <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
-          <h3 class="tm-section-title text-fg">
-            {{ release.tag }}
-          </h3>
-          <time class="text-sm text-fg-muted">{{ formatDate(release.date) }}</time>
-        </div>
+        <div class="mb-6">
+          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h3 class="font-display text-2xl font-medium tabular-nums tracking-tight text-fg leading-none">
+              {{ release.tag }}
+            </h3>
+            <time class="text-sm text-fg-muted">{{ formatDate(release.date) }}</time>
+          </div>
 
-        <p v-if="isSelfHosted" class="mb-5 text-sm">
-          <a
-            :href="release.githubReleaseUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-accent hover:underline"
-          >
-            {{ t("releaseNotes.githubLink") }}
-          </a>
-        </p>
+          <p v-if="isSelfHosted" class="mt-3">
+            <a
+              :href="release.githubReleaseUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1 text-xs text-accent hover:underline"
+            >
+              {{ t("releaseNotes.githubLink") }}
+              <ExternalLink
+                :size="12"
+                :stroke-width="2"
+                class="shrink-0"
+                aria-hidden="true"
+              />
+            </a>
+          </p>
+        </div>
 
         <div
           v-for="section in release.sections"
@@ -91,6 +99,8 @@
 </template>
 
 <script setup lang="ts">
+import { ExternalLink } from "lucide-vue-next";
+
 type ReleaseSection = {
   title: string;
   items: string[];

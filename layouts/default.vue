@@ -58,7 +58,7 @@
       </div>
     </header>
 
-    <main class="mx-auto w-full max-w-page flex-1 p-4 md:p-6">
+    <main class="mx-auto w-full max-w-page flex-1 px-4 pb-4 pt-10 md:px-6 md:pb-6 md:pt-14">
       <slot />
     </main>
 

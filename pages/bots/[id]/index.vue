@@ -5,6 +5,20 @@
       :back-to="backTo"
       :title="bot?.name ?? t('page.botDetail.titleFallback')"
     >
+      <template #title-extra>
+        <!-- Live LED after bot name: pulse green when active, dim grey when off -->
+        <span
+          v-if="bot"
+          class="size-2.5 shrink-0 self-center rounded-full"
+          :class="
+            bot.is_active
+              ? 'bg-action-unban shadow-[0_0_0_3px] shadow-action-unban/25 animate-pulse'
+              : 'bg-fg-subtle/40'
+          "
+          :aria-label="bot.is_active ? t('bot.active') : t('bot.inactive')"
+          role="status"
+        />
+      </template>
       <template v-if="bot" #subtitle>
         <a
           :href="telegramBotWebUrl(bot.id)"
@@ -17,12 +31,14 @@
         </a>
       </template>
       <template #actions>
-        <UiAppButton
-          :variant="bot?.is_active ? 'destructive' : 'primary'"
-          @click="toggleBotStatus"
-        >
-          {{ bot?.is_active ? t("common.disable") : t("common.enable") }}
-        </UiAppButton>
+        <UiAppSwitch
+          :model-value="Boolean(bot?.is_active)"
+          :disabled="!bot || statusToggling"
+          :aria-label="
+            bot?.is_active ? t('common.disable') : t('common.enable')
+          "
+          @update:model-value="onBotActiveChange"
+        />
       </template>
     </LayoutPageHeader>
 
@@ -797,6 +813,7 @@ const accessCodeCopied = ref(false);
 const teamMembers = ref<any[]>([]);
 const teamLoading = ref(false);
 const statusError = ref("");
+const statusToggling = ref(false);
 const messageTemplateTab = ref<"warning" | "ban">("warning");
 const warningTemplateDraft = ref("");
 const banTemplateDraft = ref("");
@@ -1075,15 +1092,17 @@ function chatHealthBadgeVariant(chat: any) {
   return "muted" as const;
 }
 
-async function toggleBotStatus() {
-  if (!bot.value) return;
+async function onBotActiveChange(nextActive: boolean) {
+  if (!bot.value || statusToggling.value) return;
+  if (nextActive === bot.value.is_active) return;
 
   statusError.value = "";
+  statusToggling.value = true;
 
   try {
     const resp = await $fetch<any>(`/api/bots/${botId}`, {
       method: "PUT",
-      body: { is_active: !bot.value.is_active },
+      body: { is_active: nextActive },
     });
 
     if (resp?.data) {
@@ -1095,6 +1114,8 @@ async function toggleBotStatus() {
       error?.message ||
       t("common.errors.updateBotStatus");
     console.error("Error updating bot status:", error);
+  } finally {
+    statusToggling.value = false;
   }
 }
 

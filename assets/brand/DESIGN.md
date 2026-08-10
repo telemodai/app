@@ -234,18 +234,18 @@ Source of truth for sizes: `theme-app.css` `@theme` block + the role table below
 | `text-sm` | 14px | **Default UI** — body, nav, buttons, inputs, tables, forms (`body` in `main.css`) |
 | `text-base` | 16px | Section titles (`tm-section-title`), rare emphasis |
 | `text-lg` | 18px | Rare emphasis in running text |
-| `text-xl` | 20px | Page titles (`tm-page-title`), modal titles (`tm-modal-title`) |
-| `text-2xl` | 24px | Secondary stat numbers (`tm-stat-sm`) |
-| `text-3xl` | 30px | — |
+| `text-xl` | 20px | Modal titles (`tm-modal-title`) |
+| `text-2xl` | 24px | Release version headings, secondary stats (`tm-stat-sm`) |
+| `text-3xl` | 30px | Page titles (`tm-page-title`) |
 | `text-4xl` | 36px | Primary KPI / hero stat numbers (`tm-stat`) |
 
 **Hierarchy rules**
 
 1. **Default text** — `text-sm` + `text-fg`. Secondary at the same level — `text-sm text-fg-muted`.
 2. **One step down** — `text-xs` / `tm-meta` for hints, footnotes, side-panel rows (not smaller body everywhere).
-3. **Page `h1`** — `tm-page-title` (`text-xl font-display …`).
-4. **Modal dialog titles** — `tm-modal-title` (`text-xl font-display …`); same size as page title, focused overlay context.
-5. **Section / card `h2`–`h3`** — `tm-section-title` (`text-base font-display …`).
+3. **Page `h1`** — `tm-page-title` (`text-3xl font-display …`).
+4. **Modal dialog titles** — `tm-modal-title` (`text-xl font-display …`).
+5. **Section / card `h2`–`h3`** — `tm-section-title` (`text-base font-display …`). On release notes, version tags use `text-2xl` (one step below page title).
 6. **Stats** — `tm-stat` (`text-4xl`) or `tm-stat-sm` (`text-2xl`) + semantic colour.
 7. **Badges** — `AppBadge` (`text-2xs`, `px-2.5 py-0.5`).
 8. **Dense summaries** — `tm-detail-rows` (`text-xs`) under a `text-sm` heading.
