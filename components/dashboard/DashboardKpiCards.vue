@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
     <UiAppCard :padding="false">
       <div class="p-5">
-        <div class="text-sm text-fg-muted mb-3">{{ t("dashboard.kpi.bots") }}</div>
+        <div class="tm-kpi-heading">{{ t("dashboard.kpi.bots") }}</div>
         <div class="space-y-2">
           <div class="tm-stat text-fg">{{ kpi.bots_total }}</div>
           <div class="text-xs text-fg-muted">
@@ -20,7 +20,7 @@
 
     <UiAppCard :padding="false">
       <div class="p-5">
-        <div class="text-sm text-fg-muted mb-3">{{ t("dashboard.kpi.chats") }}</div>
+        <div class="tm-kpi-heading">{{ t("dashboard.kpi.chats") }}</div>
         <div class="space-y-2">
           <div class="tm-stat text-fg">{{ kpi.chats_total }}</div>
           <div class="text-xs text-fg-muted">{{ t("dashboard.kpi.acrossAllBots") }}</div>
@@ -30,8 +30,8 @@
 
     <UiAppCard :padding="false">
       <div class="p-5">
-        <div class="text-sm text-fg-muted mb-3">{{ t("dashboard.kpi.today") }}</div>
-        <div class="grid grid-cols-2 gap-x-5 gap-y-5">
+        <div class="tm-kpi-heading">{{ t("dashboard.kpi.today") }}</div>
+        <div class="grid grid-cols-2 gap-x-5 gap-y-6">
           <div class="space-y-1.5">
             <div class="tm-stat-sm text-accent">
               {{ kpi.today_messages }}
@@ -62,15 +62,15 @@
 
     <UiAppCard :padding="false">
       <div class="p-5">
-        <div class="text-sm text-fg-muted mb-3">{{ t("dashboard.kpi.users") }}</div>
-        <div class="space-y-5">
-          <div class="space-y-2">
-            <div class="tm-stat text-action-unban">
+        <div class="tm-kpi-heading">{{ t("dashboard.kpi.users") }}</div>
+        <div class="grid grid-cols-1 gap-y-6">
+          <div class="space-y-1.5">
+            <div class="tm-stat-sm text-action-unban">
               {{ kpi.users_active_24h }}
             </div>
             <div class="text-xs text-fg-muted">{{ t("dashboard.kpi.active24h") }}</div>
           </div>
-          <div class="space-y-2">
+          <div class="space-y-1.5">
             <div class="tm-stat-sm text-action-ban">
               {{ kpi.users_banned }}
             </div>

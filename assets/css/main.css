@@ -78,4 +78,8 @@
   .tm-stat-sm {
     @apply font-display text-2xl font-medium tabular-nums tracking-tight leading-none;
   }
+
+  .tm-kpi-heading {
+    @apply mb-5 text-sm text-fg-muted;
+  }
 }
