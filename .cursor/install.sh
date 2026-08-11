@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build snapshot: system deps (once) + bun install + DB migrate.
+# Build snapshot: Postgres 17 + Bun + deps + migrated DB.
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -14,13 +14,18 @@ if ! dpkg -s postgresql-17 >/dev/null 2>&1; then
     | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
   sudo apt-get update -qq
   sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq postgresql-17
+fi
+
+if dpkg -s postgresql-17 >/dev/null 2>&1; then
   sudo tee /etc/postgresql/17/main/pg_hba.conf >/dev/null <<'EOF'
 local   all   postgres                              peer
 local   all   all                                   scram-sha-256
 host    all   all   127.0.0.1/32                    scram-sha-256
 host    all   all   ::1/128                         scram-sha-256
 EOF
-  echo "listen_addresses = 'localhost'" | sudo tee -a /etc/postgresql/17/main/postgresql.conf >/dev/null
+  grep -q "listen_addresses = 'localhost'" /etc/postgresql/17/main/postgresql.conf || \
+    echo "listen_addresses = 'localhost'" | sudo tee -a /etc/postgresql/17/main/postgresql.conf >/dev/null
+  sudo pg_ctlcluster 17 main reload || sudo pg_ctlcluster 17 main start
 fi
 
 if ! command -v bun >/dev/null 2>&1; then
