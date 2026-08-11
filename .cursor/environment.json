@@ -10,7 +10,7 @@
     {
       "name": "dev",
       "description": "Nuxt dev server (admin UI + API) on port 3001.",
-      "command": "DATABASE_URL=\"postgresql://tgmoderator:tgmoderator@localhost:5432/tgmoderator\" bun run dev"
+      "command": "bash .cursor/dev.sh"
     },
     {
       "name": "tunnel",

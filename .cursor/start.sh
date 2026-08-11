@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Per-boot: Postgres cluster + migrations. Dev server runs in terminals.
+# Per-boot: Postgres cluster + app user/db. Migrations run in dev terminal (dev.sh).
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -10,7 +10,7 @@ if ! sudo pg_isready -q; then
 fi
 until sudo pg_isready -q; do sleep 1; done
 
-sudo -u postgres psql -v ON_ERROR_STOP=0 -qc "CREATE USER tgmoderator WITH PASSWORD 'tgmoderator';"
-sudo -u postgres psql -v ON_ERROR_STOP=0 -qc "CREATE DATABASE tgmoderator OWNER tgmoderator;"
+sudo -u postgres psql -v ON_ERROR_STOP=0 -qc "CREATE USER tgmoderator WITH PASSWORD 'tgmoderator';" || true
+sudo -u postgres psql -v ON_ERROR_STOP=0 -qc "CREATE DATABASE tgmoderator OWNER tgmoderator;" || true
 
-bun run db:migrate
+echo "start.sh: Postgres ready (user/db ensured; migrations run by dev terminal)"
