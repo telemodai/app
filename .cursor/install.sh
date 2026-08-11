@@ -15,9 +15,10 @@ if ! dpkg -s postgresql-17 >/dev/null 2>&1; then
   sudo apt-get update -qq
   sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq postgresql-17
   sudo tee /etc/postgresql/17/main/pg_hba.conf >/dev/null <<'EOF'
-local   all   all   scram-sha-256
-host    all   all   127.0.0.1/32   scram-sha-256
-host    all   all   ::1/128        scram-sha-256
+local   all   postgres                              peer
+local   all   all                                   scram-sha-256
+host    all   all   127.0.0.1/32                    scram-sha-256
+host    all   all   ::1/128                         scram-sha-256
 EOF
   echo "listen_addresses = 'localhost'" | sudo tee -a /etc/postgresql/17/main/postgresql.conf >/dev/null
 fi
