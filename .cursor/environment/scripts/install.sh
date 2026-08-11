@@ -2,7 +2,9 @@
 # Build snapshot: Postgres 17 + Bun + deps + migrated DB.
 set -euo pipefail
 
-cd "$(dirname "${BASH_SOURCE[0]}")/.."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+cd "$ROOT"
 
 if ! dpkg -s postgresql-17 >/dev/null 2>&1; then
   sudo apt-get update -qq
@@ -37,7 +39,6 @@ fi
 bun install
 
 # Cloud dev terminals have no TTY — Nuxt would block on the telemetry consent prompt.
-# Official opt-out: https://github.com/nuxt/telemetry#opting-out
 bunx nuxt-telemetry disable
 
-bash .cursor/start.sh
+bash "$SCRIPT_DIR/start.sh"

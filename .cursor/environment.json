@@ -2,15 +2,15 @@
   // Human-readable name shown in the Cloud Agents dashboard.
   "name": "tg-moderator-ai (Telemodai)",
 
-  "install": "bash .cursor/install.sh",
-  "start": "bash .cursor/start.sh",
+  "install": "bash .cursor/environment/scripts/install.sh",
+  "start": "bash .cursor/environment/scripts/start.sh",
 
   // Long-running foreground processes with visible, restartable logs.
   "terminals": [
     {
       "name": "dev",
       "description": "Nuxt dev server (admin UI + API) on port 3001.",
-      "command": "DATABASE_URL=\"postgresql://tgmoderator:tgmoderator@localhost:5432/tgmoderator\" bun run dev"
+      "command": "bash .cursor/environment/scripts/dev.sh"
     },
     {
       "name": "tunnel",
