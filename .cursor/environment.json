@@ -2,11 +2,6 @@
   // Human-readable name shown in the Cloud Agents dashboard.
   "name": "tg-moderator-ai (Telemodai)",
 
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": ".."
-  },
-
   "install": "bash .cursor/install.sh",
   "start": "bash .cursor/start.sh",
 
