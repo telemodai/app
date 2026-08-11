@@ -2,11 +2,18 @@ IMAGE ?= ghcr.io/telemodai/app
 TAG   ?= local
 DEV_PORT ?= 3001
 
+# Load project .env so make tunnel sees TUNNEL_TOKEN (file is gitignored).
+ifneq (,$(wildcard .env))
+include .env
+export
+endif
+
 .PHONY: docker-build tunnel
 
 docker-build:
 	docker build -t $(IMAGE):$(TAG) .
 
-# HTTPS tunnel for Telegram OIDC / webhooks (cloudflared, HTTP/2 — not localtunnel).
+# Named Cloudflare Tunnel (TUNNEL_TOKEN from .env). HTTP/2 — QUIC often blocked on LAN.
+# Ingress to localhost:$(DEV_PORT) is configured in the Cloudflare dashboard — not localtunnel.
 tunnel:
-	TUNNEL_TRANSPORT_PROTOCOL=http2 bunx cloudflared tunnel --url http://localhost:$(DEV_PORT)
+	bunx cloudflared tunnel --protocol http2 run
