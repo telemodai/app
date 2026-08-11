@@ -2,12 +2,12 @@
   // Human-readable name shown in the Cloud Agents dashboard.
   "name": "tg-moderator-ai (Telemodai)",
 
-  // One-time, idempotent setup baked into the Build: Bun, Docker, project deps,
-  // and the Postgres image + migrated schema. See .cursor/install.sh.
-  "install": "bash .cursor/install.sh",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
 
-  // Per-boot runtime bring-up: Docker daemon + Postgres + migrations. Returns.
-  // See .cursor/start.sh.
+  "install": "bash .cursor/install.sh",
   "start": "bash .cursor/start.sh",
 
   // Long-running foreground processes with visible, restartable logs.
