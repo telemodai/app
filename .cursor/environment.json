@@ -1,0 +1,31 @@
+{
+  // Human-readable name shown in the Cloud Agents dashboard.
+  "name": "tg-moderator-ai (Telemodai)",
+
+  // One-time, idempotent setup baked into the Build: Bun, Docker, project deps,
+  // and the Postgres image + migrated schema. See .cursor/install.sh.
+  "install": "bash .cursor/install.sh",
+
+  // Per-boot runtime bring-up: Docker daemon + Postgres + migrations. Returns.
+  // See .cursor/start.sh.
+  "start": "bash .cursor/start.sh",
+
+  // Long-running foreground processes with visible, restartable logs.
+  "terminals": [
+    {
+      "name": "dev",
+      "description": "Nuxt dev server (admin UI + API) on port 3001.",
+      "command": "DATABASE_URL=\"postgresql://tgmoderator:tgmoderator@localhost:5432/tgmoderator\" bun run dev"
+    },
+    {
+      "name": "tunnel",
+      "description": "Named Cloudflare tunnel for Telegram OIDC login. Active only when the TUNNEL_TOKEN secret is set.",
+      "command": "if [ -n \"${TUNNEL_TOKEN:-}\" ]; then bunx cloudflared tunnel --protocol http2 run; else echo 'TUNNEL_TOKEN not set — skipping Cloudflare tunnel. Add TUNNEL_TOKEN + BASE_URL + TELEGRAM_LOGIN_* secrets to enable real Telegram login.'; sleep infinity; fi"
+    }
+  ],
+
+  // Expose the dev server port so Cursor auto-forwards it to your localhost.
+  "ports": [
+    { "name": "nuxt-dev", "port": 3001 }
+  ]
+}
