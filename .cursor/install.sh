@@ -35,4 +35,9 @@ if ! command -v bun >/dev/null 2>&1; then
 fi
 
 bun install
+
+# Cloud dev terminals have no TTY — Nuxt would block on the telemetry consent prompt.
+# Official opt-out: https://github.com/nuxt/telemetry#opting-out
+bunx nuxt-telemetry disable
+
 bash .cursor/start.sh
