@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build-time: Bun deps + Postgres in snapshot. Docker is in .cursor/Dockerfile.
+# Build-time: Bun deps + DB ready in snapshot (start.sh creates role/db + migrates).
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."

@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
-# Per-boot: dockerd (no systemd) → Postgres → migrations. Dev server is in terminals.
+# Per-boot: Postgres cluster + migrations. Dev server runs in terminals.
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 export DATABASE_URL="postgresql://tgmoderator:tgmoderator@localhost:5432/tgmoderator"
 
-if ! sudo test -S /var/run/docker.sock; then
-  sudo nohup dockerd >/tmp/dockerd.log 2>&1 &
-  until sudo test -S /var/run/docker.sock; do sleep 1; done
+if ! sudo pg_isready -q; then
+  sudo pg_ctlcluster 17 main start
 fi
+until sudo pg_isready -q; do sleep 1; done
 
-sudo docker compose up -d
-until sudo docker exec tg-moderator-postgres pg_isready -U tgmoderator -d tgmoderator; do sleep 1; done
+sudo -u postgres psql -v ON_ERROR_STOP=0 -qc "CREATE USER tgmoderator WITH PASSWORD 'tgmoderator';"
+sudo -u postgres psql -v ON_ERROR_STOP=0 -qc "CREATE DATABASE tgmoderator OWNER tgmoderator;"
+
 bun run db:migrate

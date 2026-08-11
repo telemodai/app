@@ -1,27 +1,23 @@
-# Nested Docker on Cloud Agent VMs: fuse-overlayfs + iptables-legacy.
-# https://cursor.com/docs/cloud-agent/setup#running-docker
+# Cloud Agent base: PostgreSQL 17 (matches docker-compose.yml). No nested Docker.
 FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN install -m 0755 -d /etc/apt/keyrings && \
-    curl --retry 3 --retry-delay 5 -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
-    chmod a+r /etc/apt/keyrings/docker.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates gnupg sudo && \
+    install -d /usr/share/postgresql-common/pgdg && \
+    curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc && \
+    echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt noble-pgdg main" \
+      > /etc/apt/sources.list.d/pgdg.list && \
     apt-get update && \
-    apt-get install -y --no-install-recommends \
-      ca-certificates curl gnupg sudo \
-      docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
-      fuse-overlayfs fuse3 iptables uidmap && \
+    apt-get install -y --no-install-recommends postgresql-17 postgresql-client-17 && \
     rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /etc/docker && \
-    printf '%s\n' '{' '  "storage-driver": "fuse-overlayfs"' '}' > /etc/docker/daemon.json && \
-    update-alternatives --set iptables /usr/sbin/iptables-legacy && \
-    update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy && \
-    groupadd -f docker && \
+    printf '%s\n' \
+      'local   all   all   scram-sha-256' \
+      'host    all   all   127.0.0.1/32   scram-sha-256' \
+      'host    all   all   ::1/128        scram-sha-256' \
+      > /etc/postgresql/17/main/pg_hba.conf && \
+    echo "listen_addresses = 'localhost'" >> /etc/postgresql/17/main/postgresql.conf && \
     (id -u ubuntu &>/dev/null || useradd -m -s /bin/bash ubuntu) && \
-    usermod -aG docker ubuntu && \
     echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu
 
 USER ubuntu
