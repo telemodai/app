@@ -11,11 +11,6 @@
       "name": "dev",
       "description": "Nuxt dev server (admin UI + API) on port 3001.",
       "command": "bash .cursor/environment/scripts/dev.sh"
-    },
-    {
-      "name": "tunnel",
-      "description": "Idle placeholder — Cloudflare tunnel is started on demand via make tunnel (see AGENTS.md).",
-      "command": "echo 'Tunnel off by default. When asked: tmux new-session -d -s cloudflared-tunnel -c /workspace -- make tunnel'; sleep infinity"
     }
   ],
 
