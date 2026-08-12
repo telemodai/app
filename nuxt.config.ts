@@ -6,6 +6,11 @@ import { brandPublic, THEME_STORAGE_KEY } from "./lib/brand";
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-08-11",
+  // Skip @nuxt/telemetry entirely (no consent prompt). Official opt-out:
+  // https://github.com/nuxt/telemetry#opting-out — required for Cloud Agent
+  // non-TTY `nuxt dev`; .nuxtrc from `nuxt-telemetry disable` does not survive
+  // git checkout on agent boot.
+  telemetry: false,
   css: ["~/assets/css/main.css"],
   vite: {
     plugins: [tailwindcss()],

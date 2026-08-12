@@ -38,9 +38,6 @@ fi
 
 bun install
 
-# Cloud dev terminals have no TTY — Nuxt would block on the telemetry consent prompt.
-bunx nuxt-telemetry disable
-
 bash "$SCRIPT_DIR/start.sh"
 
 export DATABASE_URL="postgresql://tgmoderator:tgmoderator@localhost:5432/tgmoderator"
