@@ -14,8 +14,8 @@
     },
     {
       "name": "tunnel",
-      "description": "Named Cloudflare tunnel for Telegram OIDC login. Active only when the TUNNEL_TOKEN secret is set.",
-      "command": "if [ -n \"${TUNNEL_TOKEN:-}\" ]; then bunx cloudflared tunnel --protocol http2 run; else echo 'TUNNEL_TOKEN not set — skipping Cloudflare tunnel. Add TUNNEL_TOKEN + BASE_URL + TELEGRAM_LOGIN_* secrets to enable real Telegram login.'; sleep infinity; fi"
+      "description": "Idle placeholder — Cloudflare tunnel is started on demand via make tunnel (see AGENTS.md).",
+      "command": "echo 'Tunnel off by default. When asked: tmux new-session -d -s cloudflared-tunnel -c /workspace -- make tunnel'; sleep infinity"
     }
   ],
 

@@ -20,6 +20,7 @@ import {
   runCreditsGrantOperator,
   validateGrantReason,
 } from "@/server/core/operator/credits-grant";
+import { refreshCloudDevLoginToken } from "@/server/core/operator/cloud-dev-auth";
 
 async function withDatabase<T>(fn: () => Promise<T>): Promise<T> {
   const connection = getDatabaseConnection();
@@ -199,6 +200,26 @@ export function buildCliProgram(): Command {
   const credits = program
     .command("credits")
     .description("Bot credit wallet operations");
+
+  const auth = program
+    .command("auth")
+    .description("Auth helpers (Cloud Agent dev environment only)");
+
+  auth
+    .command("refresh-dev-login")
+    .description(
+      "Refresh localhost browser login link for the Cloud Agent dev user"
+    )
+    .action(async () => {
+      if (!process.env.DATABASE_URL) {
+        exitWithError("DATABASE_URL is required");
+      }
+
+      await withDatabase(async () => {
+        const url = await refreshCloudDevLoginToken();
+        console.log(`Dev login ready. Open in browser: ${url}`);
+      });
+    });
 
   credits
     .command("grant")
