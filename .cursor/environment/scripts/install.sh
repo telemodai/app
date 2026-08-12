@@ -42,3 +42,21 @@ bun install
 bunx nuxt-telemetry disable
 
 bash "$SCRIPT_DIR/start.sh"
+
+export DATABASE_URL="postgresql://tgmoderator:tgmoderator@localhost:5432/tgmoderator"
+bun run db:migrate
+
+# Cloud Agent dev user — keep in sync with server/core/operator/cloud-dev-auth.ts
+export PGPASSWORD=tgmoderator
+psql -h localhost -U tgmoderator -d tgmoderator -v ON_ERROR_STOP=1 <<'SQL'
+INSERT INTO users (id, telegram_id, username, name, created_at, updated_at)
+VALUES (
+  'cloud-dev-user-0001',
+  100000001,
+  'clouddev',
+  'Cloud Dev',
+  NOW(),
+  NOW()
+)
+ON CONFLICT (telegram_id) DO NOTHING;
+SQL

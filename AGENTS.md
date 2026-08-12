@@ -62,6 +62,11 @@ Keep a light, friendly tone, but **clarity beats brevity**.
 - Client `$fetch` with `method: "POST"` and no body → **HTTP 400** through cloudflared; if there is no payload — use `body: {}`
 - Env: `.env.example` → local `.env`
 
+## Cloud Agent VM
+
+- **Tunnel** is not auto-started. If the user asks to open it: `tmux new-session -d -s cloudflared-tunnel -c /workspace -- make tunnel`. To stop: `tmux kill-session -t cloudflared-tunnel` (or `pkill -f 'cloudflared tunnel'`).
+- **Admin UI login** (browser only): if you hit `/login` or need the UI, run `bun run cli -- auth refresh-dev-login`, then open the printed `http://localhost:3001/auth/bot-link?token=…` URL in the VM browser.
+
 ## Commands
 
 ```bash

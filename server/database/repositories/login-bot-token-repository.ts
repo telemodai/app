@@ -58,6 +58,10 @@ export class LoginBotTokenRepository {
     return row ?? null;
   }
 
+  async deleteByToken(token: string): Promise<void> {
+    await this.db.delete(loginBotTokens).where(eq(loginBotTokens.token, token));
+  }
+
   async markConsumed(token: string, consumedAt: Date): Promise<boolean> {
     const updated = await this.db
       .update(loginBotTokens)

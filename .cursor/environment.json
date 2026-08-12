@@ -11,11 +11,6 @@
       "name": "dev",
       "description": "Nuxt dev server (admin UI + API) on port 3001.",
       "command": "bash .cursor/environment/scripts/dev.sh"
-    },
-    {
-      "name": "tunnel",
-      "description": "Named Cloudflare tunnel for Telegram OIDC login. Active only when the TUNNEL_TOKEN secret is set.",
-      "command": "if [ -n \"${TUNNEL_TOKEN:-}\" ]; then bunx cloudflared tunnel --protocol http2 run; else echo 'TUNNEL_TOKEN not set — skipping Cloudflare tunnel. Add TUNNEL_TOKEN + BASE_URL + TELEGRAM_LOGIN_* secrets to enable real Telegram login.'; sleep infinity; fi"
     }
   ],
 
