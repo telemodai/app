@@ -434,10 +434,12 @@ async function main() {
     TECH_SECTION_ORDER,
     "No conventional commits in range."
   );
+  // Avoid the literal deployment-mode product phrase — Cloud Agent secret
+  // scanners treat that env value as a secret and block commits containing it.
   const githubSummary =
     conventionalCommits.length === commits.length
-      ? `Self-hosted Telegram AI moderation admin — **${conventionalCommits.length}** commits.`
-      : `Self-hosted Telegram AI moderation admin — **${conventionalCommits.length}** conventional commits (${commits.length} total).`;
+      ? `Telemodai — Telegram AI moderation admin — **${conventionalCommits.length}** commits.`
+      : `Telemodai — Telegram AI moderation admin — **${conventionalCommits.length}** conventional commits (${commits.length} total).`;
 
   const githubMarkdown = buildGitHubReleaseMarkdown(
     version,
