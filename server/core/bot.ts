@@ -43,6 +43,7 @@ import {
 import { classifyServiceMessage } from "./service-message-kinds";
 import { shouldDeleteServiceMessage } from "./service-message-cleanup";
 import { DEFAULT_SERVICE_MESSAGE_CLEANUP } from "@/lib/service-message-cleanup";
+import { getTelegramMessageText } from "@/server/utils/telegram-message-text";
 
 export class TelegramBot {
   private token: string;
@@ -117,7 +118,8 @@ export class TelegramBot {
         return;
       }
 
-      if (!message.text) {
+      const messageText = getTelegramMessageText(message);
+      if (!messageText) {
         logger.debug(
           `Игнорируем сообщение без текста: message_id=${message.message_id}`
         );
@@ -125,12 +127,12 @@ export class TelegramBot {
       }
 
       logger.debug(
-        `Начинаем анализ сообщения: "${message.text.substring(0, 50)}${
-          message.text.length > 50 ? "..." : ""
+        `Начинаем анализ сообщения: "${messageText.substring(0, 50)}${
+          messageText.length > 50 ? "..." : ""
         }"`
       );
 
-      await this.analyzeAndModerate(message, chatConfig);
+      await this.analyzeAndModerate(message, chatConfig, messageText);
     } catch (error) {
       logger.error({ error: error as Error }, "Ошибка обработки обновления");
     }
@@ -352,7 +354,8 @@ export class TelegramBot {
 
   private async analyzeAndModerate(
     message: TelegramMessage,
-    chatConfig: ConfigChat
+    chatConfig: ConfigChat,
+    messageText: string
   ): Promise<void> {
     try {
       await this.contextService.saveMessage(
@@ -360,7 +363,7 @@ export class TelegramBot {
         message.chat.id,
         message.from.id,
         message.message_id,
-        message.text!,
+        messageText,
         new Date(message.date * 1000)
       );
 
@@ -426,7 +429,7 @@ export class TelegramBot {
       );
 
       const aiRequest: AIModerationRequest = {
-        message: message.text!,
+        message: messageText,
         user_id: message.from.id,
         username: message.from.username,
         chat_id: message.chat.id,
@@ -509,7 +512,7 @@ export class TelegramBot {
           chatId: message.chat.id,
           userId: message.from.id,
           messageId: message.message_id,
-          messageText: message.text!,
+          messageText,
           rulesApplied: applicableRules.map((rule) => rule.id),
           timestamp: new Date(message.date * 1000),
           aiResponse,

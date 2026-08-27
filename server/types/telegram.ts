@@ -4,6 +4,7 @@ export interface TelegramMessage {
   from?: TelegramUser;
   chat: TelegramChat;
   text?: string;
+  caption?: string;
   date: number;
   new_chat_members?: TelegramUser[];
   left_chat_member?: TelegramUser;
