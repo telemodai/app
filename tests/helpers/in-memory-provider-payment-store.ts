@@ -36,6 +36,16 @@ export class InMemoryProviderPaymentStore {
     return this.rows.get(providerPaymentId) ?? null;
   }
 
+  async findOpenByUserId(userId: string): Promise<ProviderPayment[]> {
+    return [...this.rows.values()]
+      .filter(
+        (row) =>
+          row.user_id === userId &&
+          (row.status === "pending" || row.status === "succeeded")
+      )
+      .sort((a, b) => a.created_at.getTime() - b.created_at.getTime());
+  }
+
   async findOpenByBotId(botId: string): Promise<ProviderPayment[]> {
     return [...this.rows.values()]
       .filter(

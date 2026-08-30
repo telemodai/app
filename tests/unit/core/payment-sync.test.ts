@@ -11,6 +11,7 @@ import {
 import {
   syncBotOpenProviderPayments,
   syncBotPurchaseFromProvider,
+  syncUserPurchaseFromProvider,
 } from "@/server/core/payment-sync";
 import { InMemoryCreditStore } from "@/tests/helpers/in-memory-credit-store";
 import { InMemoryProviderPaymentStore } from "@/tests/helpers/in-memory-provider-payment-store";
@@ -140,6 +141,7 @@ describe("syncBotPurchaseFromProvider", () => {
     const { store, creditService, providerPayments } = createSaasCreditDeps();
     await providerPayments.createPending({
       provider_payment_id: event.providerPaymentId,
+      user_id: event.purchaserUserId,
       bot_id: event.botId,
       package_id: event.packageId,
       amount_rub: event.amountRub,
@@ -193,12 +195,11 @@ describe("syncBotPurchaseFromProvider", () => {
     expect(result.status).toBe("pending");
   });
 
-  test("returns forbidden when payment metadata targets another bot", async () => {
+  test("returns forbidden when payment belongs to another user", async () => {
     const provider = new MockBillingProvider();
     provider.setPayment({
       providerPaymentId: "pay-other",
-      botId: "other-bot",
-      purchaserUserId: "user-1",
+      purchaserUserId: "user-2",
       packageId: "start",
       credits: 10_000,
       amountRub: 490,
@@ -208,16 +209,15 @@ describe("syncBotPurchaseFromProvider", () => {
     const { providerPayments } = createSaasCreditDeps();
     await providerPayments.createPending({
       provider_payment_id: "pay-other",
-      user_id: "user-1",
-      bot_id: "mybot",
+      user_id: "user-2",
       package_id: "start",
       amount_rub: 490,
       credits: 10_000,
-      purchaser_user_id: "user-1",
+      purchaser_user_id: "user-2",
     });
 
-    const result = await syncBotPurchaseFromProvider(
-      "mybot",
+    const result = await syncUserPurchaseFromProvider(
+      "user-1",
       "pay-other",
       provider,
       { providerPayments }

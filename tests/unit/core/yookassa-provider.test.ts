@@ -17,7 +17,7 @@ describe("YooKassaBillingProvider", () => {
         status: "succeeded",
         amount: { value: "490.00", currency: "RUB" },
         metadata: {
-          bot_id: "mybot",
+          user_id: "user-1",
           purchaser_user_id: "user-1",
           package_id: "start",
           credits: "10000",
@@ -28,7 +28,6 @@ describe("YooKassaBillingProvider", () => {
     const event = await provider.verifyWebhook(payload, new Headers());
     expect(event).toEqual({
       providerPaymentId: "pay-123",
-      botId: "mybot",
       purchaserUserId: "user-1",
       packageId: "start",
       credits: 10000,
@@ -61,10 +60,10 @@ describe("YooKassaBillingProvider", () => {
     try {
       const provider = new YooKassaBillingProvider(TEST_ENV);
       const result = await provider.createCheckout({
-        botId: "mybot",
+        userId: "user-1",
         purchaserUserId: "user-1",
         packageId: "start",
-        returnUrl: "https://app.test/bots/mybot/credits",
+        returnUrl: "https://app.test/account/billing",
       });
       expect(result.checkoutUrl).toBe("https://yookassa.test/pay");
       expect(result.providerPaymentId).toBe("pay-999");

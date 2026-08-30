@@ -1,4 +1,4 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, sql, desc, inArray } from "drizzle-orm";
 import { getDatabaseConnection } from "@/server/database/connection";
 import { creditTransactions } from "@/server/database/schema";
 import type {
@@ -125,5 +125,31 @@ export class CreditTransactionRepository {
       .where(eq(creditTransactions.userId, userId));
 
     return row?.total ?? 0;
+  }
+
+  async listForUser(
+    userId: string,
+    limit = 50
+  ): Promise<CreditTransaction[]> {
+    const rows = await this.db
+      .select()
+      .from(creditTransactions)
+      .where(
+        and(
+          eq(creditTransactions.userId, userId),
+          inArray(creditTransactions.type, [
+            "purchase",
+            "grant_signup",
+            "referral_bonus",
+            "allocate",
+            "reclaim",
+            "admin_adjust",
+          ])
+        )
+      )
+      .orderBy(desc(creditTransactions.createdAt))
+      .limit(limit);
+
+    return rows.map(toCreditTransaction);
   }
 }

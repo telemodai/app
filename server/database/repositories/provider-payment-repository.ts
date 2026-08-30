@@ -70,6 +70,21 @@ export class ProviderPaymentRepository {
     return row ? toProviderPayment(row) : null;
   }
 
+  async findOpenByUserId(userId: string): Promise<ProviderPayment[]> {
+    const rows = await this.db
+      .select()
+      .from(providerPayments)
+      .where(
+        and(
+          eq(providerPayments.userId, userId),
+          inArray(providerPayments.status, ["pending", "succeeded"])
+        )
+      )
+      .orderBy(providerPayments.createdAt);
+
+    return rows.map(toProviderPayment);
+  }
+
   async findOpenByBotId(botId: string): Promise<ProviderPayment[]> {
     const rows = await this.db
       .select()

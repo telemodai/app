@@ -1,5 +1,3 @@
-import { requireBotAccess } from "@/server/utils/bot-access";
-import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
 import { isSaasMode } from "@/server/core/deployment-mode";
 import { createBillingProvider } from "@/server/core/billing/yookassa-provider";
 import { resolveCreditPackage } from "@/server/core/credit-packages";
@@ -11,6 +9,7 @@ import { ProviderPaymentRepository } from "@/server/database/repositories/provid
 import { getWebhookBaseUrl } from "@/server/utils/telegram-webhook";
 import { readPromoCookie } from "@/server/utils/promo-cookie";
 import { readReferralCookie } from "@/server/utils/referral-cookie";
+import { requireSession } from "@/server/utils/session";
 
 type CheckoutBody = {
   package_id?: string;
@@ -25,8 +24,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const botId = requireBotIdParam(event);
-  const { user } = await requireBotAccess(event, botId);
+  const { user } = await requireSession(event);
   const body = (await readBody(event)) as CheckoutBody;
   const packageId = body?.package_id?.trim();
 
@@ -70,10 +68,10 @@ export default defineEventHandler(async (event) => {
     appliedPromoCode = validation.value.promo.code;
   }
 
-  const returnUrl = `${baseUrl}/bots/${botId}/credits?payment=return`;
+  const returnUrl = `${baseUrl}/account/billing?payment=return`;
   const provider = createBillingProvider();
   const checkout = await provider.createCheckout({
-    botId,
+    userId: user.id,
     purchaserUserId: user.id,
     packageId,
     returnUrl,
@@ -85,7 +83,6 @@ export default defineEventHandler(async (event) => {
   await providerPayments.createPending({
     provider_payment_id: checkout.providerPaymentId,
     user_id: user.id,
-    bot_id: botId,
     package_id: packageId,
     amount_rub: chargeAmountRub,
     credits: pkg.credits,

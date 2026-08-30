@@ -42,7 +42,7 @@ export async function reconcileProviderPayment(
     return "not_found";
   }
 
-  if (row.bot_id !== event.botId) {
+  if (row.user_id !== event.purchaserUserId) {
     return "forbidden";
   }
 
@@ -94,7 +94,7 @@ export async function reconcileProviderPayment(
     const referralResult = await new ReferralService().processPaidPurchase({
       providerPaymentId: event.providerPaymentId,
       refereeUserId: row.purchaser_user_id,
-      botId: row.bot_id,
+      botId: row.bot_id ?? "",
       baseCredits: row.credits,
       referralCodeFromCheckout: row.referral_code,
     });
