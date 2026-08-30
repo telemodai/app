@@ -7,9 +7,9 @@
 
 | Rule | Value |
 |------|-------|
-| Billing unit | **Bot** (not user, not chat) |
-| Consumption | **1 credit = 1 successfully moderated text message** |
-| Free tier | **100 credits** granted once per new bot (SaaS only) |
+| Billing unit | **User wallet** (purchases, signup, referrals) + **bot operating balance** (moderation debits) |
+| Consumption | **1 credit = 1 successfully moderated text message** (debited from bot balance) |
+| Free tier | **100 credits** granted once per new **user** on first login (SaaS only) |
 | Zero balance | LLM moderation skipped; message history still saved |
 | Silent mode | Full credit on successful moderation |
 | Self-hosted | No credits (`DEPLOYMENT_MODE=self-hosted`) |
