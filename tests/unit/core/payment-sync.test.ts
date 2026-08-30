@@ -76,6 +76,7 @@ describe("reconcileProviderPayment", () => {
     const { store, creditService, providerPayments } = createSaasCreditDeps();
     await providerPayments.createPending({
       provider_payment_id: paidEvent.providerPaymentId,
+      user_id: paidEvent.purchaserUserId,
       bot_id: paidEvent.botId,
       package_id: paidEvent.packageId,
       amount_rub: paidEvent.amountRub,
@@ -104,6 +105,7 @@ describe("syncBotPurchaseFromProvider", () => {
     const { store, creditService, providerPayments } = createSaasCreditDeps();
     await providerPayments.createPending({
       provider_payment_id: paidEvent.providerPaymentId,
+      user_id: paidEvent.purchaserUserId,
       bot_id: paidEvent.botId,
       package_id: paidEvent.packageId,
       amount_rub: paidEvent.amountRub,
@@ -174,6 +176,7 @@ describe("syncBotPurchaseFromProvider", () => {
     const { providerPayments } = createSaasCreditDeps();
     await providerPayments.createPending({
       provider_payment_id: "pay-wait",
+      user_id: "user-1",
       bot_id: "mybot",
       package_id: "start",
       amount_rub: 490,
@@ -205,6 +208,7 @@ describe("syncBotPurchaseFromProvider", () => {
     const { providerPayments } = createSaasCreditDeps();
     await providerPayments.createPending({
       provider_payment_id: "pay-other",
+      user_id: "user-1",
       bot_id: "mybot",
       package_id: "start",
       amount_rub: 490,
@@ -241,6 +245,7 @@ describe("syncBotOpenProviderPayments", () => {
     const { creditService, providerPayments, store } = createSaasCreditDeps();
     await providerPayments.createPending({
       provider_payment_id: paidEvent.providerPaymentId,
+      user_id: paidEvent.purchaserUserId,
       bot_id: paidEvent.botId,
       package_id: paidEvent.packageId,
       amount_rub: paidEvent.amountRub,

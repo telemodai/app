@@ -92,6 +92,13 @@
       "when": 1785072000000,
       "tag": "0012_rule_description_to_comment",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1785158400000,
+      "tag": "0013_billing_wallet_v2",
+      "breakpoints": true
     }
   ]
 }

@@ -12,6 +12,7 @@ function toCreditTransaction(
   return {
     id: row.id,
     bot_id: row.botId,
+    user_id: row.userId,
     type: row.type,
     amount: row.amount,
     balance_after: row.balanceAfter,
@@ -32,7 +33,8 @@ export class CreditTransactionRepository {
     const [row] = await this.db
       .insert(creditTransactions)
       .values({
-        botId: input.bot_id,
+        userId: input.user_id ?? null,
+        botId: input.bot_id ?? null,
         type: input.type,
         amount: input.amount,
         balanceAfter: input.balance_after,
@@ -110,6 +112,17 @@ export class CreditTransactionRepository {
       })
       .from(creditTransactions)
       .where(eq(creditTransactions.botId, botId));
+
+    return row?.total ?? 0;
+  }
+
+  async sumAmountByUser(userId: string): Promise<number> {
+    const [row] = await this.db
+      .select({
+        total: sql<number>`coalesce(sum(${creditTransactions.amount}), 0)::int`,
+      })
+      .from(creditTransactions)
+      .where(eq(creditTransactions.userId, userId));
 
     return row?.total ?? 0;
   }

@@ -84,6 +84,7 @@ export default defineEventHandler(async (event) => {
   const providerPayments = new ProviderPaymentRepository();
   await providerPayments.createPending({
     provider_payment_id: checkout.providerPaymentId,
+    user_id: user.id,
     bot_id: botId,
     package_id: packageId,
     amount_rub: chargeAmountRub,

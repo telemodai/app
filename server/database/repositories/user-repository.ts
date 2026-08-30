@@ -12,6 +12,7 @@ function toAppUser(row: typeof users.$inferSelect): AppUser {
     name: row.name,
     photo_url: row.photoUrl,
     referral_code: row.referralCode,
+    credit_balance: row.creditBalance,
     created_at: row.createdAt,
     updated_at: row.updatedAt,
   };

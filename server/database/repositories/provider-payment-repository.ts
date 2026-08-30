@@ -13,6 +13,7 @@ function toProviderPayment(
   return {
     id: row.id,
     provider_payment_id: row.providerPaymentId,
+    user_id: row.userId,
     bot_id: row.botId,
     package_id: row.packageId,
     amount_rub: row.amountRub,
@@ -40,7 +41,8 @@ export class ProviderPaymentRepository {
       .insert(providerPayments)
       .values({
         providerPaymentId: input.provider_payment_id,
-        botId: input.bot_id,
+        userId: input.user_id,
+        botId: input.bot_id ?? null,
         packageId: input.package_id,
         amountRub: input.amount_rub,
         credits: input.credits,

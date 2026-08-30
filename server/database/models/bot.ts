@@ -26,6 +26,8 @@ export interface Bot {
   telegram_bot_id?: number | null;
   warning_message_template?: string | null;
   ban_message_template?: string | null;
+  credit_balance?: number;
+  deleted_at?: Date | null;
   created_at: Date;
   updated_at: Date;
 }
