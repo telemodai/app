@@ -7,7 +7,8 @@ export type ProviderPaymentStatus =
 export interface ProviderPayment {
   id: number;
   provider_payment_id: string;
-  bot_id: string;
+  user_id: string;
+  bot_id?: string | null;
   package_id: string;
   amount_rub: number;
   credits: number;
@@ -22,7 +23,8 @@ export interface ProviderPayment {
 
 export interface CreateProviderPaymentInput {
   provider_payment_id: string;
-  bot_id: string;
+  user_id: string;
+  bot_id?: string | null;
   package_id: string;
   amount_rub: number;
   credits: number;

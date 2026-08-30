@@ -44,6 +44,8 @@ export const creditTransactionTypeEnum = pgEnum("credit_transaction_type", [
   "admin_adjust",
   "reconcile_fix",
   "referral_bonus",
+  "allocate",
+  "reclaim",
 ]);
 
 export const referrerStatusEnum = pgEnum("referrer_status", [
@@ -73,6 +75,7 @@ export const bots = pgTable("bots", {
   photoFileId: text("photo_file_id"),
   telegramBotId: bigint("telegram_bot_id", { mode: "number" }),
   creditBalance: integer("credit_balance").notNull().default(0),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -356,9 +359,12 @@ export const creditTransactions = pgTable(
   "credit_transactions",
   {
     id: serial("id").primaryKey(),
-    botId: varchar("bot_id", { length: 64 })
-      .notNull()
-      .references(() => bots.id, { onDelete: "cascade" }),
+    userId: text("user_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    botId: varchar("bot_id", { length: 64 }).references(() => bots.id, {
+      onDelete: "cascade",
+    }),
     type: creditTransactionTypeEnum("type").notNull(),
     amount: integer("amount").notNull(),
     balanceAfter: integer("balance_after").notNull(),
@@ -374,6 +380,7 @@ export const creditTransactions = pgTable(
   },
   (table) => [
     index("credit_transactions_bot_created").on(table.botId, table.createdAt),
+    index("credit_transactions_user_created").on(table.userId, table.createdAt),
     uniqueIndex("credit_transactions_debit_idempotency")
       .on(table.botId, table.chatId, table.reference)
       .where(sql`type = 'debit_moderation'`),
@@ -454,9 +461,12 @@ export const providerPayments = pgTable(
   {
     id: serial("id").primaryKey(),
     providerPaymentId: text("provider_payment_id").notNull(),
-    botId: varchar("bot_id", { length: 64 })
+    userId: text("user_id")
       .notNull()
-      .references(() => bots.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "restrict" }),
+    botId: varchar("bot_id", { length: 64 }).references(() => bots.id, {
+      onDelete: "set null",
+    }),
     packageId: text("package_id").notNull(),
     amountRub: integer("amount_rub").notNull(),
     credits: integer("credits").notNull(),
@@ -480,8 +490,8 @@ export const providerPayments = pgTable(
     uniqueIndex("provider_payments_provider_payment_id_unique").on(
       table.providerPaymentId
     ),
-    index("provider_payments_bot_status_created").on(
-      table.botId,
+    index("provider_payments_user_status_created").on(
+      table.userId,
       table.status,
       table.createdAt
     ),

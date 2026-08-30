@@ -21,6 +21,7 @@ function createPaymentRow(
   return {
     id: 1,
     provider_payment_id: "pay-promo-1",
+    user_id: "user-1",
     bot_id: "mybot",
     package_id: "start",
     amount_rub: 441,

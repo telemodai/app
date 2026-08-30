@@ -15,7 +15,8 @@ export class InMemoryProviderPaymentStore {
     const row: ProviderPayment = {
       id: this.nextId++,
       provider_payment_id: input.provider_payment_id,
-      bot_id: input.bot_id,
+      user_id: input.user_id,
+      bot_id: input.bot_id ?? null,
       package_id: input.package_id,
       amount_rub: input.amount_rub,
       credits: input.credits,

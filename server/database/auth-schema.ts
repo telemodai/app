@@ -6,6 +6,7 @@ import {
   index,
   bigint,
   uniqueIndex,
+  integer,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable(
@@ -17,6 +18,7 @@ export const users = pgTable(
     name: text("name").notNull(),
     photoUrl: text("photo_url"),
     referralCode: text("referral_code"),
+    creditBalance: integer("credit_balance").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

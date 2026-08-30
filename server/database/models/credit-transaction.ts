@@ -4,11 +4,14 @@ export type CreditTransactionType =
   | "debit_moderation"
   | "admin_adjust"
   | "reconcile_fix"
-  | "referral_bonus";
+  | "referral_bonus"
+  | "allocate"
+  | "reclaim";
 
 export interface CreditTransaction {
   id: number;
-  bot_id: string;
+  user_id?: string | null;
+  bot_id?: string | null;
   type: CreditTransactionType;
   amount: number;
   balance_after: number;
@@ -20,7 +23,8 @@ export interface CreditTransaction {
 }
 
 export interface CreateCreditTransactionInput {
-  bot_id: string;
+  user_id?: string | null;
+  bot_id?: string | null;
   type: CreditTransactionType;
   amount: number;
   balance_after: number;

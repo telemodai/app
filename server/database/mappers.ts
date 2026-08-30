@@ -83,6 +83,8 @@ export function toBot(row: BotRow, chats: DbChat[]): import("./models/bot").Bot 
     telegram_bot_id: row.telegramBotId,
     warning_message_template: row.warningMessageTemplate,
     ban_message_template: row.banMessageTemplate,
+    credit_balance: row.creditBalance,
+    deleted_at: row.deletedAt ?? null,
     created_at: row.createdAt,
     updated_at: row.updatedAt,
   };
