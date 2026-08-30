@@ -91,7 +91,7 @@ describe("reconcileProviderPayment", () => {
     });
 
     expect(status).toBe("applied");
-    expect(await creditService.getBalance("mybot")).toBe(10_000);
+    expect(await creditService.getUserBalance("user-1")).toBe(10_000);
     const row = await providerPayments.findByProviderPaymentId("pay-sync");
     expect(row?.status).toBe("credited");
   });
@@ -121,7 +121,7 @@ describe("syncBotPurchaseFromProvider", () => {
     );
 
     expect(result.status).toBe("applied");
-    expect(await creditService.getBalance("mybot")).toBe(10_000);
+    expect(await creditService.getUserBalance("user-1")).toBe(10_000);
   });
 
   test("returns duplicate when purchase already in ledger", async () => {
@@ -260,6 +260,6 @@ describe("syncBotOpenProviderPayments", () => {
     });
 
     expect(result.status).toBe("applied");
-    expect(await creditService.getBalance("mybot")).toBe(10_000);
+    expect(await creditService.getUserBalance("user-1")).toBe(10_000);
   });
 });

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { getDatabaseConnection } from "@/server/database/connection";
 import { users } from "@/server/database/auth-schema";
 import type { AppUser, SessionUser } from "@/server/database/models/user";
@@ -66,6 +66,33 @@ export class UserRepository {
       .where(eq(users.referralCode, normalized))
       .limit(1);
     return row ? toAppUser(row) : null;
+  }
+
+  async getCreditBalance(userId: string): Promise<number> {
+    const [row] = await this.db
+      .select({ creditBalance: users.creditBalance })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+
+    return row?.creditBalance ?? 0;
+  }
+
+  async applyCreditDelta(userId: string, amount: number): Promise<number> {
+    const updated = await this.db
+      .update(users)
+      .set({
+        creditBalance: sql`${users.creditBalance} + ${amount}`,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
+      .returning({ creditBalance: users.creditBalance });
+
+    if (updated.length === 0) {
+      throw new Error(`User not found: ${userId}`);
+    }
+
+    return updated[0]!.creditBalance;
   }
 
   async ensureReferralCode(userId: string): Promise<string> {

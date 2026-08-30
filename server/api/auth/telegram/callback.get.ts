@@ -7,6 +7,7 @@ import {
   readOidcCookies,
 } from "@/server/utils/session";
 import { UserRepository } from "@/server/database/repositories/user-repository";
+import { CreditService } from "@/server/core/credit-service";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
@@ -47,6 +48,11 @@ export default defineEventHandler(async (event) => {
         photoUrl: claims.photoUrl,
       }
     );
+
+    if (!existing) {
+      const creditService = new CreditService();
+      await creditService.grantSignupCredits(user.id);
+    }
 
     await createUserSession(event, user.id);
     return sendRedirect(event, resolveReturnToPath(returnTo));

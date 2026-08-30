@@ -112,6 +112,6 @@ describe("reconcileProviderPayment promo redemption", () => {
     expect(purchase?.metadata?.promo_code).toBe("SAVE10");
     expect(purchase?.metadata?.original_amount_rub).toBe(490);
     expect(purchase?.metadata?.amount_rub).toBe(441);
-    expect(await creditService.getBalance("mybot")).toBe(10_000);
+    expect(await creditService.getUserBalance("user-1")).toBe(10_000);
   });
 });

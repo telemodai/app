@@ -34,6 +34,6 @@ describe("applyCreditPurchaseFromBillingEvent", () => {
 
     expect(first.status).toBe("applied");
     expect(second.status).toBe("duplicate");
-    expect(await creditService.getBalance("mybot")).toBe(10_000);
+    expect(await creditService.getUserBalance("user-1")).toBe(10_000);
   });
 });

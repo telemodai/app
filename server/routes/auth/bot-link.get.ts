@@ -5,6 +5,7 @@ import {
 } from "@/server/core/login-bot-webhook";
 import { LoginBotTokenRepository } from "@/server/database/repositories/login-bot-token-repository";
 import { UserRepository } from "@/server/database/repositories/user-repository";
+import { CreditService } from "@/server/core/credit-service";
 import { createUserSession } from "@/server/utils/session";
 import { DEFAULT_POST_LOGIN_PATH } from "@/lib/auth-return-to";
 
@@ -33,6 +34,11 @@ export default defineEventHandler(async (event) => {
     name: redemption.name,
     photoUrl: existing?.photoUrl ?? null,
   });
+
+  if (!existing) {
+    const creditService = new CreditService();
+    await creditService.grantSignupCredits(user.id);
+  }
 
   await createUserSession(event, user.id);
   return sendRedirect(event, DEFAULT_POST_LOGIN_PATH);

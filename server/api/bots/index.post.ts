@@ -6,7 +6,6 @@ import {
 import { registerBotWebhook } from "@/server/utils/bot-lifecycle";
 import { getBotDeliveryHealth, withDeliveryHealth } from "@/server/utils/bot-delivery";
 import { requireSession } from "@/server/utils/session";
-import { CreditService } from "@/server/core/credit-service";
 import {
   TelegramBotApiError,
   telegramGetMe,
@@ -79,9 +78,6 @@ export default defineEventHandler(async (event) => {
       telegram_bot_id: me.id,
       photo_file_id: photoFileId,
     });
-
-    const creditService = new CreditService();
-    await creditService.grantSignupCredits(bot.id);
 
     const refreshedBot = (await botRepo.findById(bot.id)) ?? bot;
 

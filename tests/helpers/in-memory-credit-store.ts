@@ -4,31 +4,51 @@ import type { CreditLedger, CreditStore } from "@/server/core/credit-service";
 type LedgerRow = CreditTransaction;
 
 export class InMemoryCreditStore implements CreditStore, CreditLedger {
-  private balances = new Map<string, number>();
+  private botBalances = new Map<string, number>();
+  private userBalances = new Map<string, number>();
   private ledger: LedgerRow[] = [];
   private nextId = 1;
 
-  async getCreditBalance(botId: string): Promise<number> {
-    return this.balances.get(botId) ?? 0;
+  async getBotBalance(botId: string): Promise<number> {
+    return this.botBalances.get(botId) ?? 0;
   }
 
+  async getUserBalance(userId: string): Promise<number> {
+    return this.userBalances.get(userId) ?? 0;
+  }
+
+  async setBotBalance(botId: string, balance: number): Promise<void> {
+    this.botBalances.set(botId, balance);
+  }
+
+  async setUserBalance(userId: string, balance: number): Promise<void> {
+    this.userBalances.set(userId, balance);
+  }
+
+  /** @deprecated use setBotBalance */
   async setBalance(botId: string, balance: number): Promise<void> {
-    this.balances.set(botId, balance);
+    await this.setBotBalance(botId, balance);
   }
 
   async conditionalDebit(botId: string): Promise<number | null> {
-    const current = this.balances.get(botId) ?? 0;
+    const current = this.botBalances.get(botId) ?? 0;
     if (current < 1) {
       return null;
     }
     const next = current - 1;
-    this.balances.set(botId, next);
+    this.botBalances.set(botId, next);
     return next;
   }
 
-  async applyDelta(botId: string, amount: number): Promise<number> {
-    const next = (this.balances.get(botId) ?? 0) + amount;
-    this.balances.set(botId, next);
+  async applyBotDelta(botId: string, amount: number): Promise<number> {
+    const next = (this.botBalances.get(botId) ?? 0) + amount;
+    this.botBalances.set(botId, next);
+    return next;
+  }
+
+  async applyUserDelta(userId: string, amount: number): Promise<number> {
+    const next = (this.userBalances.get(userId) ?? 0) + amount;
+    this.userBalances.set(userId, next);
     return next;
   }
 
@@ -90,6 +110,12 @@ export class InMemoryCreditStore implements CreditStore, CreditLedger {
   async sumAmountByBot(botId: string): Promise<number> {
     return this.ledger
       .filter((row) => row.bot_id === botId)
+      .reduce((sum, row) => sum + row.amount, 0);
+  }
+
+  async sumAmountByUser(userId: string): Promise<number> {
+    return this.ledger
+      .filter((row) => row.user_id === userId)
       .reduce((sum, row) => sum + row.amount, 0);
   }
 }
