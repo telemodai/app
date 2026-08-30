@@ -1,4 +1,5 @@
 import { onBeforeUnmount, ref } from "vue";
+import { buildTelegramStartGroupDeepLink } from "@/lib/chat-activation-ui";
 
 const POLL_INTERVAL_MS = 2000;
 const MAX_WAIT_MS = 3 * 60 * 1000;
@@ -109,6 +110,16 @@ export function useChatActivationWait(options: UseChatActivationWaitOptions) {
         : t("chatActivation.newGroupHint");
     pendingId.value = null;
 
+    // Open Telegram synchronously (before any await) so popup blockers stay happy.
+    // With noopener/noreferrer the return value is null even on success — do not treat as blocked.
+    if (mode === "new_group") {
+      window.open(
+        buildTelegramStartGroupDeepLink(options.botUsername),
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }
+
     const resp = await $fetch<{
       data: { pending_id: number; expires_at: string };
     }>(`/api/bots/${options.botId}/chats/pending`, {
@@ -117,18 +128,6 @@ export function useChatActivationWait(options: UseChatActivationWaitOptions) {
     });
 
     pendingId.value = resp.data.pending_id;
-
-    if (mode === "new_group") {
-      const deepLink = `https://t.me/${options.botUsername}?startgroup&admin=delete_messages+restrict_members`;
-      const popup = window.open(deepLink, "_blank", "noopener,noreferrer");
-      if (!popup) {
-        status.value = "failed";
-        message.value = t("chatActivation.popupBlockedMessage");
-        clearPolling();
-        return;
-      }
-    }
-
     startPolling();
   }
 

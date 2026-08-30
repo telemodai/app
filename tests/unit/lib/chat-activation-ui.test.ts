@@ -1,8 +1,13 @@
 import { describe, expect, test } from "bun:test";
-import { CHAT_ACTIVATION_PREREQUISITE_COUNT } from "@/lib/chat-activation-ui";
+import { buildTelegramStartGroupDeepLink } from "@/lib/chat-activation-ui";
 
-describe("chat-activation-ui", () => {
-  test("exports prerequisite count for modal list", () => {
-    expect(CHAT_ACTIVATION_PREREQUISITE_COUNT).toBe(3);
+describe("buildTelegramStartGroupDeepLink", () => {
+  test("builds startgroup link with moderation admin rights", () => {
+    expect(buildTelegramStartGroupDeepLink("my_bot")).toBe(
+      "https://t.me/my_bot?startgroup&admin=delete_messages+restrict_members"
+    );
+    expect(buildTelegramStartGroupDeepLink("@my_bot")).toBe(
+      "https://t.me/my_bot?startgroup&admin=delete_messages+restrict_members"
+    );
   });
 });
