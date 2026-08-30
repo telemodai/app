@@ -13,27 +13,60 @@ DEPLOYMENT_MODE=saas
 | | self-hosted | saas |
 |---|-------------|------|
 | LLM config | Instance settings UI (api_key, base_url, model); env optional override | Platform env only |
-| Credits | Disabled (billing layer no-op) | Per-bot balance |
-| Purchase UI | Hidden | Visible to all bot members |
-| Free 100 credits | N/A | On bot creation |
+| Credits | Disabled (billing layer no-op) | User wallet + per-bot operating balance |
+| Purchase UI | Hidden | Account page (`/account/billing`) — **owner only** |
+| Free 100 credits | N/A | Once per **user** on first registration (user wallet) |
+| Bot balance | N/A | Owner allocates from wallet; manager **read-only** |
 | LLM usage analytics | Optional log | Persist every moderation call |
 
 Expose `deploymentMode` to client via runtime config for UI conditionals.
 
+## Wallet model v2 (SaaS)
+
+Two balance levels:
+
+1. **User wallet** (`users.credit_balance`) — purchases, signup grant, referral bonuses, reclaim from deleted bots.
+2. **Bot operating balance** (`bots.credit_balance`) — moderation debits only; funded by owner via allocate from wallet.
+
+```
+User wallet  ──allocate──►  Bot operating balance  ──debit_moderation──►  spent
+     ▲                              │
+     └──────── reclaim (soft delete)┘
+```
+
+### Role matrix
+
+| Action | Owner | Manager |
+|--------|-------|---------|
+| See user wallet | yes | no |
+| Purchase credits | yes | no |
+| Allocate wallet → bot | yes | no |
+| See bot operating balance | yes | yes (read-only) |
+| Moderation debits | bot balance | bot balance |
+
+### Migration (existing data)
+
+- Set `users.credit_balance = 0` for all users.
+- **Do not** move existing `bots.credit_balance` to user wallet — treat as already allocated.
+- Signup grant: new users only on first registration → user wallet. Users who already have a `grant_signup` ledger row (including legacy bot-level rows) do not receive another 100.
+
+### Rejected alternatives (do not re-introduce)
+
+- Per-bot-only wallet with credits lost on hard delete
+- Pure user wallet without per-bot operating balance (“общий котёл” — one hot chat drains all bots)
+- Manager paying from own wallet or purchasing for the bot
+- Referral “pending pool” + manual claim to a chosen bot
+
 ## Payment provider
 
-**YooKassa** for SaaS checkout and webhooks. Implementation reads [YooKassa API docs](https://yookassa.ru/developers) during issue #118.
-
-**TypeScript SDK:** evaluate before raw HTTP. Primary candidate: [@a2seven/yoo-checkout](https://github.com/a2seven/yoocheckout) (`@a2seven/yoo-checkout` on npm). Alternative: [@webzaytsev/yookassa-ts-sdk](https://github.com/WEBzaytsev/yookassa-ts-sdk) (Bun-friendly). Use a SDK if spike passes (payments + webhooks + idempotency); otherwise document fallback.
-
-Test shop credentials in env (not committed).
+**YooKassa** for SaaS checkout and webhooks.
 
 Behind `BillingProvider` abstraction so the core credit domain does not depend on YooKassa types.
 
 ```typescript
 interface BillingProvider {
   createCheckout(input: {
-    botId: string;
+    userId: string;
     purchaserUserId: string;
     packageId: string;
   }): Promise<{ checkoutUrl: string }>;
@@ -43,7 +76,6 @@ interface BillingProvider {
 
 interface BillingWebhookEvent {
   providerPaymentId: string;
-  botId: string;
   purchaserUserId: string;
   credits: number;
   amountRub: number;
@@ -51,57 +83,107 @@ interface BillingWebhookEvent {
 }
 ```
 
-`CreditService`: grant, debit, reconcile, ledger — payment-agnostic.
+`CreditService`: grant, debit, allocate, reclaim, reconcile, ledger — payment-agnostic.
 
 ## Credit ledger
 
-`credit_transactions` (append-only):
+`credit_transactions` (append-only audit log). Each row = one financial event.
 
 | Field | Notes |
 |-------|-------|
-| `bot_id` | Wallet owner |
-| `type` | `grant_signup`, `purchase`, `debit_moderation`, `admin_adjust`, `reconcile_fix` |
+| `user_id` | Nullable; wallet-level events |
+| `bot_id` | Nullable; bot-level events (at least one of `user_id` / `bot_id` required) |
+| `type` | See table below |
 | `amount` | Signed integer (+ / −) |
-| `balance_after` | Snapshot after apply |
-| `reference` | `message_id`, payment id, etc. |
-| `actor_user_id` | Purchaser for `purchase`; null for system |
-| `metadata` | JSON (package id, tokens, …) |
+| `balance_after` | Snapshot after apply (wallet or bot, per row) |
+| `reference` | Payment id, message id, allocate batch id, etc. |
+| `actor_user_id` | Purchaser, allocator, etc.; null for system |
+| `metadata` | JSON (package id, bot id for allocate, …) |
 
-`bots.credit_balance` — denormalized cache for fast pre-check.
+`users.credit_balance` and `bots.credit_balance` — denormalized caches for fast pre-check.
 
-**`admin_adjust`:** operator-only manual grants/deductions via `cli credits grant` (SaaS). Metadata includes required `reason`, `source: cli`, optional `operator_note`. Idempotent when `--reference` repeats; default reference is `admin-grant:{uuid}`.
+### Transaction types
 
-### Balance updates
+| Type | Level | Meaning |
+|------|-------|---------|
+| `grant_signup` | user | 100 credits on first registration |
+| `purchase` | user | Paid package credited to wallet |
+| `referral_bonus` | user | Referee or referrer bonus |
+| `allocate` | user (−) and bot (+) | Owner moves credits wallet → bot (paired ledger rows, shared reference) |
+| `reclaim` | bot (−) and user (+) | Soft delete: remaining bot balance returned to owner wallet |
+| `debit_moderation` | bot | −1 per successful moderation |
+| `admin_adjust` | user or bot | Operator CLI |
+| `reconcile_fix` | user or bot | Background safety net |
+
+**User-visible history** (account page): `purchase`, `grant_signup`, `referral_bonus`, `allocate` (user side), `reclaim` (user side). Moderation debits appear in bot context only.
+
+**`admin_adjust`:** operator-only via `cli credits grant` (SaaS). Metadata includes `reason`, `source: cli`. Idempotent when `--reference` repeats.
+
+### Balance updates (moderation)
 
 **Hot path (success):**
 
-1. Pre-check `credit_balance > 0` (saas only)
+1. Pre-check **bot** `credit_balance > 0` (saas only)
 2. LLM call
-3. On HTTP 200 + non-empty content → conditional debit:
+3. On HTTP 200 + non-empty content → conditional debit on **bot**:
 
 ```sql
 UPDATE bots SET credit_balance = credit_balance - 1
-WHERE id = $1 AND credit_balance >= 1
+WHERE id = $1 AND credit_balance >= 1 AND deleted_at IS NULL
 RETURNING credit_balance;
 ```
 
 4. Insert `debit_moderation` ledger row (idempotent on `bot_id + chat_id + message_id`)
 
-**No debit:** LLM throw/timeout, empty body, JSON parse failure.
+**No debit:** LLM throw/timeout, empty body, JSON parse failure, deleted bot.
 
-**Reconciliation (background / nightly):**
+### Allocate / reclaim
+
+**Allocate** (owner): atomic user wallet −N, bot +N; paired `allocate` ledger rows.
+
+**Reclaim** (soft delete): transfer entire bot `credit_balance` to owner user wallet; bot balance → 0; paired `reclaim` ledger rows. Idempotent if bot balance already 0.
+
+### Reconciliation (background / nightly)
+
+For each **non-deleted** bot and each user with wallet activity:
 
 ```
-expected_balance = sum(credit_transactions.amount)
-actual_balance = bots.credit_balance
+expected_balance = sum(credit_transactions.amount)  -- per entity
+actual_balance = credit_balance column
 if mismatch → technical log + reconcile_fix transaction
 ```
 
+Skip soft-deleted bots (`deleted_at IS NOT NULL`) — balance should be 0 after reclaim.
+
 Cross-check: `count(user_messages where is_moderated = true)` ≈ debit rows per bot.
+
+## Bot soft delete
+
+Bots are not hard-deleted. Preserves ledger, chats, rules, and audit history.
+
+| Field | On delete |
+|-------|-----------|
+| `deleted_at` | `now()` |
+| `is_active` | `false` |
+| `token` | `NULL` (security) |
+
+**Operational check** — single helper, use everywhere:
+
+```typescript
+isBotOperational(bot) := bot.is_active && bot.deleted_at == null
+```
+
+**Delete flow (owner only):** reclaim → remove Telegram webhook (best-effort) → set soft-delete fields.
+
+**Restore:** re-add bot with same `@username` token if row exists with `deleted_at` set and `owner_user_id` matches session → clear `deleted_at`, refresh token/name/avatar, re-register webhook. Bot operating balance starts at 0 (credits already on owner wallet after reclaim). Different owner → 409.
+
+**API:** deleted bot → **404** (not 403) for all members including managers with old bookmarks.
+
+**Webhook:** ignore updates for deleted bots.
 
 ## LLM usage analytics
 
-Table `llm_usage` (name TBD) — one row per SaaS moderation attempt that reached the LLM:
+Table `llm_usage` — one row per SaaS moderation attempt that reached the LLM:
 
 | Field | Notes |
 |-------|-------|
@@ -112,38 +194,35 @@ Table `llm_usage` (name TBD) — one row per SaaS moderation attempt that reache
 | `success` | HTTP 200 + content |
 | `created_at` | |
 
-Enables SQL analytics vs revenue (`credit_transactions`) without separate experiments.
-
 Planning COGS until data exists: **0.05 ₽ / successful moderation** — see [billing-economics.md](billing-economics.md).
 
 ## Moderation flow (saas)
 
 ```
 saveMessage(is_moderated = false)
+bot not operational (deleted/inactive) → return
 no active rules → return
-credit_balance <= 0 → return
+bot credit_balance <= 0 → return
 LLM → log llm_usage
-  success (HTTP 200 + content) → debit + is_moderated = true + decision
+  success (HTTP 200 + content) → debit bot + is_moderated = true + decision
   parse failure → no debit, is_moderated stays false
 ```
 
-Stats on bot page:
-
-- **Total today** — all `user_messages`
-- **Moderated today** — `is_moderated = true`
-- **Not moderated today** — `is_moderated = false`; card shown only if count > 0
-
 ## Purchases
 
-Any bot member (owner or manager) may start checkout; credits always accrue to the **bot**. All members see balance. Personal payment data stays with YooKassa per payer.
+**Owner** starts checkout from account billing page; credits accrue to **user wallet**.
 
-**Checkout** inserts a `provider_payments` row (`pending`) with `provider_payment_id`, package snapshot, and purchaser.
+**Checkout** inserts `provider_payments` (`pending`) with `user_id`, package snapshot, purchaser.
 
-**Webhook** and **sync** update that row (`succeeded` / `canceled` / `credited`) and grant credits via idempotent ledger (`reference` = YooKassa payment id). Grant happens only on `succeeded`; `credited` is set after ledger apply.
+**Webhook** and **sync** grant credits idempotently (`reference` = YooKassa payment id).
 
-**Webhook miss fallback:** `POST /api/bots/:id/credits/sync` without `payment_id` reconciles all open rows for the bot (`pending` or `succeeded`) via `GET /v3/payments/{id}`. Optional: `{ "payment_id": "…" }` for one payment. Recovery URL: `/bots/:id/credits?payment_id={yookassa_id}`.
+**Endpoints:**
 
-**Nightly:** `billing:reconcile-stale-payments` polls `pending` rows older than 15 minutes.
+- `POST /api/account/credits/checkout`
+- `POST /api/account/credits/sync`
+- Return URL: `/account/billing?payment=return`
+
+**Nightly:** `billing:reconcile-stale-payments` polls stale `pending` rows.
 
 `credit_transactions` (ledger) and `provider_payments` (provider lifecycle) are separate tables.
 
@@ -151,54 +230,23 @@ Any bot member (owner or manager) may start checkout; credits always accrue to t
 
 Percent-discount promo codes for credit package checkout. Self-hosted: no promo UI, API, or CLI in product flows.
 
-### Data model
-
-- `promo_codes` — `code` (unique, uppercased), `discount_percent` (1–100), `is_active`, optional `expires_at`
-- `promo_redemptions` — unique `(promo_code_id, user_id)` after successful payment
-- `provider_payments.promo_code_id` — links checkout to promo when used
-
 ### Rules
 
 - Discount on **RUB price only**; package **credits stay full**
 - Charged amount: `max(1, floor(price * (100 - percent) / 100))` (100% → 1 ₽)
-- One successful redemption per user per code; abandoned checkout does not consume
+- One successful redemption per user per code
 - Cookie `tg_promo_code` is UX-only; checkout re-validates server-side
-- Applying a new code overwrites the cookie (no remove control)
 
 ### Checkout flow
 
-1. User applies code on `/bots/:id/credits` → `POST /api/promo/apply` sets cookie
-2. Checkout reads cookie (or body `promo_code`), validates, charges discounted amount to YooKassa
-3. On paid webhook/sync: grant full package credits, insert redemption idempotently
-4. Ledger `purchase` metadata includes `promo_code`, `amount_rub`, `original_amount_rub` when discounted
-
-### Operator CLI
-
-Create codes in production (Node runtime image):
-
-```bash
-docker compose exec -it app cli promo create
-```
-
-Non-interactive:
-
-```bash
-docker compose exec app cli promo create --code SAVE10 --percent 10
-```
-
-Local dev: `bun run cli -- promo create …` (see `.docs/deploy.md` § Operator CLI).
-
-### Manual credit grants (operator)
-
-```bash
-docker compose exec app cli credits grant --bot-id mybot --amount 5000 --reason "support"
-```
-
-Ledger type `admin_adjust`; no YooKassa payment row. Self-hosted: CLI exits with error (billing disabled).
+1. User applies code on account billing → `POST /api/promo/apply` sets cookie
+2. Checkout validates, charges discounted amount to YooKassa
+3. On paid webhook/sync: grant full package credits to **user wallet**, insert redemption
+4. Ledger `purchase` metadata includes promo fields when discounted
 
 ## Product referrals (SaaS only)
 
-In-product credit rewards for inviting new paying users. Self-hosted: no referral UI, API, or nav.
+In-product credit rewards for inviting new paying users. Self-hosted: no referral UI or API.
 
 ### Config (`lib/referral-config.ts`)
 
@@ -209,27 +257,24 @@ In-product credit rewards for inviting new paying users. Self-hosted: no referra
 
 - Personal link `/r/:code` or `?ref=` on landing/login
 - Cookie `tg_referral_code` — last click within 30 days; self-referral ignored
-- Checkout snapshots cookie into `provider_payments.referral_code` (webhook has no cookie access)
+- Checkout snapshots cookie into `provider_payments.referral_code`
 
 ### Rewards (first successful purchase only)
 
-- **Referee:** `floor(package_credits * REFERRAL_REFEREE_PERCENT / 100)` credited immediately on the payment bot
-- **Referrer:** same math with `REFERRAL_REFERRER_PERCENT`, stored as **pending** until claim onto an **owned** bot (all pending summed in one claim)
+- **Referee:** `floor(package_credits * REFERRAL_REFEREE_PERCENT / 100)` → **user wallet immediately**
+- **Referrer:** `floor(package_credits * REFERRAL_REFERRER_PERCENT / 100)` → **user wallet immediately**
 - Ledger type `referral_bonus` with metadata `{ referral_id, role, percent, base_credits, provider_payment_id }`
-- Works alongside purchase promos (#130): promo discounts RUB; referral bonuses credits
+- No pending/claim flow; no bot selection
 
 ### Anti-abuse
 
 - No self-referral; referrer account must predate referee
 - One referral lifecycle per referee; first purchase only
-- Claim requires bot **owner** role
-- Skip zero-bonus sides; idempotent on `provider_payments.provider_payment_id`
+- Skip zero-bonus sides; idempotent on `provider_payment_id`
 
 ### APIs
 
 - `POST /api/referral/attribution` — set cookie
-- `GET /api/referral/pending` — pending sum/count for nav
-- `POST /api/referral/claim` — `{ bot_id }` credits all pending to owned bot
 - `GET /api/referral/link` — current user's share link
 
 ## Credit packages (config)
@@ -242,6 +287,15 @@ In-product credit rewards for inviting new paying users. Self-hosted: no referra
 
 Stored in code or config table; YooKassa amount derived from package.
 
+## Operator CLI
+
+```bash
+docker compose exec app cli credits grant --user-id USER --amount 5000 --reason "support"
+docker compose exec app cli promo create --code SAVE10 --percent 10
+```
+
+Ledger type `admin_adjust`; no YooKassa payment row. Self-hosted: billing CLI exits with error.
+
 ## Implementation tracker
 
-GitHub epic and sub-issues — search `billing` or see epic issue in the repo tracker.
+GitHub epic [#173](https://github.com/telemodai/app/issues/173) and sub-issues #174–#182.
