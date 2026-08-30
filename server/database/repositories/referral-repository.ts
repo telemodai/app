@@ -1,4 +1,4 @@
-import { and, eq, inArray, ne, sql } from "drizzle-orm";
+import { and, eq, ne, sql } from "drizzle-orm";
 import { getDatabaseConnection } from "@/server/database/connection";
 import { referrals, creditTransactions } from "@/server/database/schema";
 import type { Referral, ReferrerStatus } from "@/server/database/models/referral";
@@ -46,21 +46,6 @@ export class ReferralRepository {
     return row ? toReferral(row) : null;
   }
 
-  async listPendingByReferrerUserId(referrerUserId: string): Promise<Referral[]> {
-    const rows = await this.db
-      .select()
-      .from(referrals)
-      .where(
-        and(
-          eq(referrals.referrerUserId, referrerUserId),
-          eq(referrals.referrerStatus, "pending")
-        )
-      )
-      .orderBy(referrals.createdAt);
-
-    return rows.map(toReferral);
-  }
-
   async create(input: {
     referrer_user_id: string;
     referee_user_id: string;
@@ -88,30 +73,6 @@ export class ReferralRepository {
       .returning();
 
     return toReferral(row);
-  }
-
-  async markReferrerClaimed(
-    referralIds: number[],
-    botId: string
-  ): Promise<void> {
-    if (referralIds.length === 0) {
-      return;
-    }
-
-    const now = new Date();
-    await this.db
-      .update(referrals)
-      .set({
-        referrerStatus: "claimed",
-        referrerClaimedBotId: botId,
-        claimedAt: now,
-      })
-      .where(
-        and(
-          inArray(referrals.id, referralIds),
-          eq(referrals.referrerStatus, "pending")
-        )
-      );
   }
 
   async countPriorPurchasesForUser(

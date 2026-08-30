@@ -59,13 +59,6 @@ describe("ReferralService", () => {
         async createReferral() {
           return { id: 1 };
         },
-        async listPendingReferrals() {
-          return [];
-        },
-        async markReferrerClaimed() {},
-        async getMemberRole() {
-          return "owner";
-        },
       },
       creditService,
     });
@@ -116,13 +109,6 @@ describe("ReferralService", () => {
         },
         async createReferral() {
           return { id: 1 };
-        },
-        async listPendingReferrals() {
-          return [];
-        },
-        async markReferrerClaimed() {},
-        async getMemberRole() {
-          return "owner";
         },
       },
       creditService,
@@ -185,13 +171,6 @@ describe("ReferralService", () => {
       }) {
         createdReferral = input;
         return { id: 42 };
-      },
-      async listPendingReferrals() {
-        return [{ id: 42, referrer_bonus_credits: 1000 }];
-      },
-      async markReferrerClaimed() {},
-      async getMemberRole() {
-        return "owner";
       },
     };
 

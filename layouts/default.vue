@@ -44,7 +44,6 @@
         </div>
 
         <div class="flex shrink-0 items-center gap-2 text-sm md:gap-4">
-          <LayoutReferralPendingNav v-if="isSaas" class="hidden md:block" />
           <LayoutThemeToggle />
           <span v-if="session?.user" class="hidden text-fg-muted md:inline">
             {{ displayName }}
@@ -122,10 +121,6 @@
           >
             {{ t("nav.settings") }}
           </NuxtLink>
-
-          <div v-if="isSaas" class="px-1 py-1">
-            <LayoutReferralPendingNav />
-          </div>
 
           <div class="my-1 border-t border-line" role="separator" />
 
