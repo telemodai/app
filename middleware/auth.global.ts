@@ -4,10 +4,19 @@ import {
   sanitizeReturnToPath,
 } from "@/lib/auth-return-to";
 
-export default defineNuxtRouteMiddleware(async (to) => {
-  const publicPaths = ["/login"];
+function isPublicPath(pathname: string): boolean {
+  if (pathname === "/login" || pathname.startsWith("/login/")) {
+    return true;
+  }
+  // Referral landing must run before login so attribution can set tg_referral_code.
+  if (pathname.startsWith("/r/")) {
+    return true;
+  }
+  return false;
+}
 
-  if (publicPaths.some((path) => to.path.startsWith(path))) {
+export default defineNuxtRouteMiddleware(async (to) => {
+  if (isPublicPath(to.path)) {
     return;
   }
 

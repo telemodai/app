@@ -40,7 +40,11 @@
 </template>
 
 <script setup lang="ts">
-import { buildTelegramAuthHref } from "@/lib/auth-return-to";
+import { fetchSession } from "@/lib/fetch-session";
+import {
+  buildTelegramAuthHref,
+  resolveReturnToPath,
+} from "@/lib/auth-return-to";
 
 definePageMeta({
   layout: false,
@@ -55,6 +59,13 @@ const config = useRuntimeConfig();
 const appVersion = computed(() => config.public.appVersion as string);
 
 const route = useRoute();
+
+const session = await fetchSession();
+if (session?.user) {
+  const returnTo =
+    typeof route.query.returnTo === "string" ? route.query.returnTo : null;
+  await navigateTo(resolveReturnToPath(returnTo));
+}
 
 const botLoginDeepLink = computed(() => {
   const username = config.public.telegramLoginBotUsername?.trim();
