@@ -5,6 +5,7 @@
     "bots": "Боты",
     "settings": "Настройки",
     "signOut": "Выйти",
+    "account": "Аккаунт",
     "openMenu": "Открыть меню",
     "closeMenu": "Закрыть меню"
   },
@@ -151,6 +152,31 @@
       "documentTitle": "Кредиты",
       "breadcrumb": "Кредиты",
       "subtitle": "Покупка кредитов модерации для этого бота."
+    }
+  },
+  "account": {
+    "billing": {
+      "title": "Аккаунт и оплата",
+      "documentTitle": "Аккаунт и оплата",
+      "breadcrumb": "Оплата",
+      "subtitle": "Общий кошелёк кредитов для всех ботов.",
+      "walletBalance": "Баланс кошелька",
+      "walletHint": "Кредиты общие для всех ботов. Переводите их на бота со страницы бота.",
+      "buyCredits": "Купить кредиты",
+      "purchaseTitle": "Купить кредиты",
+      "historyTitle": "История операций",
+      "historyEmpty": "Пока нет операций.",
+      "balanceAfter": "Баланс: {balance}",
+      "transactionTypes": {
+        "purchase": "Покупка кредитов",
+        "grantSignup": "Приветственный бонус",
+        "referralBonus": "Реферальное вознаграждение",
+        "allocate": "Перевод на {bot}",
+        "allocateGeneric": "Перевод на бота",
+        "reclaim": "Возврат с {bot}",
+        "reclaimGeneric": "Возврат с удалённого бота",
+        "adminAdjust": "Корректировка баланса"
+      }
     }
   },
   "billing": {

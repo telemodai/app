@@ -46,7 +46,14 @@
         <div class="flex shrink-0 items-center gap-2 text-sm md:gap-4">
           <LayoutThemeToggle />
           <span v-if="session?.user" class="hidden text-fg-muted md:inline">
-            {{ displayName }}
+            <NuxtLink
+              v-if="isSaas"
+              to="/account/billing"
+              class="hover:text-fg-strong transition-colors"
+            >
+              {{ displayName }}
+            </NuxtLink>
+            <template v-else>{{ displayName }}</template>
           </span>
           <button
             v-if="session?.user"
@@ -120,6 +127,16 @@
             @click="closeMobileMenu"
           >
             {{ t("nav.settings") }}
+          </NuxtLink>
+
+          <NuxtLink
+            v-if="isSaas"
+            to="/account/billing"
+            class="tm-nav-link"
+            active-class="tm-nav-link--active"
+            @click="closeMobileMenu"
+          >
+            {{ t("nav.account") }}
           </NuxtLink>
 
           <div class="my-1 border-t border-line" role="separator" />

@@ -5,6 +5,7 @@
     "bots": "Bots",
     "settings": "Settings",
     "signOut": "Sign out",
+    "account": "Account",
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
   },
@@ -151,6 +152,31 @@
       "documentTitle": "Credits",
       "breadcrumb": "Credits",
       "subtitle": "Purchase moderation credits for this bot."
+    }
+  },
+  "account": {
+    "billing": {
+      "title": "Account & billing",
+      "documentTitle": "Account & billing",
+      "breadcrumb": "Billing",
+      "subtitle": "Your shared credit wallet for all bots.",
+      "walletBalance": "Wallet balance",
+      "walletHint": "Credits are shared across all your bots. Allocate them from each bot's page.",
+      "buyCredits": "Buy credits",
+      "purchaseTitle": "Buy credits",
+      "historyTitle": "Transaction history",
+      "historyEmpty": "No transactions yet.",
+      "balanceAfter": "Balance: {balance}",
+      "transactionTypes": {
+        "purchase": "Credit purchase",
+        "grantSignup": "Welcome bonus",
+        "referralBonus": "Referral reward",
+        "allocate": "Allocated to {bot}",
+        "allocateGeneric": "Allocated to bot",
+        "reclaim": "Returned from {bot}",
+        "reclaimGeneric": "Returned from deleted bot",
+        "adminAdjust": "Balance adjustment"
+      }
     }
   },
   "billing": {
