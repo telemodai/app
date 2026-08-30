@@ -19,6 +19,8 @@ User (telegram_id)
 
 Rules are stored **per chat**; presets are constants in `rule-templates.ts`, added from the catalog on the chat moderation page. Bot access: owner or manager via `bot_members`; manager has operational access (chats, rules, moderation) but cannot delete the bot or manage the team; join via access code.
 
+**SaaS billing (wallet v2):** user `credit_balance` (purchases, signup bonus, referrals) → owner allocates to `bots.credit_balance` for moderation debits. Purchases at `/account/billing`; bot soft-delete reclaims remaining bot credits to owner wallet. See [`.docs/billing-design.md`](.docs/billing-design.md).
+
 Public endpoint without session: `POST /api/telegram/webhook/*` (Telegram). Protection: per-bot `webhook_secret` in the DB + header `X-Telegram-Bot-Api-Secret-Token`.
 
 More: [`.docs/project-overview.md`](.docs/project-overview.md) · [`.docs/technical-design.md`](.docs/technical-design.md) · [`.docs/i18n.md`](.docs/i18n.md) (admin UI locales) · [`assets/brand/DESIGN.md`](assets/brand/DESIGN.md) (design system + app appendix)

@@ -101,6 +101,7 @@ async function runPromoCreate(options: {
 
 async function runCreditsGrant(options: {
   botId?: string;
+  userId?: string;
   amount?: string;
   reason?: string;
   actorUserId?: string;
@@ -113,7 +114,8 @@ async function runCreditsGrant(options: {
   }
 
   let grantInput: {
-    bot_id: string;
+    bot_id?: string;
+    user_id?: string;
     amount: number;
     reason: string;
     actor_user_id?: string;
@@ -123,13 +125,19 @@ async function runCreditsGrant(options: {
 
   const hasFlags =
     options.botId !== undefined ||
+    options.userId !== undefined ||
     options.amount !== undefined ||
     options.reason !== undefined;
 
   if (hasFlags) {
-    if (!options.botId || options.amount === undefined || !options.reason) {
+    if (
+      (!options.botId && !options.userId) ||
+      (options.botId && options.userId) ||
+      options.amount === undefined ||
+      !options.reason
+    ) {
       exitWithError(
-        "Non-interactive mode requires --bot-id, --amount, and --reason"
+        "Non-interactive mode requires exactly one of --bot-id or --user-id, plus --amount and --reason"
       );
     }
     const amount = parseGrantAmount(options.amount);
@@ -141,7 +149,8 @@ async function runCreditsGrant(options: {
       exitWithError(CREDITS_GRANT_ERROR_MESSAGES.missing_reason);
     }
     grantInput = {
-      bot_id: options.botId.trim(),
+      ...(options.botId?.trim() ? { bot_id: options.botId.trim() } : {}),
+      ...(options.userId?.trim() ? { user_id: options.userId.trim() } : {}),
       amount,
       reason,
       ...(options.actorUserId?.trim()
@@ -199,7 +208,7 @@ export function buildCliProgram(): Command {
 
   const credits = program
     .command("credits")
-    .description("Bot credit wallet operations");
+    .description("User wallet and bot credit operations");
 
   const auth = program
     .command("auth")
@@ -223,8 +232,9 @@ export function buildCliProgram(): Command {
 
   credits
     .command("grant")
-    .description("Grant or deduct bot credits (admin_adjust ledger)")
-    .option("--bot-id <id>", "Target bot id")
+    .description("Grant or deduct user wallet or bot credits (admin_adjust ledger)")
+    .option("--bot-id <id>", "Target bot id (mutually exclusive with --user-id)")
+    .option("--user-id <id>", "Target user id (mutually exclusive with --bot-id)")
     .option("--amount <n>", "Signed integer (+ grant, − deduct)")
     .option("--reason <text>", "Required reason (stored in ledger metadata)")
     .option("--actor-user-id <userId>", "Optional actor user id")

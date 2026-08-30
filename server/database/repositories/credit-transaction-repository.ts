@@ -1,4 +1,4 @@
-import { and, eq, sql, desc, inArray } from "drizzle-orm";
+import { and, desc, eq, inArray, isNotNull, sql } from "drizzle-orm";
 import { getDatabaseConnection } from "@/server/database/connection";
 import { creditTransactions } from "@/server/database/schema";
 import type {
@@ -125,6 +125,17 @@ export class CreditTransactionRepository {
       .where(eq(creditTransactions.userId, userId));
 
     return row?.total ?? 0;
+  }
+
+  async listDistinctUserIds(): Promise<string[]> {
+    const rows = await this.db
+      .selectDistinct({ userId: creditTransactions.userId })
+      .from(creditTransactions)
+      .where(isNotNull(creditTransactions.userId));
+
+    return rows
+      .map((row) => row.userId)
+      .filter((userId): userId is string => typeof userId === "string");
   }
 
   async listForUser(

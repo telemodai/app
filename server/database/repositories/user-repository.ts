@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { eq, ne, sql } from "drizzle-orm";
 import { getDatabaseConnection } from "@/server/database/connection";
 import { users } from "@/server/database/auth-schema";
 import type { AppUser, SessionUser } from "@/server/database/models/user";
@@ -76,6 +76,15 @@ export class UserRepository {
       .limit(1);
 
     return row?.creditBalance ?? 0;
+  }
+
+  async listIdsWithNonZeroCreditBalance(): Promise<string[]> {
+    const rows = await this.db
+      .select({ id: users.id })
+      .from(users)
+      .where(ne(users.creditBalance, 0));
+
+    return rows.map((row) => row.id);
   }
 
   async applyCreditDelta(userId: string, amount: number): Promise<number> {
