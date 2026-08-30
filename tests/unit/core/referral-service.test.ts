@@ -17,6 +17,7 @@ function user(
     referral_code: referralCode ?? null,
     created_at: new Date(createdAt),
     updated_at: new Date(createdAt),
+    credit_balance: 0,
   };
 }
 
@@ -140,7 +141,7 @@ describe("ReferralService", () => {
     }
   });
 
-  test("grants referee bonus and leaves referrer pending", async () => {
+  test("grants referee and referrer bonuses to user wallets immediately", async () => {
     const store = new InMemoryCreditStore();
     const creditService = new CreditService({
       env: { DEPLOYMENT_MODE: "saas" },
@@ -209,12 +210,9 @@ describe("ReferralService", () => {
     });
 
     expect(result.status).toBe("applied");
-    expect(createdReferral?.referrer_status).toBe("pending");
+    expect(createdReferral?.referrer_status).toBe("claimed");
     expect(createdReferral?.referee_bonus_credits).toBe(1000);
-    expect(await creditService.getBalance("mybot")).toBe(1000);
-
-    const claim = await service.claimPending("referrer", "owned-bot");
-    expect(claim.credits).toBe(1000);
-    expect(await creditService.getBalance("owned-bot")).toBe(1000);
+    expect(await creditService.getUserBalance("referee")).toBe(1000);
+    expect(await creditService.getUserBalance("referrer")).toBe(1000);
   });
 });

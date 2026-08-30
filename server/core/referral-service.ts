@@ -189,7 +189,7 @@ export class ReferralService {
     );
 
     const referrerStatus =
-      referrerBonus > 0 ? ("pending" as const) : ("skipped_zero" as const);
+      referrerBonus > 0 ? ("claimed" as const) : ("skipped_zero" as const);
 
     const referral = await this.store.createReferral({
       referrer_user_id: referrer.id,
@@ -205,13 +205,26 @@ export class ReferralService {
 
     if (refereeBonus > 0) {
       await this.creditService.grantReferralBonus({
-        botId: input.botId,
+        userId: input.refereeUserId,
         credits: refereeBonus,
         actorUserId: input.refereeUserId,
         referralId: referral.id,
         role: "referee",
         baseCredits: input.baseCredits,
         percent: REFERRAL_REFEREE_PERCENT,
+        providerPaymentId: input.providerPaymentId,
+      });
+    }
+
+    if (referrerBonus > 0) {
+      await this.creditService.grantReferralBonus({
+        userId: referrer.id,
+        credits: referrerBonus,
+        actorUserId: referrer.id,
+        referralId: referral.id,
+        role: "referrer",
+        baseCredits: input.baseCredits,
+        percent: REFERRAL_REFERRER_PERCENT,
         providerPaymentId: input.providerPaymentId,
       });
     }
@@ -267,7 +280,7 @@ export class ReferralService {
 
     if (totalCredits > 0) {
       await this.creditService.grantReferralBonus({
-        botId,
+        userId,
         credits: totalCredits,
         actorUserId: userId,
         referralId: referralIds[0]!,

@@ -50,7 +50,7 @@ export async function applyCreditPurchaseFromBillingEvent(
 
   const creditService = deps.creditService ?? new CreditService();
   await creditService.grantPurchase({
-    botId: event.botId,
+    userId: event.purchaserUserId,
     credits: event.credits,
     actorUserId: event.purchaserUserId,
     providerPaymentId: event.providerPaymentId,
@@ -62,7 +62,7 @@ export async function applyCreditPurchaseFromBillingEvent(
 
   logger.info(
     {
-      botId: event.botId,
+      userId: event.purchaserUserId,
       credits: event.credits,
       paymentId: event.providerPaymentId,
     },
