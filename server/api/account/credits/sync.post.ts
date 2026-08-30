@@ -1,12 +1,11 @@
 import { CreditService } from "@/server/core/credit-service";
 import { isSaasMode } from "@/server/core/deployment-mode";
 import {
-  syncBotOpenProviderPayments,
-  syncBotPurchaseFromProvider,
+  syncUserOpenProviderPayments,
+  syncUserPurchaseFromProvider,
 } from "@/server/core/payment-sync";
 import { ProviderPaymentRepository } from "@/server/database/repositories/provider-payment-repository";
-import { requireBotAccess } from "@/server/utils/bot-access";
-import { requireBotIdParam } from "@/server/utils/get-bot-id-param";
+import { requireSession } from "@/server/utils/session";
 
 type SyncBody = {
   payment_id?: string;
@@ -20,29 +19,27 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const botId = requireBotIdParam(event);
-  await requireBotAccess(event, botId);
-
+  const { user } = await requireSession(event);
   const body = (await readBody(event)) as SyncBody;
   const paymentId = body?.payment_id?.trim();
 
   let syncStatus: Awaited<
-    ReturnType<typeof syncBotPurchaseFromProvider>
+    ReturnType<typeof syncUserPurchaseFromProvider>
   >["status"] | undefined;
 
   if (paymentId) {
-    const sync = await syncBotPurchaseFromProvider(botId, paymentId);
+    const sync = await syncUserPurchaseFromProvider(user.id, paymentId);
     syncStatus = sync.status;
   } else {
-    const open = await new ProviderPaymentRepository().findOpenByBotId(botId);
+    const open = await new ProviderPaymentRepository().findOpenByUserId(user.id);
     if (open.length > 0) {
-      const sync = await syncBotOpenProviderPayments(botId);
+      const sync = await syncUserOpenProviderPayments(user.id);
       syncStatus = sync.status;
     }
   }
 
   const creditService = new CreditService();
-  const balance = await creditService.getBalance(botId);
+  const balance = await creditService.getUserBalance(user.id);
 
   return {
     success: true,

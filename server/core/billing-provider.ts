@@ -1,6 +1,6 @@
 export type BillingWebhookEvent = {
   providerPaymentId: string;
-  botId: string;
+  botId?: string;
   purchaserUserId: string;
   credits: number;
   amountRub: number;
@@ -10,7 +10,7 @@ export type BillingWebhookEvent = {
 
 export interface BillingProvider {
   createCheckout(input: {
-    botId: string;
+    userId: string;
     purchaserUserId: string;
     packageId: string;
     returnUrl: string;

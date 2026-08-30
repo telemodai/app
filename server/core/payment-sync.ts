@@ -33,8 +33,8 @@ function pickBestStatus(
 }
 
 /** Poll YooKassa for one payment and reconcile provider_payments + ledger. */
-export async function syncBotPurchaseFromProvider(
-  botId: string,
+export async function syncUserPurchaseFromProvider(
+  userId: string,
   providerPaymentId: string,
   provider: BillingProvider = createBillingProvider(),
   deps: ReconcileProviderPaymentDeps = {}
@@ -49,7 +49,7 @@ export async function syncBotPurchaseFromProvider(
   if (!row) {
     return { status: "not_found" };
   }
-  if (row.bot_id !== botId) {
+  if (row.user_id !== userId) {
     return { status: "forbidden" };
   }
 
@@ -65,14 +65,14 @@ export async function syncBotPurchaseFromProvider(
   return { status };
 }
 
-/** Reconcile all open provider_payments rows for a bot (pending or succeeded). */
-export async function syncBotOpenProviderPayments(
-  botId: string,
+/** Reconcile all open provider_payments rows for a user (pending or succeeded). */
+export async function syncUserOpenProviderPayments(
+  userId: string,
   provider: BillingProvider = createBillingProvider(),
   deps: ReconcileProviderPaymentDeps = {}
 ): Promise<PaymentSyncResult> {
   const repo = deps.providerPayments ?? new ProviderPaymentRepository();
-  const open = await repo.findOpenByBotId(botId);
+  const open = await repo.findOpenByUserId(userId);
   if (open.length === 0) {
     return { status: "pending" };
   }
@@ -92,6 +92,51 @@ export async function syncBotOpenProviderPayments(
   }
 
   return { status: best };
+}
+
+/** @deprecated use syncUserPurchaseFromProvider */
+export async function syncBotPurchaseFromProvider(
+  botId: string,
+  providerPaymentId: string,
+  provider: BillingProvider = createBillingProvider(),
+  deps: ReconcileProviderPaymentDeps = {}
+): Promise<PaymentSyncResult> {
+  const paymentId = providerPaymentId.trim();
+  if (!paymentId) {
+    return { status: "not_found" };
+  }
+
+  const repo = deps.providerPayments ?? new ProviderPaymentRepository();
+  const row = await repo.findByProviderPaymentId(paymentId);
+  if (!row) {
+    return { status: "not_found" };
+  }
+  if (row.bot_id && row.bot_id !== botId) {
+    return { status: "forbidden" };
+  }
+
+  return syncUserPurchaseFromProvider(
+    row.user_id,
+    providerPaymentId,
+    provider,
+    deps
+  );
+}
+
+/** @deprecated use syncUserOpenProviderPayments */
+export async function syncBotOpenProviderPayments(
+  botId: string,
+  provider: BillingProvider = createBillingProvider(),
+  deps: ReconcileProviderPaymentDeps = {}
+): Promise<PaymentSyncResult> {
+  const repo = deps.providerPayments ?? new ProviderPaymentRepository();
+  const open = await repo.findOpenByBotId(botId);
+  if (open.length === 0) {
+    return { status: "pending" };
+  }
+
+  const userId = open[0]!.user_id;
+  return syncUserOpenProviderPayments(userId, provider, deps);
 }
 
 /** Stale pending rows older than this are polled against YooKassa in the nightly task. */

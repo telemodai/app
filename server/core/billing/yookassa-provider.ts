@@ -67,12 +67,11 @@ function parseYooKassaPaymentObject(
   }
 
   const metadata = object.metadata ?? {};
-  const botId = metadata.bot_id;
-  const purchaserUserId = metadata.purchaser_user_id;
+  const purchaserUserId = metadata.purchaser_user_id ?? metadata.user_id;
   const packageId = metadata.package_id;
   const creditsRaw = metadata.credits;
 
-  if (!botId || !purchaserUserId || !packageId) {
+  if (!purchaserUserId || !packageId) {
     logger.warn({ metadata, paymentId: object.id }, "YooKassa payment missing metadata");
     return null;
   }
@@ -86,7 +85,7 @@ function parseYooKassaPaymentObject(
 
   return {
     providerPaymentId: object.id,
-    botId,
+    botId: metadata.bot_id,
     purchaserUserId,
     packageId,
     credits,
@@ -99,7 +98,7 @@ export class YooKassaBillingProvider implements BillingProvider {
   constructor(private env: NodeJS.ProcessEnv = process.env) {}
 
   async createCheckout(input: {
-    botId: string;
+    userId: string;
     purchaserUserId: string;
     packageId: string;
     returnUrl: string;
@@ -113,10 +112,10 @@ export class YooKassaBillingProvider implements BillingProvider {
 
     const chargeAmountRub = input.amountRub ?? pkg.amountRub;
     const { shopId, secretKey } = resolveYooKassaCredentials(this.env);
-    const idempotenceKey = `${input.botId}:${input.packageId}:${Date.now()}`;
+    const idempotenceKey = `${input.userId}:${input.packageId}:${Date.now()}`;
 
     const metadata: Record<string, string> = {
-      bot_id: input.botId,
+      user_id: input.userId,
       purchaser_user_id: input.purchaserUserId,
       package_id: pkg.id,
       credits: String(pkg.credits),
@@ -135,7 +134,7 @@ export class YooKassaBillingProvider implements BillingProvider {
         type: "redirect",
         return_url: input.returnUrl,
       },
-      description: `Credits package ${pkg.id} for bot ${input.botId}`,
+      description: `Credits package ${pkg.id}`,
       metadata,
     };
 
