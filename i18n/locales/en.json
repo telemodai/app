@@ -146,12 +146,6 @@
       "documentTitle": "LLM settings",
       "breadcrumb": "LLM settings",
       "subtitle": "Instance-wide model configuration for self-hosted deployments."
-    },
-    "botCredits": {
-      "title": "Credits",
-      "documentTitle": "Credits",
-      "breadcrumb": "Credits",
-      "subtitle": "Purchase moderation credits for this bot."
     }
   },
   "account": {
@@ -181,7 +175,6 @@
   },
   "billing": {
     "balance": "Credit balance",
-    "manageCredits": "Manage credits",
     "purchase": "Purchase",
     "purchasing": "Redirecting to payment...",
     "paymentReturnSuccess": "Payment submitted — balance updates after confirmation.",
@@ -292,6 +285,20 @@
       "moderation": "Moderation",
       "team": "Team"
     },
+    "credits": {
+      "topUp": "Top up",
+      "allocateTitle": "Top up bot balance",
+      "allocateHelper": "Credits are transferred from your account wallet to this bot.",
+      "allocateAmount": "Amount",
+      "allocatePlaceholder": "Enter credits",
+      "allocateSubmit": "Transfer",
+      "allocating": "Transferring...",
+      "allocateSuccess": "{amount} credits transferred to the bot.",
+      "insufficientWallet": "Not enough credits in your wallet.",
+      "buyCredits": "Buy credits",
+      "walletBalance": "Wallet balance: {balance}",
+      "emptyWallet": "Your wallet is empty. Buy credits on the account page first."
+    },
     "deliveryStatus": {
       "healthy": "Working",
       "disabled": "Disabled",
@@ -360,6 +367,7 @@
       "description": "Deleting the bot permanently removes chats, rules, team members, and moderation history. Disabling the bot (Disable) does not delete data.",
       "deleteButton": "Delete bot",
       "confirmHint": "Enter {botId} or DELETE to confirm.",
+      "creditReclaimHint": "Remaining bot credits ({credits}) will be returned to your wallet.",
       "confirmPlaceholder": "{'@'}{botId}",
       "confirmButton": "Confirm deletion",
       "deleting": "Deleting..."

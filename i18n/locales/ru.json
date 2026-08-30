@@ -146,12 +146,6 @@
       "documentTitle": "Настройки LLM",
       "breadcrumb": "Настройки LLM",
       "subtitle": "Общие настройки модели для self-hosted инстанса."
-    },
-    "botCredits": {
-      "title": "Кредиты",
-      "documentTitle": "Кредиты",
-      "breadcrumb": "Кредиты",
-      "subtitle": "Покупка кредитов модерации для этого бота."
     }
   },
   "account": {
@@ -181,7 +175,6 @@
   },
   "billing": {
     "balance": "Баланс кредитов",
-    "manageCredits": "Управление кредитами",
     "purchase": "Купить",
     "purchasing": "Переход к оплате...",
     "paymentReturnSuccess": "Платёж отправлен — баланс обновится после подтверждения.",
@@ -292,6 +285,20 @@
       "moderation": "Модерация",
       "team": "Команда"
     },
+    "credits": {
+      "topUp": "Пополнить",
+      "allocateTitle": "Пополнить баланс бота",
+      "allocateHelper": "Кредиты переводятся с кошелька аккаунта на этого бота.",
+      "allocateAmount": "Сумма",
+      "allocatePlaceholder": "Введите кредиты",
+      "allocateSubmit": "Перевести",
+      "allocating": "Перевод...",
+      "allocateSuccess": "На бота переведено {amount} кредитов.",
+      "insufficientWallet": "На кошельке недостаточно кредитов.",
+      "buyCredits": "Купить кредиты",
+      "walletBalance": "Баланс кошелька: {balance}",
+      "emptyWallet": "Кошелёк пуст. Сначала купите кредиты на странице аккаунта."
+    },
     "deliveryStatus": {
       "healthy": "Работает",
       "disabled": "Отключён",
@@ -360,6 +367,7 @@
       "description": "Удаление бота безвозвратно удалит чаты, правила, участников команды и историю модерации. Отключение бота не удаляет данные.",
       "deleteButton": "Удалить бота",
       "confirmHint": "Введите {botId} или DELETE для подтверждения.",
+      "creditReclaimHint": "Оставшиеся кредиты бота ({credits}) вернутся на ваш кошелёк.",
       "confirmPlaceholder": "{'@'}{botId}",
       "confirmButton": "Подтвердить удаление",
       "deleting": "Удаление..."

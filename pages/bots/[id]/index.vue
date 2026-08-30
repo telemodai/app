@@ -91,11 +91,12 @@
                 {{ t("billing.balance") }}: {{ (bot.credit_balance ?? 0).toLocaleString() }}
               </UiAppBadge>
               <UiAppButton
+                v-if="isOwner"
                 variant="link"
                 class="!px-2.5 !py-1.5 !text-xs uppercase tracking-wide"
-                :to="`/bots/${botId}/credits`"
+                @click="openAllocateModal"
               >
-                {{ t("billing.manageCredits") }}
+                {{ t("bot.credits.topUp") }}
               </UiAppButton>
             </template>
             <p
@@ -373,6 +374,16 @@
               <p class="text-sm text-fg">
                 {{ t("bot.dangerZone.confirmHint", { botId: bot.id }) }}
               </p>
+              <p
+                v-if="isSaas && (bot.credit_balance ?? 0) > 0"
+                class="text-sm text-fg-muted"
+              >
+                {{
+                  t("bot.dangerZone.creditReclaimHint", {
+                    credits: (bot.credit_balance ?? 0).toLocaleString(),
+                  })
+                }}
+              </p>
               <UiAppInput
                 v-model="deleteConfirmText"
                 :placeholder="t('bot.dangerZone.confirmPlaceholder', { botId: bot.id })"
@@ -631,6 +642,84 @@
       </div>
     </UiAppModal>
 
+    <UiAppModal
+      :open="showAllocateModal"
+      size="sm"
+      title-id="allocate-credits-title"
+      @close="closeAllocateModal"
+    >
+      <div>
+        <h3 id="allocate-credits-title" class="tm-modal-title mb-2">
+          {{ t("bot.credits.allocateTitle") }}
+        </h3>
+        <p class="mb-4 text-sm text-fg-muted">
+          {{ t("bot.credits.allocateHelper") }}
+        </p>
+        <p v-if="walletBalance !== null" class="mb-4 text-sm text-fg">
+          {{ t("bot.credits.walletBalance", { balance: walletBalance.toLocaleString() }) }}
+        </p>
+        <UiAppAlert
+          v-if="walletBalance === 0"
+          variant="neutral"
+          class="mb-4"
+        >
+          <p>{{ t("bot.credits.emptyWallet") }}</p>
+          <UiAppButton
+            variant="link"
+            class="mt-2 !px-0"
+            to="/account/billing"
+            @click="closeAllocateModal"
+          >
+            {{ t("bot.credits.buyCredits") }}
+          </UiAppButton>
+        </UiAppAlert>
+        <form class="space-y-4" @submit.prevent="submitAllocate">
+          <div>
+            <label class="block text-sm font-medium text-fg mb-2" for="allocate-amount">
+              {{ t("bot.credits.allocateAmount") }}
+            </label>
+            <UiAppInput
+              id="allocate-amount"
+              v-model="allocateAmountInput"
+              type="number"
+              min="1"
+              step="1"
+              inputmode="numeric"
+              :placeholder="t('bot.credits.allocatePlaceholder')"
+              :disabled="allocating"
+            />
+          </div>
+          <UiAppAlert v-if="allocateError" variant="danger">
+            {{ allocateError }}
+          </UiAppAlert>
+          <UiAppAlert v-if="allocateSuccess" variant="neutral">
+            {{ allocateSuccess }}
+          </UiAppAlert>
+          <div class="flex gap-2">
+            <UiAppButton
+              type="submit"
+              variant="primary"
+              :disabled="allocating || !canSubmitAllocate"
+            >
+              {{
+                allocating
+                  ? t("bot.credits.allocating")
+                  : t("bot.credits.allocateSubmit")
+              }}
+            </UiAppButton>
+            <UiAppButton
+              type="button"
+              variant="ghost"
+              :disabled="allocating"
+              @click="closeAllocateModal"
+            >
+              {{ t("common.cancel") }}
+            </UiAppButton>
+          </div>
+        </form>
+      </div>
+    </UiAppModal>
+
     <!-- Modal for chat silent mode -->
     <UiAppModal
       :open="showAddChatModal && editingChat"
@@ -769,6 +858,7 @@ import {
   WARNING_TEMPLATE_PLACEHOLDERS,
 } from "@/lib/bot-message-template-ui";
 import { telegramBotWebUrl } from "@/lib/telegram-bot-url";
+import { readFetchError } from "@/lib/fetch-error";
 import type { ChatActivationStartMode } from "@/composables/useChatActivationWait";
 import type { BotMemberRole } from "@/types/bot";
 import {
@@ -837,6 +927,12 @@ const savingTemplates = ref(false);
 const templateSaveError = ref("");
 const templateSaveSuccess = ref(false);
 const showHtmlHelpModal = ref(false);
+const showAllocateModal = ref(false);
+const allocateAmountInput = ref("");
+const allocateError = ref("");
+const allocateSuccess = ref("");
+const allocating = ref(false);
+const walletBalance = ref<number | null>(null);
 const showDeleteConfirm = ref(false);
 const deleteConfirmText = ref("");
 const deleteError = ref("");
@@ -896,6 +992,11 @@ const canManageBot = computed(
 );
 
 const isOwner = computed(() => bot.value?.my_role === "owner");
+
+const canSubmitAllocate = computed(() => {
+  const amount = Number(allocateAmountInput.value);
+  return Number.isInteger(amount) && amount > 0;
+});
 
 const canConfirmDelete = computed(() => {
   const value = deleteConfirmText.value.trim();
@@ -968,6 +1069,9 @@ async function loadBot() {
     const resp = await $fetch<any>(`/api/bots/${botId}`);
     bot.value = resp?.data;
     syncMessageTemplateDrafts();
+    if (isSaas.value && bot.value) {
+      await refreshBotCreditBalance();
+    }
   } catch (error: any) {
     const status = error?.statusCode ?? error?.response?.status;
     if (status !== 404) {
@@ -983,6 +1087,82 @@ function syncMessageTemplateDrafts() {
     bot.value?.warning_message_template ?? DEFAULT_WARNING_TEMPLATE_PREVIEW;
   banTemplateDraft.value =
     bot.value?.ban_message_template ?? DEFAULT_BAN_TEMPLATE_PREVIEW;
+}
+
+async function refreshBotCreditBalance() {
+  try {
+    const response = await $fetch<{ data: { balance: number } }>(
+      `/api/bots/${botId}/credits/balance`
+    );
+    if (bot.value) {
+      bot.value.credit_balance = response.data.balance;
+    }
+  } catch {
+    // Non-blocking — overview still shows last known balance from bot payload.
+  }
+}
+
+async function loadWalletBalance() {
+  try {
+    const response = await $fetch<{ data: { balance: number } }>(
+      "/api/account/wallet"
+    );
+    walletBalance.value = response.data.balance;
+  } catch {
+    walletBalance.value = null;
+  }
+}
+
+function openAllocateModal() {
+  allocateAmountInput.value = "";
+  allocateError.value = "";
+  allocateSuccess.value = "";
+  showAllocateModal.value = true;
+  void loadWalletBalance();
+}
+
+function closeAllocateModal() {
+  showAllocateModal.value = false;
+  allocateAmountInput.value = "";
+  allocateError.value = "";
+  allocateSuccess.value = "";
+}
+
+async function submitAllocate() {
+  const amount = Number(allocateAmountInput.value);
+  if (!Number.isInteger(amount) || amount <= 0) {
+    return;
+  }
+
+  allocating.value = true;
+  allocateError.value = "";
+  allocateSuccess.value = "";
+
+  try {
+    const response = await $fetch<{
+      data: { bot_balance: number; wallet_balance: number };
+    }>(`/api/bots/${botId}/credits/allocate`, {
+      method: "POST",
+      body: { amount },
+    });
+
+    if (bot.value) {
+      bot.value.credit_balance = response.data.bot_balance;
+    }
+    walletBalance.value = response.data.wallet_balance;
+    allocateSuccess.value = t("bot.credits.allocateSuccess", {
+      amount: amount.toLocaleString(),
+    });
+    allocateAmountInput.value = "";
+  } catch (error: unknown) {
+    const message = readFetchError(error, t("common.unknown"));
+    allocateError.value = message;
+    if (message.toLowerCase().includes("insufficient")) {
+      allocateError.value = t("bot.credits.insufficientWallet");
+    }
+  } finally {
+    allocating.value = false;
+  }
 }
 
 async function saveMessageTemplates() {
