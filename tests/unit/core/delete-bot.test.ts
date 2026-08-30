@@ -8,7 +8,7 @@ import { InMemoryBotRepository } from "@/tests/helpers/in-memory-bot-repository"
 import { TEST_OWNER_USER_ID } from "@/tests/helpers/constants";
 
 describe("deleteBotPermanently", () => {
-  test("deletes bot row after best-effort webhook removal", async () => {
+  test("soft-deletes bot after best-effort webhook removal", async () => {
     const botRepo = new InMemoryBotRepository();
     await botRepo.create(TEST_OWNER_USER_ID, {
       id: "delete-me",
@@ -17,10 +17,14 @@ describe("deleteBotPermanently", () => {
     });
 
     const deleteWebhookCalls: string[] = [];
+    let reclaimed = false;
 
     await deleteBotPermanently("delete-me", {
-      findByIdWithToken: (id) => botRepo.findByIdWithToken(id),
-      deleteBot: (id) => botRepo.delete(id),
+      findByIdWithToken: (id) => botRepo.findByIdWithTokenIncludingDeleted(id),
+      softDeleteBot: (id) => botRepo.softDelete(id),
+      reclaimFromBot: async () => {
+        reclaimed = true;
+      },
       deleteWebhook: async (token) => {
         deleteWebhookCalls.push(token);
       },
@@ -28,10 +32,14 @@ describe("deleteBotPermanently", () => {
     });
 
     expect(deleteWebhookCalls).toEqual(["secret-token"]);
+    expect(reclaimed).toBe(true);
     expect(await botRepo.findById("delete-me")).toBeNull();
+    const deleted = await botRepo.findByIdWithTokenIncludingDeleted("delete-me");
+    expect(deleted?.deleted_at).toBeDefined();
+    expect(deleted?.token).toBeUndefined();
   });
 
-  test("still deletes bot when webhook removal fails", async () => {
+  test("still soft-deletes bot when webhook removal fails", async () => {
     const botRepo = new InMemoryBotRepository();
     await botRepo.create(TEST_OWNER_USER_ID, {
       id: "webhook-fail",
@@ -40,8 +48,9 @@ describe("deleteBotPermanently", () => {
     });
 
     await deleteBotPermanently("webhook-fail", {
-      findByIdWithToken: (id) => botRepo.findByIdWithToken(id),
-      deleteBot: (id) => botRepo.delete(id),
+      findByIdWithToken: (id) => botRepo.findByIdWithTokenIncludingDeleted(id),
+      softDeleteBot: (id) => botRepo.softDelete(id),
+      reclaimFromBot: async () => {},
       deleteWebhook: async () => {
         throw new Error("Telegram unavailable");
       },
@@ -56,8 +65,9 @@ describe("deleteBotPermanently", () => {
 
     await expect(
       deleteBotPermanently("missing", {
-        findByIdWithToken: (id) => botRepo.findByIdWithToken(id),
-        deleteBot: (id) => botRepo.delete(id),
+        findByIdWithToken: (id) => botRepo.findByIdWithTokenIncludingDeleted(id),
+        softDeleteBot: (id) => botRepo.softDelete(id),
+        reclaimFromBot: async () => {},
         deleteWebhook: async () => {},
         fetchFn: fetch,
       })

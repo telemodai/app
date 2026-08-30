@@ -1,4 +1,4 @@
-import { eq, inArray, and, sql } from "drizzle-orm";
+import { eq, inArray, and, sql, isNull } from "drizzle-orm";
 import { getDatabaseConnection } from "@/server/database/connection";
 import {
   Bot,
@@ -121,6 +121,9 @@ export class BotRepository {
     const result: BotResponse[] = [];
 
     for (const { bot: row, role } of memberships) {
+      if (row.deletedAt) {
+        continue;
+      }
       const chatList = await this.loadChatsForBot(row.id);
       result.push({
         ...toBotResponse(row, chatList),
@@ -135,6 +138,18 @@ export class BotRepository {
     const [row] = await this.db
       .select()
       .from(bots)
+      .where(and(eq(bots.id, id), isNull(bots.deletedAt)))
+      .limit(1);
+    if (!row) return null;
+
+    const chatList = await this.loadChatsForBot(row.id);
+    return toBotResponse(row, chatList);
+  }
+
+  async findByIdIncludingDeleted(id: string): Promise<BotResponse | null> {
+    const [row] = await this.db
+      .select()
+      .from(bots)
       .where(eq(bots.id, id))
       .limit(1);
     if (!row) return null;
@@ -144,7 +159,23 @@ export class BotRepository {
   }
 
   async findByIdWithToken(id: string): Promise<Bot | null> {
-    const [row] = await this.db.select().from(bots).where(eq(bots.id, id)).limit(1);
+    const [row] = await this.db
+      .select()
+      .from(bots)
+      .where(and(eq(bots.id, id), isNull(bots.deletedAt)))
+      .limit(1);
+    if (!row) return null;
+
+    const chatList = await this.loadChatsForBot(row.id);
+    return toBot(row, chatList);
+  }
+
+  async findByIdWithTokenIncludingDeleted(id: string): Promise<Bot | null> {
+    const [row] = await this.db
+      .select()
+      .from(bots)
+      .where(eq(bots.id, id))
+      .limit(1);
     if (!row) return null;
 
     const chatList = await this.loadChatsForBot(row.id);
@@ -270,19 +301,63 @@ export class BotRepository {
     return row?.creditBalance ?? 0;
   }
 
-  async delete(id: string): Promise<boolean> {
-    const deleted = await this.db
-      .delete(bots)
-      .where(eq(bots.id, id))
+  async softDelete(id: string): Promise<boolean> {
+    const now = new Date();
+    const updated = await this.db
+      .update(bots)
+      .set({
+        deletedAt: now,
+        isActive: false,
+        token: null,
+        updatedAt: now,
+      })
+      .where(and(eq(bots.id, id), isNull(bots.deletedAt)))
       .returning({ id: bots.id });
-    return deleted.length > 0;
+    return updated.length > 0;
+  }
+
+  async restoreBot(
+    id: string,
+    input: {
+      token: string;
+      name: string;
+      telegram_bot_id?: number | null;
+      photo_file_id?: string | null;
+    }
+  ): Promise<BotResponse | null> {
+    const now = new Date();
+    const [row] = await this.db
+      .update(bots)
+      .set({
+        deletedAt: null,
+        isActive: true,
+        token: input.token,
+        name: input.name,
+        telegramBotId: input.telegram_bot_id ?? null,
+        photoFileId: input.photo_file_id ?? null,
+        updatedAt: now,
+      })
+      .where(and(eq(bots.id, id), sql`${bots.deletedAt} IS NOT NULL`))
+      .returning();
+
+    if (!row) {
+      return null;
+    }
+
+    const chatList = await this.loadChatsForBot(id);
+    return toBotResponse(row, chatList);
+  }
+
+  /** @deprecated use softDelete */
+  async delete(id: string): Promise<boolean> {
+    return this.softDelete(id);
   }
 
   async findActive(): Promise<Bot[]> {
     const botRows = await this.db
       .select()
       .from(bots)
-      .where(eq(bots.isActive, true));
+      .where(and(eq(bots.isActive, true), isNull(bots.deletedAt)));
 
     const result: Bot[] = [];
     for (const row of botRows) {
@@ -296,7 +371,13 @@ export class BotRepository {
     const activeBots = await this.db
       .select()
       .from(bots)
-      .where(and(eq(bots.isActive, true), sql`${bots.token} IS NOT NULL AND ${bots.token} <> ''`));
+      .where(
+        and(
+          eq(bots.isActive, true),
+          isNull(bots.deletedAt),
+          sql`${bots.token} IS NOT NULL AND ${bots.token} <> ''`
+        )
+      );
 
     return activeBots
       .filter((bot) => bot.token)
