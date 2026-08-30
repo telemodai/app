@@ -16,13 +16,12 @@ export class InMemoryBotRepository {
 
   async findAllForUser(userId: string): Promise<BotResponse[]> {
     return [...this.bots.values()]
-      .filter((bot) => this.memberRoles.has(this.memberKey(userId, bot.id)))
+      .filter(
+        (bot) =>
+          !bot.deleted_at &&
+          this.memberRoles.has(this.memberKey(userId, bot.id))
+      )
       .map((bot) => this.toResponse(bot, userId));
-  }
-
-  async findById(id: string): Promise<BotResponse | null> {
-    const bot = this.bots.get(id);
-    return bot ? this.toResponse(bot) : null;
   }
 
   async addMember(
@@ -33,9 +32,25 @@ export class InMemoryBotRepository {
     this.memberRoles.set(this.memberKey(userId, botId), role);
   }
 
-  async findByIdWithToken(id: string): Promise<Bot | null> {
+  async findById(id: string): Promise<BotResponse | null> {
+    const bot = this.bots.get(id);
+    if (!bot || bot.deleted_at) {
+      return null;
+    }
+    return this.toResponse(bot);
+  }
+
+  async findByIdWithTokenIncludingDeleted(id: string): Promise<Bot | null> {
     const bot = this.bots.get(id);
     return bot ? { ...bot, chats: bot.chats.map((chat) => ({ ...chat })) } : null;
+  }
+
+  async findByIdWithToken(id: string): Promise<Bot | null> {
+    const bot = this.bots.get(id);
+    if (!bot || bot.deleted_at) {
+      return null;
+    }
+    return { ...bot, chats: bot.chats.map((chat) => ({ ...chat })) };
   }
 
   async create(ownerUserId: string, botData: CreateBotInput): Promise<BotResponse> {
@@ -105,20 +120,20 @@ export class InMemoryBotRepository {
     }
   }
 
-  async delete(id: string): Promise<boolean> {
-    if (!this.bots.has(id)) {
+  async softDelete(id: string): Promise<boolean> {
+    const bot = this.bots.get(id);
+    if (!bot || bot.deleted_at) {
       return false;
     }
-
-    this.bots.delete(id);
-
-    for (const key of [...this.memberRoles.keys()]) {
-      if (key.endsWith(`:${id}`)) {
-        this.memberRoles.delete(key);
-      }
-    }
-
+    bot.deleted_at = new Date();
+    bot.is_active = false;
+    bot.token = undefined;
+    bot.updated_at = new Date();
     return true;
+  }
+
+  async delete(id: string): Promise<boolean> {
+    return this.softDelete(id);
   }
 
   private toResponse(bot: Bot, userId?: string): BotResponse {

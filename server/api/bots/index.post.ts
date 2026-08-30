@@ -52,6 +52,60 @@ export default defineEventHandler(async (event) => {
     throw error;
   }
 
+  const deletedBot = await botRepo.findByIdWithTokenIncludingDeleted(identity.id);
+  if (deletedBot?.deleted_at) {
+    if (deletedBot.owner_user_id !== user.id) {
+      throw createError({
+        statusCode: 409,
+        statusMessage: "Bot is registered to another account",
+      });
+    }
+
+    let photoFileId: string | null = null;
+    try {
+      photoFileId = await fetchBotProfilePhotoFileId(identity.token, me.id);
+    } catch {
+      // Best effort — bot may have no profile photo.
+    }
+
+    const restored =
+      (await botRepo.restoreBot(identity.id, {
+        token: identity.token,
+        name: identity.name,
+        telegram_bot_id: me.id,
+        photo_file_id: photoFileId,
+      })) ?? undefined;
+
+    if (!restored) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Failed to restore bot",
+      });
+    }
+
+    let warning: string | undefined;
+    const botWithToken = await botRepo.findByIdWithToken(restored.id);
+    if (botWithToken) {
+      try {
+        const registration = await registerBotWebhook(restored.id, botWithToken);
+        warning = registration.warning;
+      } catch (error) {
+        warning =
+          error instanceof Error
+            ? error.message
+            : "Failed to register webhook for restored bot";
+      }
+    }
+
+    const health = await getBotDeliveryHealth(event, restored.id);
+    return {
+      success: true,
+      data: withDeliveryHealth(restored, health),
+      warning,
+      message: "Bot restored successfully",
+    };
+  }
+
   const existing = await botRepo.findById(identity.id);
   if (existing) {
     throw createError({

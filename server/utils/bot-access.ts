@@ -1,5 +1,6 @@
 import type { H3Event } from "h3";
 import { BotMemberRepository, type BotMemberRole } from "@/server/database/repositories/bot-member-repository";
+import { BotRepository } from "@/server/database/repositories/bot-repository";
 import { requireSession } from "./session";
 
 export function enforceBotAccess(
@@ -32,6 +33,15 @@ export async function requireBotAccess(
   const memberRepo = new BotMemberRepository();
   const role = await memberRepo.getMemberRole(botId, user.id);
   const resolvedRole = enforceBotAccess(role, roles);
+
+  const botRepo = new BotRepository();
+  const bot = await botRepo.findById(botId);
+  if (!bot) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Bot not found",
+    });
+  }
 
   return { user, role: resolvedRole };
 }

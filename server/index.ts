@@ -5,6 +5,7 @@ import { logger } from "./core/logger";
 import { reconcileBotWebhook } from "./utils/bot-lifecycle";
 import { getWebhookBaseUrl } from "./utils/telegram-webhook";
 import { isChatActivationUpdate } from "./core/chat-activation";
+import { isBotOperational } from "./core/bot-operational";
 
 export function isBotEligibleForUpdates(
   bot: Pick<Bot, "is_active" | "token"> | null | undefined
@@ -29,6 +30,11 @@ export async function handleTelegramUpdate(
 
     if (!botConfig.token) {
       logger.warn(`Bot ${botId} has no token`);
+      return;
+    }
+
+    if (!isBotOperational(botConfig) && !isChatActivationUpdate(update)) {
+      logger.debug(`Bot ${botId} is not operational, ignoring update`);
       return;
     }
 
