@@ -94,51 +94,6 @@ export async function syncUserOpenProviderPayments(
   return { status: best };
 }
 
-/** @deprecated use syncUserPurchaseFromProvider */
-export async function syncBotPurchaseFromProvider(
-  botId: string,
-  providerPaymentId: string,
-  provider: BillingProvider = createBillingProvider(),
-  deps: ReconcileProviderPaymentDeps = {}
-): Promise<PaymentSyncResult> {
-  const paymentId = providerPaymentId.trim();
-  if (!paymentId) {
-    return { status: "not_found" };
-  }
-
-  const repo = deps.providerPayments ?? new ProviderPaymentRepository();
-  const row = await repo.findByProviderPaymentId(paymentId);
-  if (!row) {
-    return { status: "not_found" };
-  }
-  if (row.bot_id && row.bot_id !== botId) {
-    return { status: "forbidden" };
-  }
-
-  return syncUserPurchaseFromProvider(
-    row.user_id,
-    providerPaymentId,
-    provider,
-    deps
-  );
-}
-
-/** @deprecated use syncUserOpenProviderPayments */
-export async function syncBotOpenProviderPayments(
-  botId: string,
-  provider: BillingProvider = createBillingProvider(),
-  deps: ReconcileProviderPaymentDeps = {}
-): Promise<PaymentSyncResult> {
-  const repo = deps.providerPayments ?? new ProviderPaymentRepository();
-  const open = await repo.findOpenByBotId(botId);
-  if (open.length === 0) {
-    return { status: "pending" };
-  }
-
-  const userId = open[0]!.user_id;
-  return syncUserOpenProviderPayments(userId, provider, deps);
-}
-
 /** Stale pending rows older than this are polled against YooKassa in the nightly task. */
 export const STALE_PROVIDER_PAYMENT_MINUTES = 15;
 

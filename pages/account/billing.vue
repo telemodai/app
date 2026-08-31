@@ -389,6 +389,23 @@ async function applyPromo() {
   }
 }
 
+async function refreshPromoState() {
+  await refreshNuxtData("account-billing-current-promo");
+  const payload = currentPromoPayload.value;
+  if (payload) {
+    appliedPromo.value = {
+      code: payload.code,
+      valid: true,
+      discount_percent: payload.discount_percent,
+      packages: payload.packages,
+    };
+    promoInput.value = payload.code;
+  } else {
+    appliedPromo.value = null;
+    promoInput.value = "";
+  }
+}
+
 async function syncOpenPayments(
   paymentId?: string
 ): Promise<PaymentSyncStatus | undefined> {
@@ -431,6 +448,7 @@ async function refreshWallet() {
     const syncStatus = await syncOpenPayments();
     noticeForSyncStatus(syncStatus);
     await loadTransactions();
+    await refreshPromoState();
   } catch (e: unknown) {
     error.value = readFetchError(e, t("common.unknown"));
   } finally {
@@ -471,6 +489,7 @@ onMounted(async () => {
     noticeForSyncStatus(syncStatus);
     if (syncStatus === "applied" || syncStatus === "duplicate") {
       await loadTransactions();
+      await refreshPromoState();
     }
   } catch (e: unknown) {
     try {
@@ -495,6 +514,7 @@ onMounted(async () => {
       if (syncStatus === "applied" || syncStatus === "duplicate") {
         noticeForSyncStatus(syncStatus);
         await loadTransactions();
+        await refreshPromoState();
         if (pollTimer) {
           clearInterval(pollTimer);
           pollTimer = undefined;

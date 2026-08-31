@@ -1,5 +1,6 @@
 import { CreditService } from "@/server/core/credit-service";
 import { isSaasMode } from "@/server/core/deployment-mode";
+import { backfillMissingReferralRewardsForUser } from "@/server/core/provider-payment-reconciliation";
 import {
   syncUserOpenProviderPayments,
   syncUserPurchaseFromProvider,
@@ -37,6 +38,8 @@ export default defineEventHandler(async (event) => {
       syncStatus = sync.status;
     }
   }
+
+  await backfillMissingReferralRewardsForUser(user.id);
 
   const creditService = new CreditService();
   const balance = await creditService.getUserBalance(user.id);

@@ -12,12 +12,9 @@ function toReferral(row: typeof referrals.$inferSelect): Referral {
     base_credits: row.baseCredits,
     referee_bonus_credits: row.refereeBonusCredits,
     referrer_bonus_credits: row.referrerBonusCredits,
-    referee_bot_id: row.refereeBotId,
     referrer_status: row.referrerStatus,
-    referrer_claimed_bot_id: row.referrerClaimedBotId,
     referral_code: row.referralCode,
     created_at: row.createdAt,
-    claimed_at: row.claimedAt,
   };
 }
 
@@ -53,7 +50,6 @@ export class ReferralRepository {
     base_credits: number;
     referee_bonus_credits: number;
     referrer_bonus_credits: number;
-    referee_bot_id: string;
     referrer_status: ReferrerStatus;
     referral_code?: string | null;
   }): Promise<Referral> {
@@ -66,7 +62,6 @@ export class ReferralRepository {
         baseCredits: input.base_credits,
         refereeBonusCredits: input.referee_bonus_credits,
         referrerBonusCredits: input.referrer_bonus_credits,
-        refereeBotId: input.referee_bot_id,
         referrerStatus: input.referrer_status,
         referralCode: input.referral_code ?? null,
       })

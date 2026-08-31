@@ -31,7 +31,6 @@ export type ReferralStore = {
     base_credits: number;
     referee_bonus_credits: number;
     referrer_bonus_credits: number;
-    referee_bot_id: string;
     referrer_status: "claimed" | "skipped_zero";
     referral_code?: string;
   }): Promise<{ id: number }>;
@@ -70,7 +69,6 @@ class DrizzleReferralStore implements ReferralStore {
     base_credits: number;
     referee_bonus_credits: number;
     referrer_bonus_credits: number;
-    referee_bot_id: string;
     referrer_status: "claimed" | "skipped_zero";
     referral_code?: string;
   }) {
@@ -104,7 +102,6 @@ export class ReferralService {
   async processPaidPurchase(input: {
     providerPaymentId: string;
     refereeUserId: string;
-    botId: string;
     baseCredits: number;
     referralCodeFromCheckout?: string | null;
   }): Promise<ReferralProcessResult> {
@@ -175,7 +172,6 @@ export class ReferralService {
       base_credits: input.baseCredits,
       referee_bonus_credits: refereeBonus,
       referrer_bonus_credits: referrerBonus,
-      referee_bot_id: input.botId,
       referrer_status: referrerStatus,
       referral_code: normalizeReferralCode(code),
     });

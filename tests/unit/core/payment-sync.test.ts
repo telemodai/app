@@ -9,8 +9,7 @@ import {
   mapBillingEventToProviderStatus,
 } from "@/server/core/provider-payment-reconciliation";
 import {
-  syncBotOpenProviderPayments,
-  syncBotPurchaseFromProvider,
+  syncUserOpenProviderPayments,
   syncUserPurchaseFromProvider,
 } from "@/server/core/payment-sync";
 import { InMemoryCreditStore } from "@/tests/helpers/in-memory-credit-store";
@@ -96,9 +95,45 @@ describe("reconcileProviderPayment", () => {
     const row = await providerPayments.findByProviderPaymentId("pay-sync");
     expect(row?.status).toBe("credited");
   });
+
+  test("returns duplicate when payment row is already credited", async () => {
+    const { store, creditService, providerPayments } = createSaasCreditDeps();
+    const event: BillingWebhookEvent = {
+      providerPaymentId: "pay-credited",
+      purchaserUserId: "user-1",
+      packageId: "start",
+      credits: 10_000,
+      amountRub: 490,
+      status: "paid",
+    };
+
+    await providerPayments.createPending({
+      provider_payment_id: event.providerPaymentId,
+      user_id: event.purchaserUserId,
+      package_id: event.packageId,
+      amount_rub: event.amountRub,
+      credits: event.credits,
+      purchaser_user_id: event.purchaserUserId,
+    });
+
+    await applyCreditPurchaseFromBillingEvent(event, {
+      creditService,
+      ledger: store,
+      providerPayments,
+    });
+    await providerPayments.markCredited(event.providerPaymentId);
+
+    const status = await reconcileProviderPayment(event, {
+      creditService,
+      ledger: store,
+      providerPayments,
+    });
+
+    expect(status).toBe("duplicate");
+  });
 });
 
-describe("syncBotPurchaseFromProvider", () => {
+describe("syncUserPurchaseFromProvider", () => {
   test("applies credits when provider reports paid and webhook missed", async () => {
     const provider = new MockBillingProvider();
     provider.setPayment(paidEvent);
@@ -114,8 +149,8 @@ describe("syncBotPurchaseFromProvider", () => {
       purchaser_user_id: paidEvent.purchaserUserId,
     });
 
-    const result = await syncBotPurchaseFromProvider(
-      "mybot",
+    const result = await syncUserPurchaseFromProvider(
+      "user-1",
       "pay-sync",
       provider,
       { creditService, ledger: store, providerPayments }
@@ -154,8 +189,8 @@ describe("syncBotPurchaseFromProvider", () => {
       providerPayments,
     });
 
-    const result = await syncBotPurchaseFromProvider(
-      "mybot",
+    const result = await syncUserPurchaseFromProvider(
+      "user-1",
       "pay-dup",
       provider,
       { creditService, ledger: store, providerPayments }
@@ -186,8 +221,8 @@ describe("syncBotPurchaseFromProvider", () => {
       purchaser_user_id: "user-1",
     });
 
-    const result = await syncBotPurchaseFromProvider(
-      "mybot",
+    const result = await syncUserPurchaseFromProvider(
+      "user-1",
       "pay-wait",
       provider,
       { providerPayments }
@@ -230,15 +265,18 @@ describe("syncBotPurchaseFromProvider", () => {
     provider.setPayment(paidEvent);
 
     const { providerPayments } = createSaasCreditDeps();
-    const result = await syncBotPurchaseFromProvider("mybot", "pay-sync", provider, {
-      providerPayments,
-    });
+    const result = await syncUserPurchaseFromProvider(
+      "user-1",
+      "pay-sync",
+      provider,
+      { providerPayments }
+    );
     expect(result.status).toBe("not_found");
   });
 });
 
-describe("syncBotOpenProviderPayments", () => {
-  test("reconciles all open rows for bot", async () => {
+describe("syncUserOpenProviderPayments", () => {
+  test("reconciles all open rows for user", async () => {
     const provider = new MockBillingProvider();
     provider.setPayment(paidEvent);
 
@@ -253,7 +291,7 @@ describe("syncBotOpenProviderPayments", () => {
       purchaser_user_id: paidEvent.purchaserUserId,
     });
 
-    const result = await syncBotOpenProviderPayments("mybot", provider, {
+    const result = await syncUserOpenProviderPayments("user-1", provider, {
       creditService,
       ledger: store,
       providerPayments,

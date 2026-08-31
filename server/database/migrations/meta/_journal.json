@@ -99,6 +99,13 @@
       "when": 1785158400000,
       "tag": "0013_billing_wallet_v2",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1785244800000,
+      "tag": "0014_referrals_wallet_v2_cleanup",
+      "breakpoints": true
     }
   ]
 }

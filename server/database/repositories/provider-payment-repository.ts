@@ -1,6 +1,6 @@
-import { and, eq, inArray, lt } from "drizzle-orm";
+import { and, eq, inArray, isNotNull, isNull, lt } from "drizzle-orm";
 import { getDatabaseConnection } from "@/server/database/connection";
-import { providerPayments } from "@/server/database/schema";
+import { providerPayments, referrals } from "@/server/database/schema";
 import type {
   CreateProviderPaymentInput,
   ProviderPayment,
@@ -85,19 +85,27 @@ export class ProviderPaymentRepository {
     return rows.map(toProviderPayment);
   }
 
-  async findOpenByBotId(botId: string): Promise<ProviderPayment[]> {
+  async findCreditedMissingReferralByUserId(
+    userId: string
+  ): Promise<ProviderPayment[]> {
     const rows = await this.db
-      .select()
+      .select({ payment: providerPayments })
       .from(providerPayments)
+      .leftJoin(
+        referrals,
+        eq(referrals.providerPaymentId, providerPayments.providerPaymentId)
+      )
       .where(
         and(
-          eq(providerPayments.botId, botId),
-          inArray(providerPayments.status, ["pending", "succeeded"])
+          eq(providerPayments.purchaserUserId, userId),
+          eq(providerPayments.status, "credited"),
+          isNotNull(providerPayments.referralCode),
+          isNull(referrals.id)
         )
       )
       .orderBy(providerPayments.createdAt);
 
-    return rows.map(toProviderPayment);
+    return rows.map((row) => toProviderPayment(row.payment));
   }
 
   async findStalePending(olderThan: Date): Promise<ProviderPayment[]> {

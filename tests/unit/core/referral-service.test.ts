@@ -66,7 +66,6 @@ describe("ReferralService", () => {
     const self = await service.processPaidPurchase({
       providerPaymentId: "pay-self",
       refereeUserId: "referrer",
-      botId: "mybot",
       baseCredits: 10_000,
       referralCodeFromCheckout: "FRIEND10",
     });
@@ -117,7 +116,6 @@ describe("ReferralService", () => {
     const notFirst = await service.processPaidPurchase({
       providerPaymentId: "pay-2",
       refereeUserId: "referee",
-      botId: "mybot",
       baseCredits: 10_000,
       referralCodeFromCheckout: "FRIEND10",
     });
@@ -183,7 +181,6 @@ describe("ReferralService", () => {
     const result = await service.processPaidPurchase({
       providerPaymentId: "pay-ok",
       refereeUserId: "referee",
-      botId: "mybot",
       baseCredits: 10_000,
       referralCodeFromCheckout: "FRIEND10",
     });
