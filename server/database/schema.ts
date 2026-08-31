@@ -512,19 +512,11 @@ export const referrals = pgTable(
     baseCredits: integer("base_credits").notNull(),
     refereeBonusCredits: integer("referee_bonus_credits").notNull(),
     referrerBonusCredits: integer("referrer_bonus_credits").notNull(),
-    refereeBotId: varchar("referee_bot_id", { length: 64 }).references(
-      () => bots.id,
-      { onDelete: "set null" }
-    ),
     referrerStatus: referrerStatusEnum("referrer_status").notNull(),
-    referrerClaimedBotId: varchar("referrer_claimed_bot_id", {
-      length: 64,
-    }).references(() => bots.id, { onDelete: "set null" }),
     referralCode: text("referral_code"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
-    claimedAt: timestamp("claimed_at", { withTimezone: true }),
   },
   (table) => [
     uniqueIndex("referrals_referee_user_unique").on(table.refereeUserId),

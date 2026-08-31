@@ -22,6 +22,8 @@ export class InMemoryProviderPaymentStore {
       credits: input.credits,
       status: "pending",
       purchaser_user_id: input.purchaser_user_id,
+      promo_code_id: input.promo_code_id ?? null,
+      referral_code: input.referral_code ?? null,
       credited_at: null,
       created_at: now,
       updated_at: now,
@@ -46,12 +48,15 @@ export class InMemoryProviderPaymentStore {
       .sort((a, b) => a.created_at.getTime() - b.created_at.getTime());
   }
 
-  async findOpenByBotId(botId: string): Promise<ProviderPayment[]> {
+  async findCreditedMissingReferralByUserId(
+    userId: string
+  ): Promise<ProviderPayment[]> {
     return [...this.rows.values()]
       .filter(
         (row) =>
-          row.bot_id === botId &&
-          (row.status === "pending" || row.status === "succeeded")
+          row.purchaser_user_id === userId &&
+          row.status === "credited" &&
+          Boolean(row.referral_code?.trim())
       )
       .sort((a, b) => a.created_at.getTime() - b.created_at.getTime());
   }

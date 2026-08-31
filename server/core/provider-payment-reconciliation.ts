@@ -1,4 +1,5 @@
 import type { BillingWebhookEvent } from "./billing-provider";
+import type { ProviderPayment } from "@/server/database/models/provider-payment";
 import type { ProviderPaymentStatus } from "@/server/database/models/provider-payment";
 import { ProviderPaymentRepository } from "@/server/database/repositories/provider-payment-repository";
 import { PromoRedemptionRepository } from "@/server/database/repositories/promo-code-repository";
@@ -27,6 +28,55 @@ export type ReconcileProviderPaymentDeps = {
   promoRedemptions?: PromoRedemptionRepository;
 } & Parameters<typeof applyCreditPurchaseFromBillingEvent>[1];
 
+async function applyReferralRewardsForPaymentRow(
+  row: ProviderPayment
+): Promise<void> {
+  if (!row.referral_code?.trim()) {
+    return;
+  }
+
+  const referralResult = await new ReferralService().processPaidPurchase({
+    providerPaymentId: row.provider_payment_id,
+    refereeUserId: row.purchaser_user_id,
+    baseCredits: row.credits,
+    referralCodeFromCheckout: row.referral_code,
+  });
+
+  if (referralResult.status === "applied") {
+    logger.info(
+      {
+        paymentId: row.provider_payment_id,
+        referralId: referralResult.referral_id,
+      },
+      "Referral rewards applied for first purchase"
+    );
+    return;
+  }
+
+  if (referralResult.status === "skipped") {
+    logger.info(
+      {
+        paymentId: row.provider_payment_id,
+        reason: referralResult.reason,
+      },
+      "Referral rewards skipped"
+    );
+  }
+}
+
+/** Idempotent backfill for credited payments that failed referral insert (wallet v2). */
+export async function backfillMissingReferralRewardsForUser(
+  userId: string,
+  deps: ReconcileProviderPaymentDeps = {}
+): Promise<number> {
+  const repo = deps.providerPayments ?? new ProviderPaymentRepository();
+  const rows = await repo.findCreditedMissingReferralByUserId(userId);
+  for (const row of rows) {
+    await applyReferralRewardsForPaymentRow(row);
+  }
+  return rows.length;
+}
+
 /**
  * Update provider_payments row from YooKassa state and grant credits when succeeded.
  * Idempotent: credited row or ledger duplicate → duplicate.
@@ -47,6 +97,7 @@ export async function reconcileProviderPayment(
   }
 
   if (row.status === "credited") {
+    await applyReferralRewardsForPaymentRow(row);
     return "duplicate";
   }
 
@@ -91,27 +142,13 @@ export async function reconcileProviderPayment(
       }
     }
 
-    const referralResult = await new ReferralService().processPaidPurchase({
-      providerPaymentId: event.providerPaymentId,
-      refereeUserId: row.purchaser_user_id,
-      botId: row.bot_id ?? "",
-      baseCredits: row.credits,
-      referralCodeFromCheckout: row.referral_code,
-    });
-    if (referralResult.status === "applied") {
-      logger.info(
-        {
-          paymentId: event.providerPaymentId,
-          referralId: referralResult.referral_id,
-        },
-        "Referral rewards applied for first purchase"
-      );
-    }
+    await applyReferralRewardsForPaymentRow(row);
 
     return "applied";
   }
   if (applyResult.status === "duplicate") {
     await repo.markCredited(event.providerPaymentId);
+    await applyReferralRewardsForPaymentRow(row);
     return "duplicate";
   }
 

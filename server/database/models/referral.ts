@@ -8,10 +8,7 @@ export interface Referral {
   base_credits: number;
   referee_bonus_credits: number;
   referrer_bonus_credits: number;
-  referee_bot_id?: string | null;
   referrer_status: ReferrerStatus;
-  referrer_claimed_bot_id?: string | null;
   referral_code?: string | null;
   created_at: Date;
-  claimed_at?: Date | null;
 }
