@@ -62,7 +62,7 @@
           />
           <UiAppButton
             variant="ghost"
-            :disabled="applyingPromo || !promoInput.trim()"
+            :disabled="isPromoApplyDisabled"
             @click="applyPromo"
           >
             {{ applyingPromo ? t("common.loading") : t("billing.promo.apply") }}
@@ -226,8 +226,42 @@ const applyingPromo = ref(false);
 const checkoutPackageId = ref<CreditPackageId | null>(null);
 const paymentNotice = ref("");
 const paymentNoticeTone = ref<"info" | "success" | "warning">("info");
-const promoInput = ref("");
-const appliedPromo = ref<AppliedPromo>(null);
+
+type CurrentPromoPayload = {
+  code: string;
+  discount_percent: number;
+  packages: PromoPackagePreview[];
+};
+
+const { data: currentPromoPayload } = await useAsyncData(
+  "account-billing-current-promo",
+  async () => {
+    try {
+      const response = await $fetch<{ data: CurrentPromoPayload | null }>(
+        "/api/promo/current"
+      );
+      return response.data;
+    } catch {
+      return null;
+    }
+  }
+);
+
+const promoInput = ref(currentPromoPayload.value?.code ?? "");
+const appliedPromo = ref<AppliedPromo>(
+  currentPromoPayload.value
+    ? {
+        code: currentPromoPayload.value.code,
+        valid: true,
+        discount_percent: currentPromoPayload.value.discount_percent,
+        packages: currentPromoPayload.value.packages,
+      }
+    : null
+);
+
+const isPromoApplyDisabled = computed(
+  () => applyingPromo.value || promoInput.value.trim().length === 0
+);
 
 const discountedByPackage = computed(() => {
   const map = new Map<CreditPackageId, number>();
@@ -322,33 +356,6 @@ function scrollToPurchase() {
   document.getElementById("purchase")?.scrollIntoView({ behavior: "smooth" });
 }
 
-async function loadCurrentPromo() {
-  try {
-    const response = await $fetch<{
-      data: {
-        code: string;
-        discount_percent: number;
-        packages: PromoPackagePreview[];
-      } | null;
-    }>("/api/promo/current");
-
-    if (!response.data) {
-      appliedPromo.value = null;
-      return;
-    }
-
-    appliedPromo.value = {
-      code: response.data.code,
-      valid: true,
-      discount_percent: response.data.discount_percent,
-      packages: response.data.packages,
-    };
-    promoInput.value = response.data.code;
-  } catch {
-    // Non-blocking — user can still purchase at list price.
-  }
-}
-
 async function applyPromo() {
   const code = promoInput.value.trim();
   if (!code) {
@@ -359,24 +366,23 @@ async function applyPromo() {
   promoError.value = "";
   try {
     const response = await $fetch<{
-      data: {
-        code: string;
-        discount_percent: number;
-        packages: PromoPackagePreview[];
-      };
+      data: CurrentPromoPayload;
     }>("/api/promo/apply", {
       method: "POST",
       body: { code },
     });
 
+    currentPromoPayload.value = response.data;
     appliedPromo.value = {
       code: response.data.code,
       valid: true,
       discount_percent: response.data.discount_percent,
       packages: response.data.packages,
     };
+    promoInput.value = response.data.code;
   } catch (e: unknown) {
     appliedPromo.value = null;
+    currentPromoPayload.value = null;
     promoError.value = resolvePromoApplyFetchError(e, t);
   } finally {
     applyingPromo.value = false;
@@ -452,7 +458,6 @@ async function startCheckout(packageId: CreditPackageId) {
 let pollTimer: ReturnType<typeof setInterval> | undefined;
 
 onMounted(async () => {
-  await loadCurrentPromo();
   await loadTransactions();
 
   const queryPaymentId = route.query.payment_id;
