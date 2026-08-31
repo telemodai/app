@@ -19,5 +19,10 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
+  // Anonymous referral landing (/r/:code, ?ref=) must set cookie before login.
+  if (path === "/api/referral/attribution") {
+    return;
+  }
+
   await requireSession(event);
 });
