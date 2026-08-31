@@ -88,7 +88,7 @@
             </UiAppBadge>
             <template v-if="isSaas">
               <UiAppBadge variant="accent">
-                {{ t("billing.balance") }}: {{ (bot.credit_balance ?? 0).toLocaleString() }}
+                {{ t("billing.balance") }}: {{ formatLocaleNumber(bot.credit_balance ?? 0, locale) }}
               </UiAppBadge>
               <UiAppButton
                 v-if="isOwner"
@@ -380,7 +380,7 @@
               >
                 {{
                   t("bot.dangerZone.creditReclaimHint", {
-                    credits: (bot.credit_balance ?? 0).toLocaleString(),
+                    credits: formatLocaleNumber(bot.credit_balance ?? 0, locale),
                   })
                 }}
               </p>
@@ -656,7 +656,7 @@
           {{ t("bot.credits.allocateHelper") }}
         </p>
         <p v-if="walletBalance !== null" class="mb-4 text-sm text-fg">
-          {{ t("bot.credits.walletBalance", { balance: walletBalance.toLocaleString() }) }}
+          {{ t("bot.credits.walletBalance", { balance: formatLocaleNumber(walletBalance, locale) }) }}
         </p>
         <UiAppAlert
           v-if="walletBalance === 0"
@@ -859,6 +859,7 @@ import {
 } from "@/lib/bot-message-template-ui";
 import { telegramBotWebUrl } from "@/lib/telegram-bot-url";
 import { readFetchError } from "@/lib/fetch-error";
+import { formatLocaleNumber } from "@/lib/locale-format";
 import type { ChatActivationStartMode } from "@/composables/useChatActivationWait";
 import type { BotMemberRole } from "@/types/bot";
 import {
@@ -1151,7 +1152,7 @@ async function submitAllocate() {
     }
     walletBalance.value = response.data.wallet_balance;
     allocateSuccess.value = t("bot.credits.allocateSuccess", {
-      amount: amount.toLocaleString(),
+      amount: formatLocaleNumber(amount, locale.value),
     });
     allocateAmountInput.value = "";
   } catch (error: unknown) {

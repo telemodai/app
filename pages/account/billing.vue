@@ -18,7 +18,7 @@
     <UiAppCard class="!p-6 mb-6">
       <div class="text-sm text-fg-muted">{{ t("account.billing.walletBalance") }}</div>
       <div class="tm-page-title text-accent mt-1">
-        {{ balance.toLocaleString() }}
+        {{ formatLocaleNumber(balance, locale) }}
       </div>
       <p class="mt-2 text-sm text-fg-muted">
         {{ t("account.billing.walletHint") }}
@@ -90,14 +90,14 @@
             <div class="text-sm text-fg-muted">
               <template v-if="discountedPrice(pkg.id) !== pkg.amountRub">
                 <span class="line-through text-fg-subtle mr-2">
-                  {{ pkg.amountRub.toLocaleString() }} ₽
+                  {{ formatLocaleNumber(pkg.amountRub, locale) }} ₽
                 </span>
                 <span class="font-medium text-fg">
-                  {{ discountedPrice(pkg.id).toLocaleString() }} ₽
+                  {{ formatLocaleNumber(discountedPrice(pkg.id), locale) }} ₽
                 </span>
               </template>
               <template v-else>
-                {{ pkg.amountRub.toLocaleString() }} ₽
+                {{ formatLocaleNumber(pkg.amountRub, locale) }} ₽
               </template>
             </div>
           </div>
@@ -159,7 +159,7 @@
               {{ formatSignedAmount(row.amount) }}
             </div>
             <div class="text-xs text-fg-muted tabular-nums">
-              {{ t("account.billing.balanceAfter", { balance: row.balance_after.toLocaleString() }) }}
+              {{ t("account.billing.balanceAfter", { balance: formatLocaleNumber(row.balance_after, locale) }) }}
             </div>
           </div>
         </UiAppCard>
@@ -175,6 +175,7 @@
 <script setup lang="ts">
 import { CREDIT_PACKAGES, type CreditPackageId } from "@/lib/credit-packages";
 import { readFetchError } from "@/lib/fetch-error";
+import { formatLocaleNumber } from "@/lib/locale-format";
 import { resolvePromoApplyFetchError } from "@/lib/promo-validation-ui";
 import type { CreditTransaction } from "@/server/database/models/credit-transaction";
 
@@ -320,7 +321,7 @@ function formatDate(value: string | Date) {
 
 function formatSignedAmount(amount: number) {
   const prefix = amount > 0 ? "+" : "";
-  return `${prefix}${amount.toLocaleString()}`;
+  return `${prefix}${formatLocaleNumber(amount, locale.value)}`;
 }
 
 function botIdFromMetadata(row: CreditTransaction): string | undefined {
