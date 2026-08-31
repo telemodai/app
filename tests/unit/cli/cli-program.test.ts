@@ -7,6 +7,7 @@ describe("operator cli program", () => {
     const help = program.helpInformation();
 
     expect(help).toContain("promo");
+    expect(help).toContain("user");
     expect(help).toContain("credits");
     expect(help).toContain("Operator CLI");
   });

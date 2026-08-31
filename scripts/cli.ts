@@ -21,6 +21,20 @@ import {
   validateGrantReason,
 } from "@/server/core/operator/credits-grant";
 import { refreshCloudDevLoginToken } from "@/server/core/operator/cloud-dev-auth";
+import { UserRepository } from "@/server/database/repositories/user-repository";
+import {
+  formatUsersList,
+  listUsersOperator,
+} from "@/server/core/operator/user-list";
+import {
+  formatUserPurgeResult,
+  promptUserPurgeConfirm,
+  purgeUserOperator,
+} from "@/server/core/operator/user-purge";
+import {
+  formatPromoCodesList,
+  listPromoCodesOperator,
+} from "@/server/core/operator/promo-list";
 
 async function withDatabase<T>(fn: () => Promise<T>): Promise<T> {
   const connection = getDatabaseConnection();
@@ -188,6 +202,75 @@ async function runCreditsGrant(options: {
   });
 }
 
+async function runUserList(options: { limit?: string }) {
+  if (!process.env.DATABASE_URL) {
+    exitWithError("DATABASE_URL is required");
+  }
+
+  const limit = options.limit ? Number(options.limit) : 50;
+  if (!Number.isFinite(limit) || limit <= 0) {
+    exitWithError("--limit must be a positive integer");
+  }
+
+  await withDatabase(async () => {
+    const users = await listUsersOperator(limit);
+    console.log(formatUsersList(users));
+  });
+}
+
+async function runUserDelete(options: { id?: string; yes?: boolean }) {
+  if (!process.env.DATABASE_URL) {
+    exitWithError("DATABASE_URL is required");
+  }
+
+  const userId = options.id?.trim();
+  if (!userId) {
+    exitWithError("user delete requires --id <userId> (see: cli user list)");
+  }
+
+  await withDatabase(async () => {
+    const repo = new UserRepository();
+    const user = await repo.findById(userId);
+    if (!user) {
+      exitWithError(`User not found: ${userId}`);
+    }
+
+    if (!options.yes) {
+      const confirmed = await promptUserPurgeConfirm(user);
+      if (!confirmed) {
+        console.log("Aborted.");
+        process.exit(0);
+      }
+    }
+
+    const result = await purgeUserOperator(userId);
+    if (!result.ok) {
+      if (result.error === "not_found") {
+        exitWithError(`User not found: ${userId}`);
+      }
+      exitWithError("Aborted.");
+    }
+
+    console.log(formatUserPurgeResult(result));
+  });
+}
+
+async function runPromoList(options: { limit?: string }) {
+  if (!process.env.DATABASE_URL) {
+    exitWithError("DATABASE_URL is required");
+  }
+
+  const limit = options.limit ? Number(options.limit) : 50;
+  if (!Number.isFinite(limit) || limit <= 0) {
+    exitWithError("--limit must be a positive integer");
+  }
+
+  await withDatabase(async () => {
+    const promos = await listPromoCodesOperator(limit);
+    console.log(formatPromoCodesList(promos));
+  });
+}
+
 export function buildCliProgram(): Command {
   const program = new Command()
     .name("cli")
@@ -204,6 +287,33 @@ export function buildCliProgram(): Command {
     .option("--expires <iso>", "Expiry (ISO 8601) or omit for no expiry")
     .action(async (options) => {
       await runPromoCreate(options);
+    });
+
+  promo
+    .command("list")
+    .description("List promo codes")
+    .option("--limit <n>", "Max rows (default 50)", "50")
+    .action(async (options) => {
+      await runPromoList(options);
+    });
+
+  const user = program.command("user").description("User account operations");
+
+  user
+    .command("list")
+    .description("List users (newest first)")
+    .option("--limit <n>", "Max rows (default 50)", "50")
+    .action(async (options) => {
+      await runUserList(options);
+    });
+
+  user
+    .command("delete")
+    .description("Delete a user and all related data (dev/testing)")
+    .requiredOption("--id <userId>", "User id from `cli user list`")
+    .option("--yes", "Skip interactive confirmation", false)
+    .action(async (options) => {
+      await runUserDelete(options);
     });
 
   const credits = program
