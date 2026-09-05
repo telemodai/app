@@ -4,7 +4,7 @@ Repository: [github.com/telemodai/app](https://github.com/telemodai/app)
 
 ## What
 
-Self-hosted web admin + Telegram webhook service for **AI chat moderation**. Operators connect moderation bots, define rules (custom or presets), attach rule sets per chat, and review logs and audit decisions.
+Self-hosted web admin + Telegram webhook service for **AI chat moderation**. Operators connect moderation bots, define rules (custom or presets), attach rule sets per chat, and review logs and the decision journal (LLM moderation decisions).
 
 Default product name in UI: **Telemodai** (`APP_NAME` env).
 
@@ -23,7 +23,7 @@ Manual moderation does not scale; generic bot filters miss context. Teams need p
 - **Per-chat rule subsets** — same bot, different chats, different policies
 - **Actions:** warn / delete / ban per rule; silent mode runs moderation without posting to the chat
 - **Team access:** owner + managers via access codes; Telegram login (no separate passwords)
-- **Observability:** dashboard, bot statistics, moderation audit trail
+- **Observability:** dashboard, bot statistics, decision journal
 - **i18n:** English default admin UI + Russian; browser locale detection; footer language switcher
 
 ## Domain model

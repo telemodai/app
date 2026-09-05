@@ -114,8 +114,8 @@
       "chatSubtitle": "Chat {chatId}"
     },
     "audit": {
-      "title": "Moderation audit",
-      "documentTitle": "Audit",
+      "title": "Decision journal",
+      "documentTitle": "Decision journal",
       "subtitle": "Bot {'@'}{botId} — LLM decisions (newest first)"
     },
     "releaseNotes": {
@@ -359,7 +359,7 @@
     },
     "recentActivity": {
       "title": "Recent Activity",
-      "audit": "Audit",
+      "audit": "Decision journal",
       "empty": "No recent activity. Send messages to the bot to see logs here."
     },
     "dangerZone": {
@@ -466,9 +466,9 @@
     "chatFallback": "Chat {chatId}",
     "mobileMeta": "{chatName} · user {userId}",
     "mobileRule": "Rule:",
-    "empty": "No decisions yet. Send messages to the bot to see audit entries here.",
-    "breadcrumb": "Audit",
-    "paginationNav": "Audit pagination"
+    "empty": "No decisions yet. Send messages to the bot to see decision journal entries here.",
+    "breadcrumb": "Decision journal",
+    "paginationNav": "Decision journal pagination"
   },
   "releaseNotes": {
     "loading": "Loading...",

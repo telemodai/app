@@ -16,7 +16,7 @@ Repository: [github.com/telemodai/app](https://github.com/telemodai/app)
 - **Silent mode** — full moderation (delete, warn, ban) without posting messages to the chat
 - **Bot team** — owner/manager roles, join via access code
 - **Webhooks** — status: Working / Disabled / Problem
-- **Logs, statistics, audit** — moderation actions and model decisions per bot
+- **Logs, statistics, decision journal** — moderation actions and model decisions per bot
 - **en/ru UI** — language switcher in the footer
 - **Self-hosted LLM** — model settings at `/settings/llm` (when `LLM_API_KEY` is not set in env)
 - **Branding** — product name via `APP_NAME` (default `Telemodai`)

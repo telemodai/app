@@ -1,4 +1,4 @@
-/** Shared Telegram display labels for admin UI (audit, moderation). */
+/** Shared Telegram display labels for admin UI (decision journal, moderation). */
 
 export function formatTelegramUsername(
   username: string | null | undefined

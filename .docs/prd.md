@@ -4,7 +4,7 @@
 
 Web application to manage Telegram moderation bots: connect bot token, configure chats, rules, team access, and review moderation outcomes. Runtime moderation runs on incoming Telegram webhooks.
 
-**In scope:** bot CRUD, rules, rule presets, chat binding, webhook lifecycle, team join, dashboard, audit, release notes page.
+**In scope:** bot CRUD, rules, rule presets, chat binding, webhook lifecycle, team join, dashboard, decision journal, release notes page.
 
 **Out of scope (current):** multi-region, non-Telegram channels, end-user facing signup outside Telegram.
 
