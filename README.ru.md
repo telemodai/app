@@ -2,7 +2,7 @@
 
 [English](README.md) · **Русский**
 
-**AI-модерация для здоровья сообществ** · *AI moderation for healthy communities*
+**AI-модерация для здоровья сообществ** · *AI moderation for healthy communities* · MVP в проде (`v1.5.3`)
 
 Self-hosted веб-админка и Telegram webhook для AI-модерации чатов. Правила настраиваются **per chat** — у одного бота в разных чатах могут быть разные наборы правил.
 
@@ -17,6 +17,12 @@ Self-hosted веб-админка и Telegram webhook для AI-модераци
 - **Команда на боте** — owner/manager, join по access code
 - **Webhook под капотом** — статус «Working / Disabled / Problem»
 - **Логи, статистика, журнал решений** — действия модерации и решения модели по боту
+- **Пользователи чата** — помилование, разбан, сброс предупреждений
+- **Шаблоны сообщений** — настраиваемый warn/ban HTML в Telegram на бота
+- **AI-помощник для правил** — черновик текста правила по запросу на странице модерации чата
+- **Что нового** — журнал обновлений в приложении (`/release-notes`)
+- **SaaS-кредиты (опционально)** — кошелёк, оплата YooKassa, пополнение бота (`DEPLOYMENT_MODE=saas`); промокоды и реферальная программа
+- **Тёмная/светлая тема** — переключатель в шапке
 - **Интерфейс en/ru** — переключатель языка в футере
 - **Self-hosted LLM** — настройки модели в `/settings/llm` (если `LLM_API_KEY` не задан в env)
 - **Брендинг** — название продукта через `APP_NAME` (default `Telemodai`)
@@ -50,7 +56,7 @@ cp .env.example .env
 
 Минимум в `.env`: `DATABASE_URL`, `TELEGRAM_LOGIN_BOT_ID`, `TELEGRAM_LOGIN_CLIENT_SECRET`, `LLM_API_KEY`, `BASE_URL` (HTTPS для webhook и OIDC callback).
 
-Опционально: `APP_NAME` (название в UI), `SETTINGS_ENCRYPTION_KEY` (для сохранения LLM-ключа в БД на `/settings/llm`).
+Опционально: `APP_NAME` (название в UI), `SETTINGS_ENCRYPTION_KEY` (для сохранения LLM-ключа в БД на `/settings/llm`), `DEPLOYMENT_MODE` (`self-hosted` по умолчанию или `saas` для биллинга).
 
 **PostgreSQL локально:** `docker compose up -d postgres`
 
@@ -79,7 +85,7 @@ make docker-build
 
 Образ: `ghcr.io/telemodai/app:latest` (CI: git tag `v*` или ручной запуск workflow).
 
-До переноса репозитория теги `v1.3.1` и ранее публиковались как `ghcr.io/tikhomirovv/tg-moderator-ai` — GitHub перенаправляет старые ссылки на репозиторий, но для deploy лучше обновить `image:` в compose.
+До переноса репозитория теги `v1.3.1` и ранее публиковались как `ghcr.io/tikhomirovv/tg-moderator-ai` — GitHub перенаправляет старые ссылки на репозиторий, но для deploy лучше обновить `image:` в compose. Текущий релиз: `v1.5.3`.
 
 Кратко: [deploy/README.md](deploy/README.md) · полная инструкция: [.docs/deploy.md](.docs/deploy.md)
 
@@ -89,9 +95,11 @@ Health: `GET /api/health` → `{"ok":true}`. В контейнере порт **
 
 | Документ | Описание |
 |----------|----------|
-| [.docs/project-overview.md](.docs/project-overview.md) | Продукт, аудитория, статус |
+| [.docs/project-overview.md](.docs/project-overview.md) | Продукт, аудитория, статус MVP |
 | [.docs/prd.md](.docs/prd.md) | Сценарии, требования, ограничения |
 | [.docs/technical-design.md](.docs/technical-design.md) | Стек, API, структура, dev tunnel |
+| [.docs/billing-design.md](.docs/billing-design.md) | SaaS-кредиты, режимы деплоя, YooKassa |
+| [.docs/billing-economics.md](.docs/billing-economics.md) | Тарифы и экономика кредитов |
 | [.docs/i18n.md](.docs/i18n.md) | Локализация admin UI (en/ru) |
 | [Production deploy](.docs/deploy.md) | GHCR, env, Traefik, проверки |
 | [Database migrations](.docs/database-migrations.md) | Incremental миграции |
@@ -106,12 +114,16 @@ Health: `GET /api/health` → `{"ok":true}`. В контейнере порт **
 |-------|------|----------|
 | `GET/POST` | `/api/bots` | Список / создание |
 | `GET/PUT` | `/api/bots/:id` | Детали / обновление |
-| `GET` | `/api/bots/:id/logs`, `.../statistics` | Логи, статистика |
+| `GET` | `/api/bots/:id/logs`, `.../statistics`, `.../decisions` | Логи, статистика, журнал решений |
 | `GET/POST` | `/api/bots/:id/chats/:chatId/rules` | Правила чата / создание |
 | `GET/POST` | `/api/bots/:id/chats/:chatId/rule-templates` | Каталог пресетов / добавление в чат |
+| `GET/POST` | `/api/bots/:id/chats/:chatId/users/*` | Пользователи чата; помилование, разбан, сброс предупреждений |
+| `POST` | `/api/bots/:id/credits/allocate` | Перевод с кошелька на бота (SaaS, owner) |
 | `POST` | `/api/bots/join` | Join по access code |
 | `GET` | `/api/dashboard` | Дашборд по ботам пользователя |
 | `GET/PUT` | `/api/settings/llm` | LLM settings (self-hosted) |
+| `GET/POST` | `/api/account/wallet`, `/api/account/credits/*` | SaaS-кошелёк и оплата |
+| `GET` | `/api/releases` | Лента release notes |
 | `POST` | `/api/telegram/webhook/:botId` | Webhook Telegram |
 | `GET` | `/api/auth/telegram` | Старт Telegram OIDC |
 | `GET` | `/api/auth/session` | Текущая сессия |

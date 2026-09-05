@@ -33,7 +33,7 @@ Self-hosted production guide. Образ приложения в Docker; Postgre
 
 ```
 ghcr.io/telemodai/app:latest   # git tag v* или ручной workflow
-ghcr.io/telemodai/app:v1.3.1   # git tag v1.3.1
+ghcr.io/telemodai/app:v1.5.3   # git tag v1.5.3
 ```
 
 Ранее (до переноса репозитория): `ghcr.io/tikhomirovv/tg-moderator-ai` — теги до смены CI остаются там; в `compose.yml` обновите `image:` на новый путь.
