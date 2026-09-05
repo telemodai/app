@@ -4,7 +4,7 @@ Repository: [github.com/telemodai/app](https://github.com/telemodai/app). Stable
 
 ## Project
 
-Self-hosted admin UI + Telegram webhook: AI moderation of chats via configurable rules (LLM).
+Self-hosted admin UI + Telegram webhook: AI moderation of chats via configurable rules (LLM). **MVP shipped** (`v1.5.3`) — see [`.docs/project-overview.md`](.docs/project-overview.md) for status and [`.docs/prd.md`](.docs/prd.md) for scope.
 
 **Domain model:**
 
