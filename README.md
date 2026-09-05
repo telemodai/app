@@ -2,7 +2,7 @@
 
 **English** · [Русский](README.ru.md)
 
-**AI moderation for healthy communities**
+**AI moderation for healthy communities** · MVP shipped (`v1.5.3`)
 
 Self-hosted web admin and Telegram webhooks for AI chat moderation. Rules are configured **per chat** — one bot can use different rule sets in different chats.
 
@@ -17,6 +17,12 @@ Repository: [github.com/telemodai/app](https://github.com/telemodai/app)
 - **Bot team** — owner/manager roles, join via access code
 - **Webhooks** — status: Working / Disabled / Problem
 - **Logs, statistics, decision journal** — moderation actions and model decisions per bot
+- **Chat users** — pardon, unban, reset warnings per chat
+- **Message templates** — customizable warn/ban Telegram HTML per bot
+- **AI rule assist** — draft rule text from a prompt on the chat moderation page
+- **Release notes** — in-app changelog at `/release-notes`
+- **SaaS credits (optional)** — user wallet, YooKassa checkout, allocate to bots (`DEPLOYMENT_MODE=saas`); promo codes and referral
+- **Dark/light theme** — toggle in the header
 - **en/ru UI** — language switcher in the footer
 - **Self-hosted LLM** — model settings at `/settings/llm` (when `LLM_API_KEY` is not set in env)
 - **Branding** — product name via `APP_NAME` (default `Telemodai`)
@@ -50,7 +56,7 @@ cp .env.example .env
 
 Minimum `.env`: `DATABASE_URL`, `TELEGRAM_LOGIN_BOT_ID`, `TELEGRAM_LOGIN_CLIENT_SECRET`, `LLM_API_KEY`, `BASE_URL` (HTTPS for webhooks and OIDC callback).
 
-Optional: `APP_NAME` (UI title), `SETTINGS_ENCRYPTION_KEY` (to store the LLM key in the DB on `/settings/llm`).
+Optional: `APP_NAME` (UI title), `SETTINGS_ENCRYPTION_KEY` (to store the LLM key in the DB on `/settings/llm`), `DEPLOYMENT_MODE` (`self-hosted` default or `saas` for billing UI).
 
 **Local PostgreSQL:** `docker compose up -d postgres`
 
@@ -79,7 +85,7 @@ make docker-build
 
 Image: `ghcr.io/telemodai/app:latest` (CI: git tag `v*` or manual workflow run).
 
-Before the repo move, tags through `v1.3.1` were published as `ghcr.io/tikhomirovv/tg-moderator-ai` — GitHub redirects old links, but update `image:` in compose for deploy.
+Before the repo move, tags through `v1.3.1` were published as `ghcr.io/tikhomirovv/tg-moderator-ai` — GitHub redirects old links, but update `image:` in compose for deploy. Current release: `v1.5.3`.
 
 Short guide: [deploy/README.md](deploy/README.md) · full guide: [.docs/deploy.md](.docs/deploy.md)
 
@@ -89,9 +95,11 @@ Health: `GET /api/health` → `{"ok":true}`. Container listens on port **3000**.
 
 | Document | Description |
 |----------|-------------|
-| [.docs/project-overview.md](.docs/project-overview.md) | Product, audience, status |
+| [.docs/project-overview.md](.docs/project-overview.md) | Product, audience, MVP status |
 | [.docs/prd.md](.docs/prd.md) | Scenarios, requirements, constraints |
 | [.docs/technical-design.md](.docs/technical-design.md) | Stack, API, layout, dev tunnel |
+| [.docs/billing-design.md](.docs/billing-design.md) | SaaS credits, deployment modes, YooKassa |
+| [.docs/billing-economics.md](.docs/billing-economics.md) | Credit tiers and economics |
 | [.docs/i18n.md](.docs/i18n.md) | Admin UI localization (en/ru) |
 | [Production deploy](.docs/deploy.md) | GHCR, env, Traefik, checks |
 | [Database migrations](.docs/database-migrations.md) | Incremental migrations |
@@ -106,12 +114,16 @@ Health: `GET /api/health` → `{"ok":true}`. Container listens on port **3000**.
 |--------|------|-------------|
 | `GET/POST` | `/api/bots` | List / create |
 | `GET/PUT` | `/api/bots/:id` | Details / update |
-| `GET` | `/api/bots/:id/logs`, `.../statistics` | Logs, statistics |
+| `GET` | `/api/bots/:id/logs`, `.../statistics`, `.../decisions` | Logs, statistics, decision journal |
 | `GET/POST` | `/api/bots/:id/chats/:chatId/rules` | Chat rules / create |
 | `GET/POST` | `/api/bots/:id/chats/:chatId/rule-templates` | Preset catalog / add to chat |
+| `GET/POST` | `/api/bots/:id/chats/:chatId/users/*` | Chat users; pardon, unban, reset warnings |
+| `POST` | `/api/bots/:id/credits/allocate` | Allocate wallet → bot (SaaS, owner) |
 | `POST` | `/api/bots/join` | Join via access code |
 | `GET` | `/api/dashboard` | Cross-bot dashboard |
 | `GET/PUT` | `/api/settings/llm` | LLM settings (self-hosted) |
+| `GET/POST` | `/api/account/wallet`, `/api/account/credits/*` | SaaS wallet and checkout |
+| `GET` | `/api/releases` | Release notes feed |
 | `POST` | `/api/telegram/webhook/:botId` | Telegram webhook |
 | `GET` | `/api/auth/telegram` | Start Telegram OIDC |
 | `GET` | `/api/auth/session` | Current session |
