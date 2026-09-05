@@ -2,7 +2,7 @@
 
 **English** · [Русский](README.ru.md)
 
-**AI moderation for healthy communities** · MVP shipped (`v1.5.3`)
+**AI moderation for healthy communities**
 
 Self-hosted web admin and Telegram webhooks for AI chat moderation. Rules are configured **per chat** — one bot can use different rule sets in different chats.
 
@@ -78,14 +78,41 @@ bun run build
 bun test
 bun run db:migrate
 bun run db:generate   # after editing Drizzle schema
+bun run cli -- --help # operator CLI (needs DATABASE_URL)
 make docker-build
 ```
+
+## Operator CLI
+
+Maintenance CLI for operators and local dev. Requires `DATABASE_URL` (loaded from `.env` via `bun run cli`).
+
+```bash
+bun run cli -- --help
+docker compose exec app cli --help   # production image (binary on PATH)
+```
+
+| Command | Purpose |
+|---------|---------|
+| `promo create` / `promo list` | SaaS purchase promo codes |
+| `credits grant` | Manual wallet or bot credit adjust (`admin_adjust` ledger, SaaS) |
+| `user list` / `user delete` | List users; purge user and related data (dev/testing) |
+| `auth refresh-dev-login` | Print localhost browser login link (Cloud Agent dev) |
+
+Examples:
+
+```bash
+bun run cli -- promo create --code LAUNCH20 --percent 20
+bun run cli -- credits grant --bot-id mybot --amount 5000 --reason "support"
+docker compose exec app cli promo list
+```
+
+SaaS ledger rules: [.docs/billing-design.md](.docs/billing-design.md). More examples: [.docs/deploy.md](.docs/deploy.md#10-operator-cli-saas).
 
 ## Production
 
 Image: `ghcr.io/telemodai/app:latest` (CI: git tag `v*` or manual workflow run).
 
-Before the repo move, tags through `v1.3.1` were published as `ghcr.io/tikhomirovv/tg-moderator-ai` — GitHub redirects old links, but update `image:` in compose for deploy. Current release: `v1.5.3`.
+Before the repo move, tags through `v1.3.1` were published as `ghcr.io/tikhomirovv/tg-moderator-ai` — GitHub redirects old links, but update `image:` in compose for deploy.
 
 Short guide: [deploy/README.md](deploy/README.md) · full guide: [.docs/deploy.md](.docs/deploy.md)
 
@@ -95,7 +122,7 @@ Health: `GET /api/health` → `{"ok":true}`. Container listens on port **3000**.
 
 | Document | Description |
 |----------|-------------|
-| [.docs/project-overview.md](.docs/project-overview.md) | Product, audience, MVP status |
+| [.docs/project-overview.md](.docs/project-overview.md) | Product, audience, status |
 | [.docs/prd.md](.docs/prd.md) | Scenarios, requirements, constraints |
 | [.docs/technical-design.md](.docs/technical-design.md) | Stack, API, layout, dev tunnel |
 | [.docs/billing-design.md](.docs/billing-design.md) | SaaS credits, deployment modes, YooKassa |

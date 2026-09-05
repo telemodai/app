@@ -2,7 +2,7 @@
 
 [English](README.md) · **Русский**
 
-**AI-модерация для здоровья сообществ** · *AI moderation for healthy communities* · MVP в проде (`v1.5.3`)
+**AI-модерация для здоровья сообществ** · *AI moderation for healthy communities*
 
 Self-hosted веб-админка и Telegram webhook для AI-модерации чатов. Правила настраиваются **per chat** — у одного бота в разных чатах могут быть разные наборы правил.
 
@@ -78,14 +78,41 @@ bun run build
 bun test
 bun run db:migrate
 bun run db:generate   # после правки Drizzle schema
+bun run cli -- --help # operator CLI (нужен DATABASE_URL)
 make docker-build
 ```
+
+## Operator CLI
+
+CLI для операторских задач и локальной разработки. Нужен `DATABASE_URL` (при `bun run cli` подхватывается из `.env`).
+
+```bash
+bun run cli -- --help
+docker compose exec app cli --help   # production-образ (бинарник в PATH)
+```
+
+| Команда | Назначение |
+|---------|------------|
+| `promo create` / `promo list` | Промокоды на покупку кредитов (SaaS) |
+| `credits grant` | Ручное начисление/списание на кошелёк или бота (`admin_adjust`, SaaS) |
+| `user list` / `user delete` | Список пользователей; удаление пользователя и данных (dev/testing) |
+| `auth refresh-dev-login` | Ссылка для входа в браузере на localhost (Cloud Agent dev) |
+
+Примеры:
+
+```bash
+bun run cli -- promo create --code LAUNCH20 --percent 20
+bun run cli -- credits grant --bot-id mybot --amount 5000 --reason "support"
+docker compose exec app cli promo list
+```
+
+Правила ledger: [.docs/billing-design.md](.docs/billing-design.md). Подробнее: [.docs/deploy.md](.docs/deploy.md#10-operator-cli-saas).
 
 ## Production
 
 Образ: `ghcr.io/telemodai/app:latest` (CI: git tag `v*` или ручной запуск workflow).
 
-До переноса репозитория теги `v1.3.1` и ранее публиковались как `ghcr.io/tikhomirovv/tg-moderator-ai` — GitHub перенаправляет старые ссылки на репозиторий, но для deploy лучше обновить `image:` в compose. Текущий релиз: `v1.5.3`.
+До переноса репозитория теги `v1.3.1` и ранее публиковались как `ghcr.io/tikhomirovv/tg-moderator-ai` — GitHub перенаправляет старые ссылки на репозиторий, но для deploy лучше обновить `image:` в compose.
 
 Кратко: [deploy/README.md](deploy/README.md) · полная инструкция: [.docs/deploy.md](.docs/deploy.md)
 
@@ -95,7 +122,7 @@ Health: `GET /api/health` → `{"ok":true}`. В контейнере порт **
 
 | Документ | Описание |
 |----------|----------|
-| [.docs/project-overview.md](.docs/project-overview.md) | Продукт, аудитория, статус MVP |
+| [.docs/project-overview.md](.docs/project-overview.md) | Продукт, аудитория, статус |
 | [.docs/prd.md](.docs/prd.md) | Сценарии, требования, ограничения |
 | [.docs/technical-design.md](.docs/technical-design.md) | Стек, API, структура, dev tunnel |
 | [.docs/billing-design.md](.docs/billing-design.md) | SaaS-кредиты, режимы деплоя, YooKassa |
