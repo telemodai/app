@@ -23,6 +23,8 @@ Rules are stored **per chat**; presets are constants in `rule-templates.ts`, add
 
 Public endpoint without session: `POST /api/telegram/webhook/*` (Telegram). Protection: per-bot `webhook_secret` in the DB + header `X-Telegram-Bot-Api-Secret-Token`.
 
+**Terminology:** user-facing **Decision journal** (RU: **Журнал решений**) — LLM moderation decisions per bot (`/bots/:id/audit`). Code, routes, and i18n keys still use `audit`; do not rename unless explicitly scoped.
+
 More: [`.docs/project-overview.md`](.docs/project-overview.md) · [`.docs/technical-design.md`](.docs/technical-design.md) · [`.docs/i18n.md`](.docs/i18n.md) (admin UI locales) · [`assets/brand/DESIGN.md`](assets/brand/DESIGN.md) (design system + app appendix)
 
 GitHub repo: **`README.md` (EN)** and **`README.ru.md` (RU)** — when editing README, update both.

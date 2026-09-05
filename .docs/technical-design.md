@@ -31,7 +31,7 @@
 | `bot_access_codes` | Invite codes for managers |
 | `rules` | Per-bot moderation rules |
 | `chats`, `chat_rules` | Telegram chats and assigned rules |
-| `moderation_actions`, `moderation_decisions` | Audit trail |
+| `moderation_actions`, `moderation_decisions` | Decision journal (UI; code paths still use `audit`) |
 | `chat_statistics` | Aggregated stats |
 
 ## API surface (authenticated unless noted)

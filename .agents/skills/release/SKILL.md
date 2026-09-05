@@ -65,7 +65,7 @@ Archive file: commit as-is. GitHub file: use for `gh release create/edit` — **
 | Bad (technical) | Good (human) |
 |-----------------|--------------|
 | Moderation audit decisions table and UI | Можно просматривать, какие решения приняла модель по каждому сообщению |
-| Open bot audit page via [id]/index.vue | Страница аудита бота открывается корректно |
+| Open bot audit page via [id]/index.vue | Страница журнала решений бота открывается корректно |
 | JSON chat history in LLM prompt and 100-msg retention | Бот учитывает больше контекста переписки при проверке сообщений |
 | Telegram login errors shown clearly in UI | Понятные сообщения, если вход через Telegram не удался |
 
@@ -130,11 +130,11 @@ date: 2026-07-12
 
 ## Добавлено
 
-- Можно смотреть аудит решений модели по каждому сообщению
+- Можно смотреть журнал решений модели по каждому сообщению
 
 ## Исправлено
 
-- Исправлено открытие страницы аудита бота
+- Исправлено открытие страницы журнала решений бота
 ```
 
 Allowed sections: **Добавлено**, **Исправлено**, **Производительность** only.
